@@ -1,0 +1,136 @@
+/* Estilos dos quatro mini-jogos. Usa os tokens da casca, com valores de reserva. */
+.jogo {
+  --j-rosa-forte: var(--rosa-forte, #d6336c);
+  --j-rosa: var(--rosa, #f783ac);
+  --j-rosa-claro: var(--rosa-claro, #ffdeeb);
+  --j-lilas: var(--lilas, #b197fc);
+  --j-agua: var(--agua, #66d9e8);
+  --j-dourado: var(--dourado, #ffd43b);
+  --j-texto: var(--texto, #5c2a3e);
+  --j-margem: var(--margem-borda, 16px);
+  --j-alvo: var(--alvo-min, 64px);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: var(--j-margem);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+  background: var(--fundo, #fff0f6);
+  color: var(--j-texto);
+  font-family: var(--fonte, 'Andika', system-ui, sans-serif);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.jogo *, .jogo *::before, .jogo *::after { box-sizing: border-box; }
+.jogo img { display: block; pointer-events: none; }
+
+/* topo: progresso + ouvir de novo */
+.j-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: 0 0 auto; }
+.j-progresso { display: flex; gap: 8px; }
+.j-ponto { width: 18px; height: 18px; border-radius: 50%; background: var(--j-rosa-claro); border: 3px solid var(--j-rosa); transition: background .4s, transform .4s; }
+.j-ponto.j-feito { background: var(--j-dourado); border-color: var(--j-rosa-forte); transform: scale(1.15); }
+.j-ouvir {
+  width: 80px; height: 80px; min-width: var(--j-alvo); min-height: var(--j-alvo);
+  border-radius: 50%; border: 4px solid #fff; background: var(--j-rosa-forte);
+  box-shadow: 0 6px 0 rgba(92, 42, 62, .25); padding: 14px; cursor: pointer; flex: 0 0 auto;
+}
+.j-ouvir img { width: 100%; height: 100%; }
+.j-ouvir:active { transform: translateY(3px); box-shadow: 0 3px 0 rgba(92, 42, 62, .25); }
+.j-ouvir:focus-visible, .j-cartao:focus-visible, .j-sereia:focus-visible { outline: 5px solid var(--j-dourado); outline-offset: 3px; }
+
+/* área de opções */
+.j-opcoes { flex: 1 1 auto; min-height: 0; display: flex; flex-wrap: wrap; align-content: center; justify-content: center; gap: 16px; }
+.j-cartao {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 5px solid var(--j-rosa); border-radius: 28px;
+  box-shadow: 0 8px 0 var(--j-rosa); padding: 8px; cursor: pointer; color: var(--j-rosa-forte);
+  font-family: inherit; transition: opacity .45s ease, transform .45s ease, box-shadow .2s;
+}
+.j-cartao:active { transform: translateY(4px); box-shadow: 0 4px 0 var(--j-rosa); }
+.j-letra { font-size: 96px; font-weight: 700; line-height: 1; }
+.j-figura { width: 100%; height: 100%; object-fit: contain; }
+
+/* escute: cartões 2x2 */
+.j-opcoes-letras .j-cartao { width: calc(50% - 8px); height: min(40%, 190px); min-height: 130px; }
+.j-opcoes-letras[data-qtd="2"] .j-cartao { height: 170px; }
+.j-opcoes-letras[data-qtd="2"] .j-letra, .j-opcoes-letras[data-qtd="3"] .j-letra { font-size: 110px; }
+
+/* caça: três figuras em coluna */
+.j-opcoes-figuras { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 14px; }
+.j-opcoes-figuras .j-cartao { flex: 1 1 0; min-height: var(--j-alvo); max-height: 190px; width: 100%; }
+
+/* estados: erro suave (sem vermelho), sumir, acerto, convite */
+.j-balanca { animation: j-balanca .45s ease-in-out; }
+@keyframes j-balanca { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px) rotate(-1.5deg); } 50% { transform: translateX(7px) rotate(1.5deg); } 80% { transform: translateX(-4px); } }
+.j-some { opacity: 0; transform: scale(.85); pointer-events: none; }
+.j-fora { opacity: .25; transform: scale(.92); pointer-events: none; }
+.j-acerto { animation: j-pula .7s ease-out; border-color: var(--j-dourado); box-shadow: 0 0 0 8px rgba(255, 212, 59, .55), 0 8px 0 var(--j-rosa-forte); }
+@keyframes j-pula { 0% { transform: scale(1); } 30% { transform: scale(1.07) rotate(-3deg); } 60% { transform: scale(1.04) rotate(3deg); } 100% { transform: scale(1.05); } }
+.j-convida { animation: j-convida 1.1s ease-in-out infinite; border-color: var(--j-dourado); }
+@keyframes j-convida { 0%, 100% { transform: translateY(0); box-shadow: 0 0 0 0 rgba(255, 212, 59, .8), 0 8px 0 var(--j-rosa); } 50% { transform: translateY(-6px); box-shadow: 0 0 0 12px rgba(255, 212, 59, .45), 0 8px 0 var(--j-rosa); } }
+
+/* junte os sons */
+.jogo-junte { background: var(--cenario-mar, none) center / cover no-repeat, linear-gradient(#c5f6fa, #e7f5ff); }
+.j-pista { position: relative; flex: 0 0 auto; margin-top: 8px; padding-top: 104px; min-height: 230px; }
+.j-sereia {
+  position: absolute; left: 0; top: 0; width: 96px; height: 96px; min-width: var(--j-alvo); padding: 0;
+  background: transparent; border: 0; cursor: pointer; --x: 0px;
+  transform: translateX(var(--x)); transition: transform .6s ease-in-out; z-index: 2;
+}
+.j-sereia img { width: 100%; height: 100%; object-fit: contain; }
+.j-sereia.j-nada img { animation: j-ondula .3s ease-in-out infinite; }
+.j-sereia.j-aponta img { animation: j-aponta 1s ease-in-out infinite; }
+@keyframes j-ondula { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+@keyframes j-aponta { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+.j-blocos { display: flex; justify-content: center; gap: 14px; transition: gap .6s ease-in-out; }
+.j-bloco {
+  width: 96px; height: 110px; min-width: var(--j-alvo); display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 5px solid var(--j-lilas); border-radius: 24px; color: var(--j-rosa-forte);
+  box-shadow: 0 6px 0 var(--j-lilas); cursor: pointer; transition: background .3s, transform .3s, border-radius .6s, box-shadow .3s;
+}
+.j-blocos[data-qtd="2"] .j-bloco { width: calc(50% - 7px); max-width: 150px; }
+.j-blocos[data-qtd="3"] .j-bloco { width: calc(33.3% - 10px); max-width: 100px; }
+.j-bloco .j-letra { font-size: 64px; }
+.j-bloco[data-len="2"] .j-letra { font-size: 52px; }
+.j-blocos[data-qtd="3"] .j-bloco[data-len="2"] .j-letra { font-size: 40px; }
+.j-bloco.j-aceso { background: var(--j-dourado); border-color: var(--j-rosa-forte); transform: translateY(-6px) scale(1.06); box-shadow: 0 0 0 8px rgba(255, 212, 59, .5), 0 6px 0 var(--j-rosa-forte); }
+.j-blocos.j-juntos { gap: 0; }
+.j-blocos.j-juntos .j-bloco { background: var(--j-rosa-claro); border-color: var(--j-rosa-forte); transform: none; box-shadow: 0 6px 0 var(--j-rosa-forte); }
+.j-blocos.j-juntos .j-bloco:not(:first-child) { border-left-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.j-blocos.j-juntos .j-bloco:not(:last-child) { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.j-opcoes-junte { opacity: 0; transition: opacity .5s; flex-wrap: nowrap; align-items: center; pointer-events: none; }
+.j-opcoes-junte.j-visivel { opacity: 1; pointer-events: auto; }
+.j-opcoes-junte .j-cartao { width: calc(50% - 8px); height: 160px; max-height: 100%; }
+.j-opcoes-junte[data-qtd="1"] .j-cartao { width: 70%; }
+.j-cartao.j-grande { transform: scale(1.18); z-index: 3; }
+
+/* trace */
+.j-palco { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.j-trace-svg { width: 100%; max-height: 100%; aspect-ratio: 1 / 1; touch-action: none; overflow: visible; background: #fff; border-radius: 28px; border: 5px solid var(--j-rosa); box-shadow: 0 8px 0 var(--j-rosa); }
+.j-trace-faixa { fill: none; stroke: var(--j-rosa-claro); stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+.j-trace-pontos { fill: none; stroke: var(--j-lilas); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .1 6; }
+.j-trace-rastro { fill: none; stroke: var(--j-rosa-forte); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 2px rgba(247, 131, 172, .9)); }
+.j-trace-estrela { fill: var(--j-dourado); stroke: var(--j-rosa-forte); stroke-width: 1.2; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; animation: j-pulsa 1s ease-in-out infinite; }
+.j-trace-seta { fill: var(--j-rosa-forte); opacity: .75; }
+@keyframes j-pulsa { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+.j-trace-completa .j-trace-rastro { animation: j-brilha 1s ease-in-out; }
+@keyframes j-brilha { 0%, 100% { stroke: var(--j-rosa-forte); } 50% { stroke: var(--j-dourado); stroke-width: 11; } }
+
+/* cintilância */
+.j-cintila { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; z-index: 5; }
+.j-estrelinha {
+  position: absolute; left: 0; top: 0; width: var(--tam, 16px); height: var(--tam, 16px); margin: calc(var(--tam, 16px) / -2) 0 0 calc(var(--tam, 16px) / -2);
+  background: var(--j-dourado); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0; animation: j-voa 1.4s ease-out var(--atraso, 0ms) forwards;
+}
+@keyframes j-voa { 0% { opacity: 0; transform: translate(0, 0) scale(.3); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(120deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .jogo *, .jogo *::before, .jogo *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .j-convida { box-shadow: 0 0 0 10px rgba(255, 212, 59, .6), 0 8px 0 var(--j-rosa); }
+}

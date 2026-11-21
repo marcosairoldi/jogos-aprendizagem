@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness D2</title>
+<link rel="stylesheet" href="../css/jogos.css">
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #fff0f6; font-family: sans-serif; }
+  #barra { height: 72px; background: #d6336c; }
+  #raiz { height: calc(100dvh - 72px); }
+</style>
+</head>
+<body>
+<div id="barra"></div>
+<div id="raiz"></div>
+<script type="module">
+  // Harness: ?jogo=escute&liberadas=a,e,m&foco=m&letras=m,a&estados=m:nova,a:pratica
+  import { curriculoMock } from './d2-mock-curriculo.js';
+  const q = new URLSearchParams(location.search);
+  const id = q.get('jogo') || 'escute';
+  const lista = (k, pad) => (q.get(k) ?? pad).split(',').filter(Boolean);
+  const liberadas = lista('liberadas', 'a,e,i,o,u,m,p,b,t');
+  const letras = lista('letras', 'm,a,p,o');
+  const foco = q.get('foco') === null ? 'm' : (q.get('foco') || null);
+  const estados = Object.fromEntries(lista('estados', 'm:nova,a:pratica,p:dominada,o:pratica').map((s) => s.split(':')));
+  const d2 = window.__d2 = { falas: [], efeitos: [], registros: [], terminou: null, paradas: 0, curriculo: curriculoMock, pronto: false, jogo: null };
+  const audio = {
+    falar(itens) { d2.falas.push(itens); return new Promise((r) => setTimeout(() => r({ cancelado: false }), 40)); },
+    efeito(n) { d2.efeitos.push(n); },
+    parar() { d2.paradas++; },
+  };
+  const ctx = {
+    curriculo: curriculoMock, audio, guia: 'lumi', letras, letraFoco: foco, letrasLiberadas: liberadas,
+    estadoLetra: (l) => estados[l] || 'pratica',
+    registrar: (r) => d2.registros.push(r),
+    aoTerminar: (r) => { d2.terminou = r; },
+  };
+  const mod = await import(`../js/jogos/${id}.js`);
+  d2.def = mod.default;
+  d2.disponivel = mod.default.disponivel(liberadas, curriculoMock);
+  d2.jogo = mod.default.iniciar(document.getElementById('raiz'), ctx);
+  d2.pronto = true;
+</script>
+</body>
+</html>
