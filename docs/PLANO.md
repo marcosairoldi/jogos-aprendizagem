@@ -1,0 +1,132 @@
+# Plano e contrato técnico: Trilha dos Sons
+
+Jogo web (PWA) de método fônico em português do Brasil para crianças de 5 anos em pré-escola.
+Uma adulta acompanha. Toda instrução é falada; nada exige leitura.
+
+## 1. Estrutura de pastas e donos
+
+| Caminho | Dono | Conteúdo |
+|---|---|---|
+| `index.html`, `css/estilo.css`, `js/app.js`, `js/ui.js`, `js/armazenamento.js`, `js/progresso.js`, `js/telas/*.js` | D1 | casca do app, rotas, tela inicial, escolha do guia, Trilha Encantada, menu, recompensas, despedida, área dos pais |
+| `js/jogos/*.js`, `css/jogos.css`, `data/tracados.json` | D2 | Escute e Toque, Caça-Som, Junte os Sons, Trace a Letra |
+| `data/curriculo.json`, `docs/pesquisa.md` | A | pesquisa e currículo |
+| `assets/svg/personagens`, `cenarios`, `recompensas`, `ui`, `assets/icones/*.svg` | B1 | personagens, cenários, recompensas, ícones |
+| `assets/svg/figuras/*.svg` | B2 (vogais, M, P, B, T) e B3 (F, V, S, L, N, D, C, G) | figuras das palavras |
+| `js/audio.js`, `assets/audio/gerado/`, `assets/audio/LISTA.md`, `manifest.json`, `sw.js`, `ferramentas/*` | C | áudio, PWA, offline, scripts |
+| `data/frases.json` | líder | frases faladas (chaves fixas) |
+| `tests/` | E | QA e testes |
+| `README.md`, `docs/PLANO.md` | líder | |
+
+Ninguém edita arquivo de outro dono. Ninguém faz commit; o líder integra e commita.
+
+## 2. Convenções
+
+- JS puro, módulos ES (`<script type="module">`), sem frameworks, sem dependências em tempo de execução.
+- Todos os caminhos são relativos (`assets/...`, nunca `/assets/...`), para funcionar em `usuario.github.io/repo/`.
+- Ids em minúsculas ASCII sem acento: letra `m`, sílaba `ma`, palavra `aviao`.
+- Ids de áudio: `som_<letra>`, `sil_<silaba>`, `pal_<palavra>`, `frase_<chave>`.
+- Letras exibidas em MAIÚSCULA, fonte Andika (SIL OFL, feita para quem está aprendendo a ler), embutida em `assets/fontes/`.
+- Paleta: rosa dominante. Tokens CSS em `css/estilo.css` (`--rosa-forte #d6336c`, `--rosa #f783ac`, `--rosa-claro #ffdeeb`, `--lilas #b197fc`, `--agua #66d9e8`, `--dourado #ffd43b`, `--texto #5c2a3e`, `--fundo #fff0f6`).
+- Personagens originais: unicórnio **Lumi** e sereia **Marola**.
+- Nenhum nome real de pessoa em arquivo algum. Nome da criança só no `localStorage`; sem nome, o jogo diz "princesa".
+
+## 3. Regras pedagógicas que o código obedece
+
+1. O jogo nunca fala o NOME de uma consoante ("eme", "pê"). Só o SOM, vindo de arquivo de áudio. Nenhuma frase interpola a letra como texto para TTS.
+2. Erro: sem som de falha, sem vermelho, sem pontos perdidos. A opção errada balança de leve e some; o som-alvo é repetido com carinho; as opções diminuem até sobrar a certa.
+3. Sem tempo limite. Toda tela fala sua instrução ao entrar e tem botão grande de "ouvir de novo" (ícone de orelha/alto-falante).
+4. Sessão de cerca de 8 minutos (`regras.minutosSessao`), com despedida carinhosa; a adulta pode continuar.
+5. Avanço por domínio, com revisão espaçada das letras antigas; nada de bloquear a diversão (todos os jogos ficam disponíveis com as letras já liberadas).
+
+## 4. Esquema de `data/curriculo.json`
+
+```json
+{
+  "versao": 1,
+  "regras": {
+    "itensPorRodada": 5, "janelaDominio": 6, "acertosParaDominar": 5,
+    "jogosDistintosParaDominar": 2, "sessoesParaDominar": 2,
+    "proporcaoRevisao": 0.3, "minutosSessao": 8, "opcoesMin": 2, "opcoesMax": 4
+  },
+  "ordem": ["a","e","i","o","u","m","p","b","t","f","v","s","l","n","d","c","g"],
+  "etapas": [{ "id": "vogais", "letras": ["a","e","i","o","u"] }],
+  "letras": {
+    "m": {
+      "maiuscula": "M", "tipo": "consoante", "fonema": "/m/", "continuo": true,
+      "audio": "som_m", "tts": "mmmmm", "palavras": ["mapa","moto","mala"],
+      "dica": "Para a adulta: boca fechada, som contínuo, sem dizer 'mê'."
+    }
+  },
+  "silabas": {
+    "ma": { "texto": "MA", "letras": ["m","a"], "audio": "sil_ma", "tts": "má" }
+  },
+  "palavras": {
+    "mapa": { "texto": "MAPA", "silabas": ["ma","pa"], "inicial": "m",
+              "figura": "assets/svg/figuras/mapa.svg", "audio": "pal_mapa",
+              "tts": "mapa", "juntar": true }
+  }
+}
+```
+
+- `tts` de consoante oclusiva (p, b, t, d, c, g) é `null`: TTS não consegue fazer esse som puro. Nesse caso o áudio usa o arquivo gerado; se faltar, fala a palavra-âncora.
+- `juntar: true` só para palavras regulares CV.CV usadas em Junte os Sons.
+- Pares de vogais (ex.: `ai`, `oi`, `eu`) podem entrar em `silabas` para Junte os Sons na etapa das vogais.
+
+### Figuras (ids fixos; arquivo `assets/svg/figuras/<id>.svg`, viewBox `0 0 200 200`)
+
+A: abelha, anel, aviao · E: elefante, ervilha, ema · I: ilha, iglu, ioio · O: ovo, olho, ovelha · U: uva, urso, unicornio · M: mapa, moto, mala · P: pato, pipa, pe · B: bola, bolo, bota · T: tatu, tomate, tapete · F: foca, fada, fita · V: vaca, vela, vaso · S: sapo, sino, suco · L: lua, lobo, lupa · N: navio, nuvem, nariz · D: dado, dedo, dente · C: copo, cubo, cama · G: gato, galo, gota
+
+## 5. API de áudio (`js/audio.js`)
+
+```js
+import * as audio from './audio.js';
+audio.configurar({ curriculo, frases, obterNome })  // obterNome(): string ou ''
+await audio.desbloquear()           // chamar dentro do toque no botão "Começar"
+await audio.falar(['frase:escute_instrucao', 'pausa:300', 'som:m'])
+await audio.falar([{ frase: 'acerto_2' }])  // {nome} é preenchido sozinho
+audio.efeito('brilho')              // 'brilho' | 'pop' | 'tchan' | 'bolha' | 'passo' (sintetizados, nunca som de erro)
+audio.parar()
+audio.estado()                      // { desbloqueado, temVozPtBr }
+```
+
+- Itens de `falar`: `frase:<chave>`, `som:<letra>`, `sil:<silaba>`, `pal:<palavra>`, `pausa:<ms>`, `efeito:<nome>`, ou `{ frase, vars }`.
+- Uma nova chamada a `falar` cancela a anterior. A Promise sempre resolve (nunca rejeita): `{ cancelado: boolean }`.
+- Busca de arquivo para um id: `assets/audio/gravacoes/<id>.mp3`, depois `.m4a` (gravações da adulta), depois `assets/audio/gerado/<id>.<ext>` (sons de letra gerados), depois `speechSynthesis` pt-BR com `tts` do currículo ou texto da frase, com `console.info('[audio] usando voz do aparelho para', id)`.
+- O módulo pausa tudo sozinho quando a página vai para segundo plano (`visibilitychange`).
+
+## 6. Contrato dos jogos (`js/jogos/<id>.js`)
+
+```js
+export default {
+  id: 'escute',             // 'escute' | 'caca' | 'junte' | 'trace'
+  icone: 'assets/svg/ui/jogo-escute.svg',
+  disponivel(letrasLiberadas, curriculo) { return true },
+  iniciar(raiz, ctx) { /* monta a tela dentro de raiz */ return { destruir() {} } }
+}
+```
+
+`ctx` entregue pela casca:
+
+```js
+{
+  curriculo, audio, guia,          // guia: 'lumi' | 'marola'
+  letras,                           // letras da rodada (foco + revisão), ex.: ['m','a','o']
+  letraFoco,                        // letra nova sendo aprendida, ou null
+  letrasLiberadas,                  // todas as já liberadas
+  estadoLetra(letra),               // 'nova' | 'pratica' | 'dominada'
+  registrar({ letra, acertouPrimeira, jogo }),
+  aoTerminar({ jogo, itens })       // fim da rodada; a casca mostra recompensa
+}
+```
+
+A raiz ocupa a tela toda abaixo de uma barra superior da casca (botão casa e guia). O jogo não usa rolagem.
+
+## 7. Progresso (`js/progresso.js`, chave `localStorage` `trilhaSons.v1`)
+
+Guarda: nome, guia, letras liberadas, histórico curto por letra (`[{ jogo, ok, sessao, t }]`), recompensas (`{ estrela, concha, chifre }`), tempo total de uso, número de sessões. Se o armazenamento falhar, usa memória e o jogo segue.
+
+## 8. Ordem de trabalho
+
+1. Paralelo: A, B1, B2, B3, C, D1, D2.
+2. Líder integra, gera lista de cache e LISTA.md, roda o jogo.
+3. E faz QA em 360x800 e offline; líder corrige e commita.
