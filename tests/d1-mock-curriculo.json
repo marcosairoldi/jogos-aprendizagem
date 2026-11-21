@@ -1,0 +1,474 @@
+{
+ "versao": 1,
+ "regras": {
+  "itensPorRodada": 5,
+  "janelaDominio": 6,
+  "acertosParaDominar": 5,
+  "jogosDistintosParaDominar": 2,
+  "sessoesParaDominar": 2,
+  "proporcaoRevisao": 0.3,
+  "minutosSessao": 8,
+  "opcoesMin": 2,
+  "opcoesMax": 4
+ },
+ "ordem": [
+  "a",
+  "e",
+  "i",
+  "o",
+  "u",
+  "m",
+  "p",
+  "b",
+  "t"
+ ],
+ "etapas": [
+  {
+   "id": "vogais",
+   "letras": [
+    "a",
+    "e",
+    "i",
+    "o",
+    "u"
+   ]
+  },
+  {
+   "id": "consoantes",
+   "letras": [
+    "m",
+    "p",
+    "b",
+    "t"
+   ]
+  }
+ ],
+ "letras": {
+  "a": {
+   "maiuscula": "A",
+   "tipo": "vogal",
+   "fonema": "/a/",
+   "continuo": true,
+   "audio": "som_a",
+   "tts": "a",
+   "palavras": [
+    "abelha",
+    "anel",
+    "aviao"
+   ],
+   "dica": "mock"
+  },
+  "e": {
+   "maiuscula": "E",
+   "tipo": "vogal",
+   "fonema": "/e/",
+   "continuo": true,
+   "audio": "som_e",
+   "tts": "e",
+   "palavras": [
+    "elefante",
+    "ervilha",
+    "ema"
+   ],
+   "dica": "mock"
+  },
+  "i": {
+   "maiuscula": "I",
+   "tipo": "vogal",
+   "fonema": "/i/",
+   "continuo": true,
+   "audio": "som_i",
+   "tts": "i",
+   "palavras": [
+    "ilha",
+    "iglu",
+    "ioio"
+   ],
+   "dica": "mock"
+  },
+  "o": {
+   "maiuscula": "O",
+   "tipo": "vogal",
+   "fonema": "/o/",
+   "continuo": true,
+   "audio": "som_o",
+   "tts": "o",
+   "palavras": [
+    "ovo",
+    "olho",
+    "ovelha"
+   ],
+   "dica": "mock"
+  },
+  "u": {
+   "maiuscula": "U",
+   "tipo": "vogal",
+   "fonema": "/u/",
+   "continuo": true,
+   "audio": "som_u",
+   "tts": "u",
+   "palavras": [
+    "uva",
+    "urso",
+    "unicornio"
+   ],
+   "dica": "mock"
+  },
+  "m": {
+   "maiuscula": "M",
+   "tipo": "consoante",
+   "fonema": "/m/",
+   "continuo": true,
+   "audio": "som_m",
+   "tts": "m",
+   "palavras": [
+    "mapa",
+    "moto",
+    "mala"
+   ],
+   "dica": "mock"
+  },
+  "p": {
+   "maiuscula": "P",
+   "tipo": "consoante",
+   "fonema": "/p/",
+   "continuo": true,
+   "audio": "som_p",
+   "tts": "p",
+   "palavras": [
+    "pato",
+    "pipa",
+    "pe"
+   ],
+   "dica": "mock"
+  },
+  "b": {
+   "maiuscula": "B",
+   "tipo": "consoante",
+   "fonema": "/b/",
+   "continuo": true,
+   "audio": "som_b",
+   "tts": "b",
+   "palavras": [
+    "bola",
+    "bolo",
+    "bota"
+   ],
+   "dica": "mock"
+  },
+  "t": {
+   "maiuscula": "T",
+   "tipo": "consoante",
+   "fonema": "/t/",
+   "continuo": true,
+   "audio": "som_t",
+   "tts": "t",
+   "palavras": [
+    "tatu",
+    "tomate",
+    "tapete"
+   ],
+   "dica": "mock"
+  }
+ },
+ "silabas": {},
+ "palavras": {
+  "abelha": {
+   "texto": "ABELHA",
+   "silabas": [
+    "abelha"
+   ],
+   "inicial": "a",
+   "figura": "assets/svg/figuras/abelha.svg",
+   "audio": "pal_abelha",
+   "tts": "abelha",
+   "juntar": false
+  },
+  "anel": {
+   "texto": "ANEL",
+   "silabas": [
+    "anel"
+   ],
+   "inicial": "a",
+   "figura": "assets/svg/figuras/anel.svg",
+   "audio": "pal_anel",
+   "tts": "anel",
+   "juntar": false
+  },
+  "aviao": {
+   "texto": "AVIAO",
+   "silabas": [
+    "aviao"
+   ],
+   "inicial": "a",
+   "figura": "assets/svg/figuras/aviao.svg",
+   "audio": "pal_aviao",
+   "tts": "aviao",
+   "juntar": false
+  },
+  "elefante": {
+   "texto": "ELEFANTE",
+   "silabas": [
+    "elefante"
+   ],
+   "inicial": "e",
+   "figura": "assets/svg/figuras/elefante.svg",
+   "audio": "pal_elefante",
+   "tts": "elefante",
+   "juntar": false
+  },
+  "ervilha": {
+   "texto": "ERVILHA",
+   "silabas": [
+    "ervilha"
+   ],
+   "inicial": "e",
+   "figura": "assets/svg/figuras/ervilha.svg",
+   "audio": "pal_ervilha",
+   "tts": "ervilha",
+   "juntar": false
+  },
+  "ema": {
+   "texto": "EMA",
+   "silabas": [
+    "ema"
+   ],
+   "inicial": "e",
+   "figura": "assets/svg/figuras/ema.svg",
+   "audio": "pal_ema",
+   "tts": "ema",
+   "juntar": false
+  },
+  "ilha": {
+   "texto": "ILHA",
+   "silabas": [
+    "ilha"
+   ],
+   "inicial": "i",
+   "figura": "assets/svg/figuras/ilha.svg",
+   "audio": "pal_ilha",
+   "tts": "ilha",
+   "juntar": false
+  },
+  "iglu": {
+   "texto": "IGLU",
+   "silabas": [
+    "iglu"
+   ],
+   "inicial": "i",
+   "figura": "assets/svg/figuras/iglu.svg",
+   "audio": "pal_iglu",
+   "tts": "iglu",
+   "juntar": false
+  },
+  "ioio": {
+   "texto": "IOIO",
+   "silabas": [
+    "ioio"
+   ],
+   "inicial": "i",
+   "figura": "assets/svg/figuras/ioio.svg",
+   "audio": "pal_ioio",
+   "tts": "ioio",
+   "juntar": false
+  },
+  "ovo": {
+   "texto": "OVO",
+   "silabas": [
+    "ovo"
+   ],
+   "inicial": "o",
+   "figura": "assets/svg/figuras/ovo.svg",
+   "audio": "pal_ovo",
+   "tts": "ovo",
+   "juntar": false
+  },
+  "olho": {
+   "texto": "OLHO",
+   "silabas": [
+    "olho"
+   ],
+   "inicial": "o",
+   "figura": "assets/svg/figuras/olho.svg",
+   "audio": "pal_olho",
+   "tts": "olho",
+   "juntar": false
+  },
+  "ovelha": {
+   "texto": "OVELHA",
+   "silabas": [
+    "ovelha"
+   ],
+   "inicial": "o",
+   "figura": "assets/svg/figuras/ovelha.svg",
+   "audio": "pal_ovelha",
+   "tts": "ovelha",
+   "juntar": false
+  },
+  "uva": {
+   "texto": "UVA",
+   "silabas": [
+    "uva"
+   ],
+   "inicial": "u",
+   "figura": "assets/svg/figuras/uva.svg",
+   "audio": "pal_uva",
+   "tts": "uva",
+   "juntar": false
+  },
+  "urso": {
+   "texto": "URSO",
+   "silabas": [
+    "urso"
+   ],
+   "inicial": "u",
+   "figura": "assets/svg/figuras/urso.svg",
+   "audio": "pal_urso",
+   "tts": "urso",
+   "juntar": false
+  },
+  "unicornio": {
+   "texto": "UNICORNIO",
+   "silabas": [
+    "unicornio"
+   ],
+   "inicial": "u",
+   "figura": "assets/svg/figuras/unicornio.svg",
+   "audio": "pal_unicornio",
+   "tts": "unicornio",
+   "juntar": false
+  },
+  "mapa": {
+   "texto": "MAPA",
+   "silabas": [
+    "mapa"
+   ],
+   "inicial": "m",
+   "figura": "assets/svg/figuras/mapa.svg",
+   "audio": "pal_mapa",
+   "tts": "mapa",
+   "juntar": false
+  },
+  "moto": {
+   "texto": "MOTO",
+   "silabas": [
+    "moto"
+   ],
+   "inicial": "m",
+   "figura": "assets/svg/figuras/moto.svg",
+   "audio": "pal_moto",
+   "tts": "moto",
+   "juntar": false
+  },
+  "mala": {
+   "texto": "MALA",
+   "silabas": [
+    "mala"
+   ],
+   "inicial": "m",
+   "figura": "assets/svg/figuras/mala.svg",
+   "audio": "pal_mala",
+   "tts": "mala",
+   "juntar": false
+  },
+  "pato": {
+   "texto": "PATO",
+   "silabas": [
+    "pato"
+   ],
+   "inicial": "p",
+   "figura": "assets/svg/figuras/pato.svg",
+   "audio": "pal_pato",
+   "tts": "pato",
+   "juntar": false
+  },
+  "pipa": {
+   "texto": "PIPA",
+   "silabas": [
+    "pipa"
+   ],
+   "inicial": "p",
+   "figura": "assets/svg/figuras/pipa.svg",
+   "audio": "pal_pipa",
+   "tts": "pipa",
+   "juntar": false
+  },
+  "pe": {
+   "texto": "PE",
+   "silabas": [
+    "pe"
+   ],
+   "inicial": "p",
+   "figura": "assets/svg/figuras/pe.svg",
+   "audio": "pal_pe",
+   "tts": "pe",
+   "juntar": false
+  },
+  "bola": {
+   "texto": "BOLA",
+   "silabas": [
+    "bola"
+   ],
+   "inicial": "b",
+   "figura": "assets/svg/figuras/bola.svg",
+   "audio": "pal_bola",
+   "tts": "bola",
+   "juntar": false
+  },
+  "bolo": {
+   "texto": "BOLO",
+   "silabas": [
+    "bolo"
+   ],
+   "inicial": "b",
+   "figura": "assets/svg/figuras/bolo.svg",
+   "audio": "pal_bolo",
+   "tts": "bolo",
+   "juntar": false
+  },
+  "bota": {
+   "texto": "BOTA",
+   "silabas": [
+    "bota"
+   ],
+   "inicial": "b",
+   "figura": "assets/svg/figuras/bota.svg",
+   "audio": "pal_bota",
+   "tts": "bota",
+   "juntar": false
+  },
+  "tatu": {
+   "texto": "TATU",
+   "silabas": [
+    "tatu"
+   ],
+   "inicial": "t",
+   "figura": "assets/svg/figuras/tatu.svg",
+   "audio": "pal_tatu",
+   "tts": "tatu",
+   "juntar": false
+  },
+  "tomate": {
+   "texto": "TOMATE",
+   "silabas": [
+    "tomate"
+   ],
+   "inicial": "t",
+   "figura": "assets/svg/figuras/tomate.svg",
+   "audio": "pal_tomate",
+   "tts": "tomate",
+   "juntar": false
+  },
+  "tapete": {
+   "texto": "TAPETE",
+   "silabas": [
+    "tapete"
+   ],
+   "inicial": "t",
+   "figura": "assets/svg/figuras/tapete.svg",
+   "audio": "pal_tapete",
+   "tts": "tapete",
+   "juntar": false
+  }
+ }
+}
