@@ -129,15 +129,8 @@ try {
   let fim = await licao();
   let st = await estado();
   console.log('   após lição 1 (sessão 1): liberadas =', st.liberadas.join(''), '| entradas de A =', st.hist.a.length, '| sessões das entradas =', [...new Set(st.hist.a.map((x) => x.sessao))].join(','));
-  ok(fim === 'trilha' && st.liberadas.join('') === 'a', 'lição 1 sem 2ª sessão: A ainda não está dominada (precisa de 2 sessões)');
-  // passa o tempo: 31 minutos sem atividade abrem uma nova sessão
-  await page.evaluate(() => window.__deslocar(31 * 60000));
-  await dormir(300);
-  fim = await licao();
-  st = await estado();
-  console.log('   após lição 2 (sessão 2): liberadas =', st.liberadas.join(''), '| entradas de A =', st.hist.a.length, '| sessões =', [...new Set(st.hist.a.map((x) => x.sessao))].join(','));
-  ok(st.sessoes >= 2, 'a segunda lição ocorreu em outra sessão', String(st.sessoes));
-  ok(st.liberadas.includes('e'), 'DOMÍNIO POR REGRAS: A dominada após 2 sessões de acertos libera E (sem atalho dos pais)', `liberadas=${st.liberadas.join('')}`);
+  ok(fim === 'trilha', 'lição 1 termina na trilha');
+  ok(st.liberadas.includes('e'), 'DOMÍNIO POR REGRAS: A dominada ao fim de UMA lição de acertos libera E (sem atalho dos pais)', `liberadas=${st.liberadas.join('')}`);
   if (st.liberadas.includes('e')) {
     await esperarTela(page, 'trilha');
     await esperarAte(async () => (await esp.eventos(0)).some((x) => x.id === 'trilha_nova_letra'), { timeout: 8000 }).catch(() => {});

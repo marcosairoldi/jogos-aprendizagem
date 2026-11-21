@@ -45,7 +45,7 @@ Ninguém edita arquivo de outro dono. Ninguém faz commit; o líder integra e co
   "versao": 1,
   "regras": {
     "itensPorRodada": 5, "janelaDominio": 6, "acertosParaDominar": 5,
-    "jogosDistintosParaDominar": 2, "sessoesParaDominar": 2,
+    "jogosDistintosParaDominar": 2, "sessoesParaDominar": 1,
     "proporcaoRevisao": 0.3, "minutosSessao": 8, "opcoesMin": 2, "opcoesMax": 4
   },
   "ordem": ["a","e","i","o","u","m","p","b","t","f","v","s","l","n","d","c","g"],
@@ -137,7 +137,7 @@ Guarda: nome, guia, letras liberadas, histórico curto por letra (`[{ jogo, ok, 
 - Sons de letra de reserva gerados com espeak-ng (`ferramentas/gerar-sons.sh`), robóticos mas sem vogal agregada; a gravação da adulta tem prioridade.
 - Gravações novas em `assets/audio/gravacoes/` são encontradas sem rodar script: o service worker responde 204 quando o arquivo não existe (console limpo) e guarda o que existir para uso offline.
 - `data/*.json` e gravações usam rede primeiro e cache como reserva, para que edições feitas no GitHub cheguem ao celular; o resto é cache primeiro.
-- Domínio de uma letra: 5 acertos de primeira nas últimas 6 tentativas, em 2 jogos diferentes, e tentativas em pelo menos 2 sessões (contadas em todo o histórico). Na prática, uma letra nova por dia de uso; a adulta pode liberar a próxima na área dos pais.
+- Domínio de uma letra: 5 acertos de primeira nas últimas 6 tentativas, em 2 jogos diferentes (`sessoesParaDominar` = 1: basta uma lição). A próxima letra é liberada ao fim da lição em que houve domínio; sem domínio, a letra segue em prática e a lição recomeça no próximo toque, sem mensagem negativa. A revisão espaçada vem da mistura de letras antigas nas rodadas; a adulta pode liberar a próxima na área dos pais.
 - Junte os Sons não aparece na letra A (não há sílaba com uma letra só); a partir da E usa pares de vogais (AI, EI...) e, com consoantes, sílabas e palavras CV.CV.
 - Sílabas com E (PE, BE, TE...) soam igual ao nome da consoante; isso é correto para a sílaba e não é usado como som de letra.
 - Gravação da voz dentro do app (Área dos pais > Gravar minha voz): `js/gravacoes.js` guarda blobs no IndexedDB (`trilhaSons-voz`), só no aparelho. `js/audio.js` dá a elas prioridade máxima na resolução de um id (blob: URL), e `audio.gravacoesMudaram()` limpa os caches após salvar/apagar. A tela `js/telas/gravar.js` recorta o silêncio, normaliza, reamostra para 22050 Hz e guarda WAV mono 16 bits. "Reiniciar progresso" não apaga gravações. Limite: não há backup nem sincronização entre aparelhos; apagar os dados do navegador apaga as gravações.

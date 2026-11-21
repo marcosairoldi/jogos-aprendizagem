@@ -11,7 +11,7 @@ const REGRAS_PADRAO = {
   janelaDominio: 6,
   acertosParaDominar: 5,
   jogosDistintosParaDominar: 2,
-  sessoesParaDominar: 2,
+  sessoesParaDominar: 1,
   proporcaoRevisao: 0.3,
   minutosSessao: 8,
   opcoesMin: 2,

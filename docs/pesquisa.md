@@ -42,7 +42,7 @@ Método da pesquisa: duas buscas na web (resultados resumidos, sem abrir os PDFs
 | janelaDominio | 6 | olha as últimas 6 tentativas da letra |
 | acertosParaDominar | 5 | 5 de 6 acertos de primeira: tolera um tropeço, sem exigir perfeição |
 | jogosDistintosParaDominar | 2 | evita "decorar" a resposta de um só jogo; generaliza o som |
-| sessoesParaDominar | 2 | domínio em dias diferentes, o que aproxima de revisão espaçada |
+| sessoesParaDominar | 1 | o critério de 2 sessões travava o avanço e frustrava (uma lição sozinha nunca liberava a próxima); a revisão espaçada já está garantida porque as rodadas seguintes misturam letras antigas |
 | proporcaoRevisao | 0.3 | cerca de 1 em 3 itens é de letra antiga |
 | minutosSessao | 8 | dentro de 5 a 10 minutos por dia |
 | opcoesMin / opcoesMax | 2 / 4 | começa com mais opções e encolhe no erro (aprendizagem sem erro) |
