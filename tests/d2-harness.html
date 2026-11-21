@@ -36,6 +36,7 @@
     registrar: (r) => d2.registros.push(r),
     aoTerminar: (r) => { d2.terminou = r; },
   };
+  if (q.get('modo')) ctx.modo = q.get('modo');
   const mod = await import(`../js/jogos/${id}.js`);
   d2.def = mod.default;
   d2.disponivel = mod.default.disponivel(liberadas, curriculoMock);

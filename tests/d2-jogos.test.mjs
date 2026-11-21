@@ -301,9 +301,11 @@ await teste('junte: etapa das vogais usa pares (ai, oi)', async () => {
 
 // ---------- Trace a Letra ----------
 const tracados = JSON.parse(readFileSync(RAIZ + 'data/tracados.json', 'utf8'));
+// maiúscula + minúscula (deslocada 100 unidades), na ordem em que a criança traça
+const tracosDe = (l) => [...tracados.letras[l].tracos, ...tracados.letras[l].minuscula.tracos.map((t) => t.map(([x, y]) => [x + 100, y]))];
 async function arrastar(page, traco, { ate = traco.length } = {}) {
-  const box = await page.evaluate(() => { const b = document.querySelector('.j-trace-svg').getBoundingClientRect(); return { l: b.left, t: b.top, w: b.width, h: b.height }; });
-  const pos = ([x, y]) => [box.l + (x / 100) * box.w, box.t + (y / 100) * box.h];
+  const box = await page.evaluate(() => { const s = document.querySelector('.j-trace-svg'); const b = s.getBoundingClientRect(); return { l: b.left, t: b.top, w: b.width, h: b.height, vw: s.viewBox.baseVal.width }; });
+  const pos = ([x, y]) => [box.l + (x / box.vw) * box.w, box.t + (y / 100) * box.h];
   const [x0, y0] = pos(traco[0]);
   await page.mouse.move(x0, y0);
   await page.mouse.down();
@@ -323,7 +325,7 @@ await teste('trace: arrasta os traços de 2 letras e conclui', async () => {
   assert.equal(info.touch, 'none');
   for (const letra of ['m', 'a']) {
     await esperar(page, (l) => !document.querySelector('.j-trace-completa') && window.__d2.falas.some((f) => f[0] === 'frase:trace_instrucao' && f[1] === 'som:' + l), letra);
-    const tr = tracados.letras[letra].tracos;
+    const tr = tracosDe(letra);
     for (let t = 0; t < tr.length; t++) {
       if (letra === 'm' && t === 0) {
         // arrasta só metade, levanta o dedo: o progresso fica
@@ -352,13 +354,13 @@ await teste('trace: arrasta os traços de 2 letras e conclui', async () => {
   await ctx.close();
 });
 
-await teste('trace: todas as 17 letras são completáveis', async () => {
+await teste('trace: as 26 letras (maiúscula e minúscula) são completáveis', async () => {
   const todas = Object.keys(tracados.letras);
-  assert.equal(todas.length, 17);
+  assert.equal(todas.length, 26);
   for (const l of todas) {
     const { page, erros, ctx } = await novaPagina(`jogo=trace&foco=${l}&letras=${l}&liberadas=${l}`);
     await esperar(page, () => document.querySelector('.j-trace-svg'));
-    for (const t of tracados.letras[l].tracos) await arrastar(page, t);
+    for (const t of tracosDe(l)) await arrastar(page, t);
     await esperar(page, () => document.querySelector('.j-trace-completa'), null, 4000);
     assert.deepEqual(erros, [], l);
     await ctx.close();

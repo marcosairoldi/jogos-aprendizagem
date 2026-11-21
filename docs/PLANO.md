@@ -74,7 +74,7 @@ Ninguém edita arquivo de outro dono. Ninguém faz commit; o líder integra e co
 
 ### Figuras (ids fixos; arquivo `assets/svg/figuras/<id>.svg`, viewBox `0 0 200 200`)
 
-A: abelha, anel, aviao · E: elefante, ervilha, ema · I: ilha, iglu, ioio · O: ovo, olho, ovelha · U: uva, urso, unicornio · M: mapa, moto, mala · P: pato, pipa, pe · B: bola, bolo, bota · T: tatu, tomate, tapete · F: foca, fada, fita · V: vaca, vela, vaso · S: sapo, sino, suco · L: lua, lobo, lupa · N: navio, nuvem, nariz · D: dado, dedo, dente · C: copo, cubo, cama · G: gato, galo, gota
+A: abelha, anel, aviao · E: elefante, ervilha, ema · I: ilha, iglu, ioio · O: ovo, olho, ovelha · U: uva, urso, unicornio · M: mapa, moto, mala · P: pato, pipa, pe · B: bola, bolo, bota · T: tatu, tomate, tapete · F: foca, fada, fita · V: vaca, vela, vaso · S: sapo, sino, suco · L: lua, lobo, lupa · N: navio, nuvem, nariz · D: dado, dedo, dente · C: copo, cubo, cama · G: gato, galo, gota · J: janela, jacare, joaninha · Z: zebra, ziper · R: rato, roda, rosa
 
 ## 5. API de áudio (`js/audio.js`)
 
@@ -114,6 +114,7 @@ export default {
   letraFoco,                        // letra nova sendo aprendida, ou null
   letrasLiberadas,                  // todas as já liberadas
   estadoLetra(letra),               // 'nova' | 'pratica' | 'dominada'
+  modo,                             // opcional: 'livre' só quando o Trace abre pelo menu de brincadeiras (26 letras); ausente na lição
   registrar({ letra, acertouPrimeira, jogo }),
   aoTerminar({ jogo, itens })       // fim da rodada; a casca mostra recompensa
 }
@@ -139,3 +140,6 @@ Guarda: nome, guia, letras liberadas, histórico curto por letra (`[{ jogo, ok, 
 - Domínio de uma letra: 5 acertos de primeira nas últimas 6 tentativas, em 2 jogos diferentes, e tentativas em pelo menos 2 sessões (contadas em todo o histórico). Na prática, uma letra nova por dia de uso; a adulta pode liberar a próxima na área dos pais.
 - Junte os Sons não aparece na letra A (não há sílaba com uma letra só); a partir da E usa pares de vogais (AI, EI...) e, com consoantes, sílabas e palavras CV.CV.
 - Sílabas com E (PE, BE, TE...) soam igual ao nome da consoante; isso é correto para a sílaba e não é usado como som de letra.
+- Gravação da voz dentro do app (Área dos pais > Gravar minha voz): `js/gravacoes.js` guarda blobs no IndexedDB (`trilhaSons-voz`), só no aparelho. `js/audio.js` dá a elas prioridade máxima na resolução de um id (blob: URL), e `audio.gravacoesMudaram()` limpa os caches após salvar/apagar. A tela `js/telas/gravar.js` recorta o silêncio, normaliza, reamostra para 22050 Hz e guarda WAV mono 16 bits. "Reiniciar progresso" não apaga gravações. Limite: não há backup nem sincronização entre aparelhos; apagar os dados do navegador apaga as gravações.
+- Trace livre (menu de brincadeiras, `ctx.modo === 'livre'`): grade com as 26 letras A a Z (cartões "Aa"), inclusive as ainda não liberadas e as fora do currículo (H, K, Q, W, X, Y). Tocar uma letra com som no currículo toca `som:x`; letras sem som (h k q w x y) só recebem a frase de elogio, nunca nome nem voz sintética. 3 letras traçadas encerram a rodada; só letras de `letrasLiberadas` são registradas. Trilha, lição e outros jogos seguem só com o currículo.
+- Trace (lição e livre): traça-se o par maiúscula + minúscula lado a lado (viewBox 0 0 200 100; a minúscula é a do `data/tracados.json` deslocada 100 unidades). Formato: `letras.x.tracos` (maiúscula, 15..85) e `letras.x.minuscula.tracos` (altura-x 45, base 85, ascendente 15, descendente 97), gerado por `tests/d2-gerar-tracados.mjs`. Minúsculas no estilo da Andika (a e g de um andar).

@@ -33,7 +33,7 @@ export default {
 
     async function jogar(id) {
       const letras = app.progresso.escolherLetrasRodada(regras.itensPorRodada);
-      jogoAtual = executarJogo(app, palco, id, { letras, letraFoco: app.progresso.letraFoco() });
+      jogoAtual = executarJogo(app, palco, id, { letras, letraFoco: app.progresso.letraFoco(), modo: id === 'trace' ? 'livre' : undefined });
       const r = await jogoAtual.promessa;
       jogoAtual = null;
       if (!vivo) return;

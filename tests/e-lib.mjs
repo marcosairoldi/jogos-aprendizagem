@@ -513,14 +513,27 @@ export function criarJogador(page, esp, relator, { nome = '', errar = true, foto
     const cdp = await page.context().newCDPSession(page);
     // a instrução pode ter sido falada antes desta função começar: olha também os últimos eventos
     let marca = Math.max(0, (await esp.tamanho()) - 20);
-    const nLetras = 2;
+    // pelo menu de brincadeiras o Trace abre uma grade com as 26 letras (modo livre: 3 letras);
+    // na lição ele traça direto o par da letra foco e de uma revisão (2 letras)
+    await esperarAte(async () => page.locator('.j-cartao-letra, .j-trace-svg').count(), { msg: 'grade ou traçado' });
+    const livre = (await page.locator('.j-cartao-letra').count()) > 0;
+    const nLetras = livre ? 3 : 2;
+    const escolhas = ['m', 'h', 'a', 'p']; // inclui uma letra sem som no currículo (h)
     for (let n = 0; n < nLetras; n++) {
-      let alvo;
-      try { alvo = await esperarAlvo('trace_instrucao', marca); } catch (e) {
-        if (await page.locator('.recompensa').count()) break;
-        throw e;
+      let letra;
+      if (livre) {
+        await esperarAte(async () => page.locator('.j-cartao-letra').count(), { msg: 'grade de letras' });
+        if (n === 0) await verTela('jogoTraceGrade');
+        letra = escolhas[n];
+        await tocar(page, `.j-cartao-letra[data-letra="${letra}"]`);
+      } else {
+        let alvo;
+        try { alvo = await esperarAlvo('trace_instrucao', marca); } catch (e) {
+          if (await page.locator('.recompensa').count()) break;
+          throw e;
+        }
+        letra = alvo.id;
       }
-      const letra = alvo.id;
       await esperarAte(async () => page.locator('.j-trace-svg').count(), { msg: 'svg do trace' });
       if (n === 0) await verTela('jogoTrace');
       const tr = tracados.letras[letra];
@@ -530,7 +543,7 @@ export function criarJogador(page, esp, relator, { nome = '', errar = true, foto
         const s = document.querySelector('.j-trace-svg');
         const m = s.getScreenCTM();
         return tracos.map((t) => t.map(([x, y]) => ({ x: m.a * x + m.c * y + m.e, y: m.b * x + m.d * y + m.f })));
-      }, tr.tracos);
+      }, [...tr.tracos, ...tr.minuscula.tracos.map((t) => t.map(([x, y]) => [x + 100, y]))]);
       let tid = 1;
       for (const t of traços) {
         const toque = (p) => ({ x: p.x, y: p.y, id: tid, radiusX: 8, radiusY: 8, force: 1 });
@@ -543,7 +556,7 @@ export function criarJogador(page, esp, relator, { nome = '', errar = true, foto
         tid++;
         await dormir(120);
       }
-      const completou = await esperarAte(async () => page.evaluate(() => !!document.querySelector('.j-trace-completa')), { timeout: 5000, msg: 'letra completa' }).catch(() => false);
+      const completou = await esperarAte(async () => page.evaluate(() => !!document.querySelector('.j-trace-completa') || !document.querySelector('.j-trace-svg')), { timeout: 5000, msg: 'letra completa' }).catch(() => false);
       ok(!!completou, `trace: arrastar pelo caminho real completa a letra "${letra}"`);
       marca = await esp.tamanho();
       await esperarAte(async () => page.evaluate(() => !document.querySelector('.j-trace-completa')) || page.locator('.recompensa').count(), { timeout: 8000 }).catch(() => {});
@@ -585,6 +598,8 @@ export function textosPermitidos() {
   return s;
 }
 const PERMITIDOS = textosPermitidos();
+// no Trace livre as 26 letras (maiúscula e minúscula) são o próprio conteúdo da grade, não instrução
+for (const c of 'abcdefghijklmnopqrstuvwxyz') { PERMITIDOS.add(c); PERMITIDOS.add(c.toUpperCase()); }
 
 /** Confere uma auditoria de tela da criança. rotulo identifica tela+viewport nas mensagens. */
 export function verificarAuditoria(relator, rotulo, a, { exigirSemRolagem = true, textoLivre = false } = {}) {

@@ -6,7 +6,7 @@ import { el } from '../ui.js';
  * promessa resolve com { ok: true, res } quando o jogo chama aoTerminar,
  * ou { ok: false } se o jogo não existe, não está disponível ou falhou.
  */
-export function executarJogo(app, palco, id, { letras, letraFoco }) {
+export function executarJogo(app, palco, id, { letras, letraFoco, modo }) {
   let instancia = null;
   let terminou = false;
   let destruido = false;
@@ -36,6 +36,7 @@ export function executarJogo(app, palco, id, { letras, letraFoco }) {
       letras,
       letraFoco,
       letrasLiberadas: liberadas,
+      ...(modo ? { modo } : {}),
       estadoLetra: (l) => app.progresso.estadoLetra(l),
       registrar: (r) => app.progresso.registrar(r),
       aoTerminar: (res) => {

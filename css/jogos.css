@@ -111,12 +111,25 @@
 
 /* trace */
 .j-palco { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; }
-.j-trace-svg { width: 100%; max-height: 100%; aspect-ratio: 1 / 1; touch-action: none; overflow: visible; background: #fff; border-radius: 28px; border: 5px solid var(--j-rosa); box-shadow: 0 8px 0 var(--j-rosa); }
-.j-trace-faixa { fill: none; stroke: var(--j-rosa-claro); stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
-.j-trace-pontos { fill: none; stroke: var(--j-lilas); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .1 6; }
-.j-trace-rastro { fill: none; stroke: var(--j-rosa-forte); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 2px rgba(247, 131, 172, .9)); }
+.j-trace-svg { width: 100%; max-height: 100%; aspect-ratio: 2 / 1; touch-action: none; overflow: visible; background: #fff; border-radius: 28px; border: 5px solid var(--j-rosa); box-shadow: 0 8px 0 var(--j-rosa); }
+.j-trace-faixa { fill: none; stroke: var(--j-rosa-claro); stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
+.j-trace-pontos { fill: none; stroke: var(--j-lilas); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .1 6; }
+.j-trace-rastro { fill: none; stroke: var(--j-rosa-forte); stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 2px rgba(247, 131, 172, .9)); }
 .j-trace-estrela { fill: var(--j-dourado); stroke: var(--j-rosa-forte); stroke-width: 1.2; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; animation: j-pulsa 1s ease-in-out infinite; }
 .j-trace-seta { fill: var(--j-rosa-forte); opacity: .75; }
+/* trace: modo livre (26 letras, cartões com o par Aa) */
+.j-em-grade .j-topo { display: none; }
+.j-em-grade .j-palco { align-items: stretch; }
+.j-grade-letras { width: 100%; height: 100%; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(7, minmax(var(--j-alvo), 84px)); gap: 8px; align-content: center; }
+.j-celula { display: flex; align-items: center; justify-content: center; min-width: 0; }
+.j-grade-letras .j-ouvir { width: 100%; height: 100%; max-width: 84px; min-height: var(--j-alvo); padding: 12px; }
+.j-cartao-letra { width: 100%; height: 100%; min-width: 0; min-height: var(--j-alvo); padding: 2px; border-width: 4px; border-radius: 20px; box-shadow: 0 4px 0 var(--j-rosa); }
+.j-cartao-letra:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--j-rosa); }
+.j-cartao-letra.j-liberada { background: #fffbe3; box-shadow: 0 4px 0 var(--j-rosa), 0 0 10px 2px rgba(255, 212, 59, .55); }
+.j-par { display: flex; align-items: baseline; justify-content: center; gap: 2px; line-height: 1; font-family: var(--fonte, 'Andika', system-ui, sans-serif); font-weight: 700; }
+.j-mai { font-size: clamp(26px, min(9vw, 4.6vh), 40px); }
+.j-min { font-size: clamp(20px, min(7vw, 3.6vh), 32px); }
+.j-marca { position: absolute; top: -9px; right: -7px; width: 24px; height: 24px; fill: var(--j-dourado); stroke: var(--j-rosa-forte); stroke-width: 1.5; stroke-linejoin: round; pointer-events: none; }
 @keyframes j-pulsa { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
 .j-trace-completa .j-trace-rastro { animation: j-brilha 1s ease-in-out; }
 @keyframes j-brilha { 0%, 100% { stroke: var(--j-rosa-forte); } 50% { stroke: var(--j-dourado); stroke-width: 11; } }

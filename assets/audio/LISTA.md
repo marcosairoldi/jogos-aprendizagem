@@ -51,6 +51,9 @@ O jogo ensina o **som** da letra, **nunca o nome**. Diga "mmmm", não "eme"; "p"
 | `som_d.mp3` | D | língua atrás dos dentes de cima e solta um 'd' curtinho, com voz, sem vogal depois (não é 'dê'). Use 'dado'; evite 'di', que soa 'dji'. (som /d/) |
 | `som_c.mp3` | C | som /k/ lá no fundo da garganta, curtinho, sem voz e sem vogal depois (não é 'cê'). Só nas sílabas CA, CO, CU. (som /k/) |
 | `som_g.mp3` | G | som /g/ lá no fundo da garganta, com voz, curtinho, sem vogal depois (não é 'gê'). Só nas sílabas GA, GO, GU. (som /ɡ/) |
+| `som_j.mp3` | J | lábios para a frente, dentes quase juntos, e faz 'jjjj' contínuo, com voz, como no começo de 'janela'. Sem dizer 'jota' e sem vogal no fim. (som /ʒ/) |
+| `som_z.mp3` | Z | igual ao 'ssss', mas com voz: 'zzzz' contínuo, como uma abelha voando. Sem dizer 'zê'. (som /z/) |
+| `som_r.mp3` | R | é o R forte do começo de 'rato': um sopro rouco na garganta, contínuo, do jeito do seu sotaque. Sem vogal no fim e sem dizer 'erre'. Aqui só se ensina o R do começo da palavra; o R de 'caro' fica para depois. (som /h/) |
 
 ### 2. Sílabas
 
@@ -118,6 +121,21 @@ Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a"
 | `sil_eu.mp3` | êu (EU) |
 | `sil_oi.mp3` | oi (OI) |
 | `sil_ui.mp3` | ui (UI) |
+| `sil_ja.mp3` | já (JA) |
+| `sil_je.mp3` | jê (JE) |
+| `sil_ji.mp3` | jí (JI) |
+| `sil_jo.mp3` | jô (JO) |
+| `sil_ju.mp3` | jú (JU) |
+| `sil_za.mp3` | zá (ZA) |
+| `sil_ze.mp3` | zê (ZE) |
+| `sil_zi.mp3` | zí (ZI) |
+| `sil_zo.mp3` | zô (ZO) |
+| `sil_zu.mp3` | zú (ZU) |
+| `sil_ra.mp3` | rá (RA) |
+| `sil_re.mp3` | rê (RE) |
+| `sil_ri.mp3` | rí (RI) |
+| `sil_ro.mp3` | rô (RO) |
+| `sil_ru.mp3` | rú (RU) |
 
 ### 3. Palavras
 
@@ -174,6 +192,14 @@ Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a"
 | `pal_gato.mp3` | gato |
 | `pal_galo.mp3` | galo |
 | `pal_gota.mp3` | gota |
+| `pal_janela.mp3` | janela |
+| `pal_jacare.mp3` | jacaré |
+| `pal_joaninha.mp3` | joaninha |
+| `pal_zebra.mp3` | zebra |
+| `pal_ziper.mp3` | zíper |
+| `pal_rato.mp3` | rato |
+| `pal_roda.mp3` | roda |
+| `pal_rosa.mp3` | rosa |
 
 ### 4. Frases
 
@@ -199,6 +225,7 @@ Frases com `{nome}`: grave **sem o nome**, como mostrado.
 | `frase_junte_resultado.mp3` | Juntando, fica assim: |
 | `frase_trace_instrucao.mp3` | Passe o dedinho em cima dos pontinhos da letra. |
 | `frase_trace_completo.mp3` | Que traço lindo! |
+| `frase_trace_escolher.mp3` | Escolha uma letra para traçar! |
 | `frase_acerto_1.mp3` | Isso mesmo! |
 | `frase_acerto_2.mp3` | Muito bem! |
 | `frase_acerto_3.mp3` | Você acertou! |
