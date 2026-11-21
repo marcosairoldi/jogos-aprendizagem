@@ -130,3 +130,12 @@ Guarda: nome, guia, letras liberadas, histórico curto por letra (`[{ jogo, ok, 
 1. Paralelo: A, B1, B2, B3, C, D1, D2.
 2. Líder integra, gera lista de cache e LISTA.md, roda o jogo.
 3. E faz QA em 360x800 e offline; líder corrige e commita.
+
+## 9. Decisões tomadas na integração
+
+- Sons de letra de reserva gerados com espeak-ng (`ferramentas/gerar-sons.sh`), robóticos mas sem vogal agregada; a gravação da adulta tem prioridade.
+- Gravações novas em `assets/audio/gravacoes/` são encontradas sem rodar script: o service worker responde 204 quando o arquivo não existe (console limpo) e guarda o que existir para uso offline.
+- `data/*.json` e gravações usam rede primeiro e cache como reserva, para que edições feitas no GitHub cheguem ao celular; o resto é cache primeiro.
+- Domínio de uma letra: 5 acertos de primeira nas últimas 6 tentativas, em 2 jogos diferentes, e tentativas em pelo menos 2 sessões (contadas em todo o histórico). Na prática, uma letra nova por dia de uso; a adulta pode liberar a próxima na área dos pais.
+- Junte os Sons não aparece na letra A (não há sílaba com uma letra só); a partir da E usa pares de vogais (AI, EI...) e, com consoantes, sílabas e palavras CV.CV.
+- Sílabas com E (PE, BE, TE...) soam igual ao nome da consoante; isso é correto para a sílaba e não é usado como som de letra.

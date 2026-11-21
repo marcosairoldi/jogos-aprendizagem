@@ -71,12 +71,17 @@ export function quadro(app, raiz, { aoCasa, guia } = {}) {
   return { tela, barra, palco };
 }
 
-/** Grade da coleção: ícones de estrelas, conchas e chifres (sem números). */
-export function gradeColecao(rec, maximo = 24) {
+/**
+ * Grade da coleção: ícones de estrelas, conchas e chifres (sem números).
+ * `filas` é o total de filas de ícones (5 por fila) que cabem na tela sem rolar; dividido entre os tipos presentes.
+ */
+export function gradeColecao(rec, maximo = 24, filas = 6) {
   const grade = el('div', { classe: 'grade-colecao' });
   const tipos = [['estrela', 'estrela'], ['concha', 'concha'], ['chifre', 'chifre']];
+  const presentes = tipos.filter(([tipo]) => (rec[tipo] || 0) > 0).length || 1;
+  const porTipo = Math.min(maximo, Math.max(1, Math.floor(filas / presentes)) * 5);
   for (const [tipo, arq] of tipos) {
-    const n = Math.min(rec[tipo] || 0, maximo);
+    const n = Math.min(rec[tipo] || 0, porTipo);
     if (!n) continue;
     const linha = el('div', { classe: `linha-colecao ${tipo}` });
     for (let i = 0; i < n; i++) {

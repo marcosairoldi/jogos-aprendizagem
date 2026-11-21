@@ -102,7 +102,9 @@ export function estadoLetra(l) {
   const janela = h.slice(-regras.janelaDominio);
   const acertos = janela.filter((x) => x.ok).length;
   const jogos = new Set(janela.map((x) => x.jogo)).size;
-  const sessoes = new Set(janela.map((x) => x.sessao)).size;
+  // Sessões contadas em todo o histórico guardado: uma lição inteira de uma letra gera 6+ tentativas
+  // na mesma sessão, então contar só dentro da janela nunca chegaria a 2 sessões (a letra nunca seria dominada).
+  const sessoes = new Set(h.map((x) => x.sessao)).size;
   if (
     acertos >= regras.acertosParaDominar &&
     jogos >= regras.jogosDistintosParaDominar &&

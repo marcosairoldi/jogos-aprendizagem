@@ -6,7 +6,7 @@ export default {
     const guia = app.progresso.guia() || 'lumi';
     const fala = ['efeito:tchan', 'frase:despedida'];
     const festa = el('div', { classe: 'guia-festa' }, imagem(srcGuia(guia, true)));
-    const dia = el('div', { classe: 'colecao-cheia' }, gradeColecao(app.progresso.recompensasSessao(), 12));
+    const dia = el('div', { classe: 'colecao-cheia' }, gradeColecao(app.progresso.recompensasSessao(), 12, 3));
     const casa = botaoIcone({ src: 'assets/svg/ui/casa.svg', rotulo: 'Ir para o início', glifo: '⌂', classe: 'grande', aoClicar: () => app.ir('inicio') });
     const ouvir = botaoOuvir(() => app.audio.falar(fala));
     // botão discreto, para a adulta seguir brincando

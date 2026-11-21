@@ -57,7 +57,8 @@ function carregarVozes() {
   if (vozesProntas) return Promise.resolve();
   return new Promise((resolve) => {
     let feito = false;
-    const fim = () => { if (feito) return; feito = true; atualizarVoz(); resolve(); };
+    // Espera uma vez só: se o aparelho nunca preencher a lista, não atrasa cada fala seguinte.
+    const fim = () => { if (feito) return; feito = true; atualizarVoz(); vozesProntas = true; resolve(); };
     try { speechSynthesis.addEventListener('voiceschanged', fim, { once: true }); } catch (e) { /* ignora */ }
     setTimeout(fim, 1200);
   });
