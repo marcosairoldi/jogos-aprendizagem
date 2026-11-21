@@ -1,0 +1,1412 @@
+{
+  "versao": 1,
+  "regras": {
+    "itensPorRodada": 5,
+    "janelaDominio": 6,
+    "acertosParaDominar": 5,
+    "jogosDistintosParaDominar": 2,
+    "sessoesParaDominar": 2,
+    "proporcaoRevisao": 0.3,
+    "minutosSessao": 8,
+    "opcoesMin": 2,
+    "opcoesMax": 4
+  },
+  "ordem": [
+    "a",
+    "e",
+    "i",
+    "o",
+    "u",
+    "m",
+    "p",
+    "b",
+    "t",
+    "f",
+    "v",
+    "s",
+    "l",
+    "n",
+    "d",
+    "c",
+    "g"
+  ],
+  "etapas": [
+    {
+      "id": "vogais",
+      "letras": [
+        "a",
+        "e",
+        "i",
+        "o",
+        "u"
+      ]
+    },
+    {
+      "id": "mpbt",
+      "letras": [
+        "m",
+        "p",
+        "b",
+        "t"
+      ]
+    },
+    {
+      "id": "fvs",
+      "letras": [
+        "f",
+        "v",
+        "s"
+      ]
+    },
+    {
+      "id": "ln",
+      "letras": [
+        "l",
+        "n"
+      ]
+    },
+    {
+      "id": "dcg",
+      "letras": [
+        "d",
+        "c",
+        "g"
+      ]
+    }
+  ],
+  "letras": {
+    "a": {
+      "maiuscula": "A",
+      "tipo": "vogal",
+      "fonema": "/a/",
+      "continuo": true,
+      "audio": "som_a",
+      "tts": "á",
+      "palavras": [
+        "abelha",
+        "anel",
+        "aviao"
+      ],
+      "dica": "Para a adulta: boca bem aberta, língua baixa, o som 'á' de 'abelha'."
+    },
+    "e": {
+      "maiuscula": "E",
+      "tipo": "vogal",
+      "fonema": "/e/",
+      "continuo": true,
+      "audio": "som_e",
+      "tts": "ê",
+      "palavras": [
+        "elefante",
+        "ervilha",
+        "ema"
+      ],
+      "dica": "Para a adulta: som fechado 'ê' de 'elefante'; sorriso leve, língua um pouco alta. Não é o 'é' aberto."
+    },
+    "i": {
+      "maiuscula": "I",
+      "tipo": "vogal",
+      "fonema": "/i/",
+      "continuo": true,
+      "audio": "som_i",
+      "tts": "í",
+      "palavras": [
+        "ilha",
+        "iglu",
+        "ioio"
+      ],
+      "dica": "Para a adulta: sorriso largo, lábios esticados, som curto e agudo 'i' de 'ilha'."
+    },
+    "o": {
+      "maiuscula": "O",
+      "tipo": "vogal",
+      "fonema": "/o/",
+      "continuo": true,
+      "audio": "som_o",
+      "tts": "ô",
+      "palavras": [
+        "ovo",
+        "olho",
+        "ovelha"
+      ],
+      "dica": "Para a adulta: lábios em 'o' redondo, som fechado 'ô' de 'ovo'. Não é o 'ó' aberto."
+    },
+    "u": {
+      "maiuscula": "U",
+      "tipo": "vogal",
+      "fonema": "/u/",
+      "continuo": true,
+      "audio": "som_u",
+      "tts": "ú",
+      "palavras": [
+        "uva",
+        "urso",
+        "unicornio"
+      ],
+      "dica": "Para a adulta: lábios bem fechadinhos e para frente, como um beijinho: 'u' de 'uva'."
+    },
+    "m": {
+      "maiuscula": "M",
+      "tipo": "consoante",
+      "fonema": "/m/",
+      "continuo": true,
+      "audio": "som_m",
+      "tts": "mmmmm",
+      "palavras": [
+        "mapa",
+        "moto",
+        "mala"
+      ],
+      "dica": "Para a adulta: lábios fechados, som 'mmmm' saindo pelo nariz, contínuo, sem dizer 'mê'."
+    },
+    "p": {
+      "maiuscula": "P",
+      "tipo": "consoante",
+      "fonema": "/p/",
+      "continuo": false,
+      "audio": "som_p",
+      "tts": null,
+      "palavras": [
+        "pato",
+        "pipa",
+        "pe"
+      ],
+      "dica": "Para a adulta: lábios fechados e um sopro rápido, só 'p', sem voz e sem vogal depois (não é 'pê'). Mão na frente da boca sente o ar."
+    },
+    "b": {
+      "maiuscula": "B",
+      "tipo": "consoante",
+      "fonema": "/b/",
+      "continuo": false,
+      "audio": "som_b",
+      "tts": null,
+      "palavras": [
+        "bola",
+        "bolo",
+        "bota"
+      ],
+      "dica": "Para a adulta: lábios fechados, solta um 'b' curtinho com a voz, sem vogal depois (não é 'bê'). Mão na garganta sente vibrar."
+    },
+    "t": {
+      "maiuscula": "T",
+      "tipo": "consoante",
+      "fonema": "/t/",
+      "continuo": false,
+      "audio": "som_t",
+      "tts": null,
+      "palavras": [
+        "tatu",
+        "tomate",
+        "tapete"
+      ],
+      "dica": "Para a adulta: ponta da língua atrás dos dentes de cima e solta um 't' curtinho, sem voz e sem vogal depois (não é 'tê')."
+    },
+    "f": {
+      "maiuscula": "F",
+      "tipo": "consoante",
+      "fonema": "/f/",
+      "continuo": true,
+      "audio": "som_f",
+      "tts": "fffff",
+      "palavras": [
+        "foca",
+        "fada",
+        "fita"
+      ],
+      "dica": "Para a adulta: dentes de cima no lábio de baixo e sopra: 'ffff' contínuo, sem voz, sem dizer 'efe'."
+    },
+    "v": {
+      "maiuscula": "V",
+      "tipo": "consoante",
+      "fonema": "/v/",
+      "continuo": true,
+      "audio": "som_v",
+      "tts": "vvvvv",
+      "palavras": [
+        "vaca",
+        "vela",
+        "vaso"
+      ],
+      "dica": "Para a adulta: igual ao 'f' (dentes no lábio de baixo), mas com voz, fazendo cócegas: 'vvvv', sem dizer 'vê'."
+    },
+    "s": {
+      "maiuscula": "S",
+      "tipo": "consoante",
+      "fonema": "/s/",
+      "continuo": true,
+      "audio": "som_s",
+      "tts": "sssss",
+      "palavras": [
+        "sapo",
+        "sino",
+        "suco"
+      ],
+      "dica": "Para a adulta: dentes quase fechados e sopro fino como cobrinha: 'ssss', sem voz, sem dizer 'esse'."
+    },
+    "l": {
+      "maiuscula": "L",
+      "tipo": "consoante",
+      "fonema": "/l/",
+      "continuo": true,
+      "audio": "som_l",
+      "tts": "lllll",
+      "palavras": [
+        "lua",
+        "lobo",
+        "lupa"
+      ],
+      "dica": "Para a adulta: ponta da língua tocando atrás dos dentes de cima, voz contínua: 'llll', sem dizer 'ele'."
+    },
+    "n": {
+      "maiuscula": "N",
+      "tipo": "consoante",
+      "fonema": "/n/",
+      "continuo": true,
+      "audio": "som_n",
+      "tts": "nnnnn",
+      "palavras": [
+        "navio",
+        "nuvem",
+        "nariz"
+      ],
+      "dica": "Para a adulta: língua atrás dos dentes de cima, boca aberta e som saindo pelo nariz: 'nnnn', sem dizer 'ene'."
+    },
+    "d": {
+      "maiuscula": "D",
+      "tipo": "consoante",
+      "fonema": "/d/",
+      "continuo": false,
+      "audio": "som_d",
+      "tts": null,
+      "palavras": [
+        "dado",
+        "dedo",
+        "dente"
+      ],
+      "dica": "Para a adulta: língua atrás dos dentes de cima e solta um 'd' curtinho, com voz, sem vogal depois (não é 'dê'). Use 'dado'; evite 'di', que soa 'dji'."
+    },
+    "c": {
+      "maiuscula": "C",
+      "tipo": "consoante",
+      "fonema": "/k/",
+      "continuo": false,
+      "audio": "som_c",
+      "tts": null,
+      "palavras": [
+        "copo",
+        "cubo",
+        "cama"
+      ],
+      "dica": "Para a adulta: som /k/ lá no fundo da garganta, curtinho, sem voz e sem vogal depois (não é 'cê'). Só nas sílabas CA, CO, CU."
+    },
+    "g": {
+      "maiuscula": "G",
+      "tipo": "consoante",
+      "fonema": "/ɡ/",
+      "continuo": false,
+      "audio": "som_g",
+      "tts": null,
+      "palavras": [
+        "gato",
+        "galo",
+        "gota"
+      ],
+      "dica": "Para a adulta: som /g/ lá no fundo da garganta, com voz, curtinho, sem vogal depois (não é 'gê'). Só nas sílabas GA, GO, GU."
+    }
+  },
+  "silabas": {
+    "ma": {
+      "texto": "MA",
+      "letras": [
+        "m",
+        "a"
+      ],
+      "audio": "sil_ma",
+      "tts": "má"
+    },
+    "me": {
+      "texto": "ME",
+      "letras": [
+        "m",
+        "e"
+      ],
+      "audio": "sil_me",
+      "tts": "mê"
+    },
+    "mi": {
+      "texto": "MI",
+      "letras": [
+        "m",
+        "i"
+      ],
+      "audio": "sil_mi",
+      "tts": "mí"
+    },
+    "mo": {
+      "texto": "MO",
+      "letras": [
+        "m",
+        "o"
+      ],
+      "audio": "sil_mo",
+      "tts": "mô"
+    },
+    "mu": {
+      "texto": "MU",
+      "letras": [
+        "m",
+        "u"
+      ],
+      "audio": "sil_mu",
+      "tts": "mú"
+    },
+    "pa": {
+      "texto": "PA",
+      "letras": [
+        "p",
+        "a"
+      ],
+      "audio": "sil_pa",
+      "tts": "pá"
+    },
+    "pe": {
+      "texto": "PE",
+      "letras": [
+        "p",
+        "e"
+      ],
+      "audio": "sil_pe",
+      "tts": "pê"
+    },
+    "pi": {
+      "texto": "PI",
+      "letras": [
+        "p",
+        "i"
+      ],
+      "audio": "sil_pi",
+      "tts": "pí"
+    },
+    "po": {
+      "texto": "PO",
+      "letras": [
+        "p",
+        "o"
+      ],
+      "audio": "sil_po",
+      "tts": "pô"
+    },
+    "pu": {
+      "texto": "PU",
+      "letras": [
+        "p",
+        "u"
+      ],
+      "audio": "sil_pu",
+      "tts": "pú"
+    },
+    "ba": {
+      "texto": "BA",
+      "letras": [
+        "b",
+        "a"
+      ],
+      "audio": "sil_ba",
+      "tts": "bá"
+    },
+    "be": {
+      "texto": "BE",
+      "letras": [
+        "b",
+        "e"
+      ],
+      "audio": "sil_be",
+      "tts": "bê"
+    },
+    "bi": {
+      "texto": "BI",
+      "letras": [
+        "b",
+        "i"
+      ],
+      "audio": "sil_bi",
+      "tts": "bí"
+    },
+    "bo": {
+      "texto": "BO",
+      "letras": [
+        "b",
+        "o"
+      ],
+      "audio": "sil_bo",
+      "tts": "bô"
+    },
+    "bu": {
+      "texto": "BU",
+      "letras": [
+        "b",
+        "u"
+      ],
+      "audio": "sil_bu",
+      "tts": "bú"
+    },
+    "ta": {
+      "texto": "TA",
+      "letras": [
+        "t",
+        "a"
+      ],
+      "audio": "sil_ta",
+      "tts": "tá"
+    },
+    "te": {
+      "texto": "TE",
+      "letras": [
+        "t",
+        "e"
+      ],
+      "audio": "sil_te",
+      "tts": "tê"
+    },
+    "to": {
+      "texto": "TO",
+      "letras": [
+        "t",
+        "o"
+      ],
+      "audio": "sil_to",
+      "tts": "tô"
+    },
+    "tu": {
+      "texto": "TU",
+      "letras": [
+        "t",
+        "u"
+      ],
+      "audio": "sil_tu",
+      "tts": "tú"
+    },
+    "fa": {
+      "texto": "FA",
+      "letras": [
+        "f",
+        "a"
+      ],
+      "audio": "sil_fa",
+      "tts": "fá"
+    },
+    "fe": {
+      "texto": "FE",
+      "letras": [
+        "f",
+        "e"
+      ],
+      "audio": "sil_fe",
+      "tts": "fê"
+    },
+    "fi": {
+      "texto": "FI",
+      "letras": [
+        "f",
+        "i"
+      ],
+      "audio": "sil_fi",
+      "tts": "fí"
+    },
+    "fo": {
+      "texto": "FO",
+      "letras": [
+        "f",
+        "o"
+      ],
+      "audio": "sil_fo",
+      "tts": "fô"
+    },
+    "fu": {
+      "texto": "FU",
+      "letras": [
+        "f",
+        "u"
+      ],
+      "audio": "sil_fu",
+      "tts": "fú"
+    },
+    "va": {
+      "texto": "VA",
+      "letras": [
+        "v",
+        "a"
+      ],
+      "audio": "sil_va",
+      "tts": "vá"
+    },
+    "ve": {
+      "texto": "VE",
+      "letras": [
+        "v",
+        "e"
+      ],
+      "audio": "sil_ve",
+      "tts": "vê"
+    },
+    "vi": {
+      "texto": "VI",
+      "letras": [
+        "v",
+        "i"
+      ],
+      "audio": "sil_vi",
+      "tts": "ví"
+    },
+    "vo": {
+      "texto": "VO",
+      "letras": [
+        "v",
+        "o"
+      ],
+      "audio": "sil_vo",
+      "tts": "vô"
+    },
+    "vu": {
+      "texto": "VU",
+      "letras": [
+        "v",
+        "u"
+      ],
+      "audio": "sil_vu",
+      "tts": "vú"
+    },
+    "sa": {
+      "texto": "SA",
+      "letras": [
+        "s",
+        "a"
+      ],
+      "audio": "sil_sa",
+      "tts": "sá"
+    },
+    "se": {
+      "texto": "SE",
+      "letras": [
+        "s",
+        "e"
+      ],
+      "audio": "sil_se",
+      "tts": "sê"
+    },
+    "si": {
+      "texto": "SI",
+      "letras": [
+        "s",
+        "i"
+      ],
+      "audio": "sil_si",
+      "tts": "sí"
+    },
+    "so": {
+      "texto": "SO",
+      "letras": [
+        "s",
+        "o"
+      ],
+      "audio": "sil_so",
+      "tts": "sô"
+    },
+    "su": {
+      "texto": "SU",
+      "letras": [
+        "s",
+        "u"
+      ],
+      "audio": "sil_su",
+      "tts": "sú"
+    },
+    "la": {
+      "texto": "LA",
+      "letras": [
+        "l",
+        "a"
+      ],
+      "audio": "sil_la",
+      "tts": "lá"
+    },
+    "le": {
+      "texto": "LE",
+      "letras": [
+        "l",
+        "e"
+      ],
+      "audio": "sil_le",
+      "tts": "lê"
+    },
+    "li": {
+      "texto": "LI",
+      "letras": [
+        "l",
+        "i"
+      ],
+      "audio": "sil_li",
+      "tts": "lí"
+    },
+    "lo": {
+      "texto": "LO",
+      "letras": [
+        "l",
+        "o"
+      ],
+      "audio": "sil_lo",
+      "tts": "lô"
+    },
+    "lu": {
+      "texto": "LU",
+      "letras": [
+        "l",
+        "u"
+      ],
+      "audio": "sil_lu",
+      "tts": "lú"
+    },
+    "na": {
+      "texto": "NA",
+      "letras": [
+        "n",
+        "a"
+      ],
+      "audio": "sil_na",
+      "tts": "ná"
+    },
+    "ne": {
+      "texto": "NE",
+      "letras": [
+        "n",
+        "e"
+      ],
+      "audio": "sil_ne",
+      "tts": "nê"
+    },
+    "ni": {
+      "texto": "NI",
+      "letras": [
+        "n",
+        "i"
+      ],
+      "audio": "sil_ni",
+      "tts": "ní"
+    },
+    "no": {
+      "texto": "NO",
+      "letras": [
+        "n",
+        "o"
+      ],
+      "audio": "sil_no",
+      "tts": "nô"
+    },
+    "nu": {
+      "texto": "NU",
+      "letras": [
+        "n",
+        "u"
+      ],
+      "audio": "sil_nu",
+      "tts": "nú"
+    },
+    "da": {
+      "texto": "DA",
+      "letras": [
+        "d",
+        "a"
+      ],
+      "audio": "sil_da",
+      "tts": "dá"
+    },
+    "de": {
+      "texto": "DE",
+      "letras": [
+        "d",
+        "e"
+      ],
+      "audio": "sil_de",
+      "tts": "dê"
+    },
+    "do": {
+      "texto": "DO",
+      "letras": [
+        "d",
+        "o"
+      ],
+      "audio": "sil_do",
+      "tts": "dô"
+    },
+    "du": {
+      "texto": "DU",
+      "letras": [
+        "d",
+        "u"
+      ],
+      "audio": "sil_du",
+      "tts": "dú"
+    },
+    "ca": {
+      "texto": "CA",
+      "letras": [
+        "c",
+        "a"
+      ],
+      "audio": "sil_ca",
+      "tts": "cá"
+    },
+    "co": {
+      "texto": "CO",
+      "letras": [
+        "c",
+        "o"
+      ],
+      "audio": "sil_co",
+      "tts": "cô"
+    },
+    "cu": {
+      "texto": "CU",
+      "letras": [
+        "c",
+        "u"
+      ],
+      "audio": "sil_cu",
+      "tts": "cú"
+    },
+    "ga": {
+      "texto": "GA",
+      "letras": [
+        "g",
+        "a"
+      ],
+      "audio": "sil_ga",
+      "tts": "gá"
+    },
+    "go": {
+      "texto": "GO",
+      "letras": [
+        "g",
+        "o"
+      ],
+      "audio": "sil_go",
+      "tts": "gô"
+    },
+    "gu": {
+      "texto": "GU",
+      "letras": [
+        "g",
+        "u"
+      ],
+      "audio": "sil_gu",
+      "tts": "gú"
+    },
+    "ai": {
+      "texto": "AI",
+      "letras": [
+        "a",
+        "i"
+      ],
+      "audio": "sil_ai",
+      "tts": "ai"
+    },
+    "au": {
+      "texto": "AU",
+      "letras": [
+        "a",
+        "u"
+      ],
+      "audio": "sil_au",
+      "tts": "au"
+    },
+    "ei": {
+      "texto": "EI",
+      "letras": [
+        "e",
+        "i"
+      ],
+      "audio": "sil_ei",
+      "tts": "êi"
+    },
+    "eu": {
+      "texto": "EU",
+      "letras": [
+        "e",
+        "u"
+      ],
+      "audio": "sil_eu",
+      "tts": "êu"
+    },
+    "oi": {
+      "texto": "OI",
+      "letras": [
+        "o",
+        "i"
+      ],
+      "audio": "sil_oi",
+      "tts": "oi"
+    },
+    "ui": {
+      "texto": "UI",
+      "letras": [
+        "u",
+        "i"
+      ],
+      "audio": "sil_ui",
+      "tts": "ui"
+    }
+  },
+  "palavras": {
+    "abelha": {
+      "texto": "ABELHA",
+      "silabas": [],
+      "inicial": "a",
+      "figura": "assets/svg/figuras/abelha.svg",
+      "audio": "pal_abelha",
+      "tts": "abelha",
+      "juntar": false
+    },
+    "anel": {
+      "texto": "ANEL",
+      "silabas": [],
+      "inicial": "a",
+      "figura": "assets/svg/figuras/anel.svg",
+      "audio": "pal_anel",
+      "tts": "anel",
+      "juntar": false
+    },
+    "aviao": {
+      "texto": "AVIÃO",
+      "silabas": [],
+      "inicial": "a",
+      "figura": "assets/svg/figuras/aviao.svg",
+      "audio": "pal_aviao",
+      "tts": "avião",
+      "juntar": false
+    },
+    "elefante": {
+      "texto": "ELEFANTE",
+      "silabas": [],
+      "inicial": "e",
+      "figura": "assets/svg/figuras/elefante.svg",
+      "audio": "pal_elefante",
+      "tts": "elefante",
+      "juntar": false
+    },
+    "ervilha": {
+      "texto": "ERVILHA",
+      "silabas": [],
+      "inicial": "e",
+      "figura": "assets/svg/figuras/ervilha.svg",
+      "audio": "pal_ervilha",
+      "tts": "ervilha",
+      "juntar": false
+    },
+    "ema": {
+      "texto": "EMA",
+      "silabas": [],
+      "inicial": "e",
+      "figura": "assets/svg/figuras/ema.svg",
+      "audio": "pal_ema",
+      "tts": "ema",
+      "juntar": false
+    },
+    "ilha": {
+      "texto": "ILHA",
+      "silabas": [],
+      "inicial": "i",
+      "figura": "assets/svg/figuras/ilha.svg",
+      "audio": "pal_ilha",
+      "tts": "ilha",
+      "juntar": false
+    },
+    "iglu": {
+      "texto": "IGLU",
+      "silabas": [],
+      "inicial": "i",
+      "figura": "assets/svg/figuras/iglu.svg",
+      "audio": "pal_iglu",
+      "tts": "iglu",
+      "juntar": false
+    },
+    "ioio": {
+      "texto": "IOIÔ",
+      "silabas": [],
+      "inicial": "i",
+      "figura": "assets/svg/figuras/ioio.svg",
+      "audio": "pal_ioio",
+      "tts": "iôiô",
+      "juntar": false
+    },
+    "ovo": {
+      "texto": "OVO",
+      "silabas": [],
+      "inicial": "o",
+      "figura": "assets/svg/figuras/ovo.svg",
+      "audio": "pal_ovo",
+      "tts": "ôvo",
+      "juntar": false
+    },
+    "olho": {
+      "texto": "OLHO",
+      "silabas": [],
+      "inicial": "o",
+      "figura": "assets/svg/figuras/olho.svg",
+      "audio": "pal_olho",
+      "tts": "ôlho",
+      "juntar": false
+    },
+    "ovelha": {
+      "texto": "OVELHA",
+      "silabas": [],
+      "inicial": "o",
+      "figura": "assets/svg/figuras/ovelha.svg",
+      "audio": "pal_ovelha",
+      "tts": "ovelha",
+      "juntar": false
+    },
+    "uva": {
+      "texto": "UVA",
+      "silabas": [],
+      "inicial": "u",
+      "figura": "assets/svg/figuras/uva.svg",
+      "audio": "pal_uva",
+      "tts": "uva",
+      "juntar": false
+    },
+    "urso": {
+      "texto": "URSO",
+      "silabas": [],
+      "inicial": "u",
+      "figura": "assets/svg/figuras/urso.svg",
+      "audio": "pal_urso",
+      "tts": "urso",
+      "juntar": false
+    },
+    "unicornio": {
+      "texto": "UNICÓRNIO",
+      "silabas": [],
+      "inicial": "u",
+      "figura": "assets/svg/figuras/unicornio.svg",
+      "audio": "pal_unicornio",
+      "tts": "unicórnio",
+      "juntar": false
+    },
+    "mapa": {
+      "texto": "MAPA",
+      "silabas": [
+        "ma",
+        "pa"
+      ],
+      "inicial": "m",
+      "figura": "assets/svg/figuras/mapa.svg",
+      "audio": "pal_mapa",
+      "tts": "mapa",
+      "juntar": true
+    },
+    "moto": {
+      "texto": "MOTO",
+      "silabas": [
+        "mo",
+        "to"
+      ],
+      "inicial": "m",
+      "figura": "assets/svg/figuras/moto.svg",
+      "audio": "pal_moto",
+      "tts": "moto",
+      "juntar": true
+    },
+    "mala": {
+      "texto": "MALA",
+      "silabas": [
+        "ma",
+        "la"
+      ],
+      "inicial": "m",
+      "figura": "assets/svg/figuras/mala.svg",
+      "audio": "pal_mala",
+      "tts": "mala",
+      "juntar": true
+    },
+    "pato": {
+      "texto": "PATO",
+      "silabas": [
+        "pa",
+        "to"
+      ],
+      "inicial": "p",
+      "figura": "assets/svg/figuras/pato.svg",
+      "audio": "pal_pato",
+      "tts": "pato",
+      "juntar": true
+    },
+    "pipa": {
+      "texto": "PIPA",
+      "silabas": [
+        "pi",
+        "pa"
+      ],
+      "inicial": "p",
+      "figura": "assets/svg/figuras/pipa.svg",
+      "audio": "pal_pipa",
+      "tts": "pipa",
+      "juntar": true
+    },
+    "pe": {
+      "texto": "PÉ",
+      "silabas": [],
+      "inicial": "p",
+      "figura": "assets/svg/figuras/pe.svg",
+      "audio": "pal_pe",
+      "tts": "pé",
+      "juntar": false
+    },
+    "bola": {
+      "texto": "BOLA",
+      "silabas": [
+        "bo",
+        "la"
+      ],
+      "inicial": "b",
+      "figura": "assets/svg/figuras/bola.svg",
+      "audio": "pal_bola",
+      "tts": "bola",
+      "juntar": true
+    },
+    "bolo": {
+      "texto": "BOLO",
+      "silabas": [
+        "bo",
+        "lo"
+      ],
+      "inicial": "b",
+      "figura": "assets/svg/figuras/bolo.svg",
+      "audio": "pal_bolo",
+      "tts": "bolo",
+      "juntar": true
+    },
+    "bota": {
+      "texto": "BOTA",
+      "silabas": [
+        "bo",
+        "ta"
+      ],
+      "inicial": "b",
+      "figura": "assets/svg/figuras/bota.svg",
+      "audio": "pal_bota",
+      "tts": "bota",
+      "juntar": true
+    },
+    "tatu": {
+      "texto": "TATU",
+      "silabas": [
+        "ta",
+        "tu"
+      ],
+      "inicial": "t",
+      "figura": "assets/svg/figuras/tatu.svg",
+      "audio": "pal_tatu",
+      "tts": "tatu",
+      "juntar": true
+    },
+    "tomate": {
+      "texto": "TOMATE",
+      "silabas": [
+        "to",
+        "ma",
+        "te"
+      ],
+      "inicial": "t",
+      "figura": "assets/svg/figuras/tomate.svg",
+      "audio": "pal_tomate",
+      "tts": "tomate",
+      "juntar": false
+    },
+    "tapete": {
+      "texto": "TAPETE",
+      "silabas": [
+        "ta",
+        "pe",
+        "te"
+      ],
+      "inicial": "t",
+      "figura": "assets/svg/figuras/tapete.svg",
+      "audio": "pal_tapete",
+      "tts": "tapete",
+      "juntar": false
+    },
+    "foca": {
+      "texto": "FOCA",
+      "silabas": [
+        "fo",
+        "ca"
+      ],
+      "inicial": "f",
+      "figura": "assets/svg/figuras/foca.svg",
+      "audio": "pal_foca",
+      "tts": "foca",
+      "juntar": true
+    },
+    "fada": {
+      "texto": "FADA",
+      "silabas": [
+        "fa",
+        "da"
+      ],
+      "inicial": "f",
+      "figura": "assets/svg/figuras/fada.svg",
+      "audio": "pal_fada",
+      "tts": "fada",
+      "juntar": true
+    },
+    "fita": {
+      "texto": "FITA",
+      "silabas": [
+        "fi",
+        "ta"
+      ],
+      "inicial": "f",
+      "figura": "assets/svg/figuras/fita.svg",
+      "audio": "pal_fita",
+      "tts": "fita",
+      "juntar": true
+    },
+    "vaca": {
+      "texto": "VACA",
+      "silabas": [
+        "va",
+        "ca"
+      ],
+      "inicial": "v",
+      "figura": "assets/svg/figuras/vaca.svg",
+      "audio": "pal_vaca",
+      "tts": "vaca",
+      "juntar": true
+    },
+    "vela": {
+      "texto": "VELA",
+      "silabas": [
+        "ve",
+        "la"
+      ],
+      "inicial": "v",
+      "figura": "assets/svg/figuras/vela.svg",
+      "audio": "pal_vela",
+      "tts": "vela",
+      "juntar": true
+    },
+    "vaso": {
+      "texto": "VASO",
+      "silabas": [
+        "va",
+        "so"
+      ],
+      "inicial": "v",
+      "figura": "assets/svg/figuras/vaso.svg",
+      "audio": "pal_vaso",
+      "tts": "vaso",
+      "juntar": false
+    },
+    "sapo": {
+      "texto": "SAPO",
+      "silabas": [
+        "sa",
+        "po"
+      ],
+      "inicial": "s",
+      "figura": "assets/svg/figuras/sapo.svg",
+      "audio": "pal_sapo",
+      "tts": "sapo",
+      "juntar": true
+    },
+    "sino": {
+      "texto": "SINO",
+      "silabas": [
+        "si",
+        "no"
+      ],
+      "inicial": "s",
+      "figura": "assets/svg/figuras/sino.svg",
+      "audio": "pal_sino",
+      "tts": "sino",
+      "juntar": true
+    },
+    "suco": {
+      "texto": "SUCO",
+      "silabas": [
+        "su",
+        "co"
+      ],
+      "inicial": "s",
+      "figura": "assets/svg/figuras/suco.svg",
+      "audio": "pal_suco",
+      "tts": "suco",
+      "juntar": true
+    },
+    "lua": {
+      "texto": "LUA",
+      "silabas": [],
+      "inicial": "l",
+      "figura": "assets/svg/figuras/lua.svg",
+      "audio": "pal_lua",
+      "tts": "lua",
+      "juntar": false
+    },
+    "lobo": {
+      "texto": "LOBO",
+      "silabas": [
+        "lo",
+        "bo"
+      ],
+      "inicial": "l",
+      "figura": "assets/svg/figuras/lobo.svg",
+      "audio": "pal_lobo",
+      "tts": "lobo",
+      "juntar": true
+    },
+    "lupa": {
+      "texto": "LUPA",
+      "silabas": [
+        "lu",
+        "pa"
+      ],
+      "inicial": "l",
+      "figura": "assets/svg/figuras/lupa.svg",
+      "audio": "pal_lupa",
+      "tts": "lupa",
+      "juntar": true
+    },
+    "navio": {
+      "texto": "NAVIO",
+      "silabas": [],
+      "inicial": "n",
+      "figura": "assets/svg/figuras/navio.svg",
+      "audio": "pal_navio",
+      "tts": "navio",
+      "juntar": false
+    },
+    "nuvem": {
+      "texto": "NUVEM",
+      "silabas": [],
+      "inicial": "n",
+      "figura": "assets/svg/figuras/nuvem.svg",
+      "audio": "pal_nuvem",
+      "tts": "nuvem",
+      "juntar": false
+    },
+    "nariz": {
+      "texto": "NARIZ",
+      "silabas": [],
+      "inicial": "n",
+      "figura": "assets/svg/figuras/nariz.svg",
+      "audio": "pal_nariz",
+      "tts": "nariz",
+      "juntar": false
+    },
+    "dado": {
+      "texto": "DADO",
+      "silabas": [
+        "da",
+        "do"
+      ],
+      "inicial": "d",
+      "figura": "assets/svg/figuras/dado.svg",
+      "audio": "pal_dado",
+      "tts": "dado",
+      "juntar": true
+    },
+    "dedo": {
+      "texto": "DEDO",
+      "silabas": [
+        "de",
+        "do"
+      ],
+      "inicial": "d",
+      "figura": "assets/svg/figuras/dedo.svg",
+      "audio": "pal_dedo",
+      "tts": "dedo",
+      "juntar": true
+    },
+    "dente": {
+      "texto": "DENTE",
+      "silabas": [],
+      "inicial": "d",
+      "figura": "assets/svg/figuras/dente.svg",
+      "audio": "pal_dente",
+      "tts": "dente",
+      "juntar": false
+    },
+    "copo": {
+      "texto": "COPO",
+      "silabas": [
+        "co",
+        "po"
+      ],
+      "inicial": "c",
+      "figura": "assets/svg/figuras/copo.svg",
+      "audio": "pal_copo",
+      "tts": "copo",
+      "juntar": true
+    },
+    "cubo": {
+      "texto": "CUBO",
+      "silabas": [
+        "cu",
+        "bo"
+      ],
+      "inicial": "c",
+      "figura": "assets/svg/figuras/cubo.svg",
+      "audio": "pal_cubo",
+      "tts": "cubo",
+      "juntar": true
+    },
+    "cama": {
+      "texto": "CAMA",
+      "silabas": [
+        "ca",
+        "ma"
+      ],
+      "inicial": "c",
+      "figura": "assets/svg/figuras/cama.svg",
+      "audio": "pal_cama",
+      "tts": "cama",
+      "juntar": true
+    },
+    "gato": {
+      "texto": "GATO",
+      "silabas": [
+        "ga",
+        "to"
+      ],
+      "inicial": "g",
+      "figura": "assets/svg/figuras/gato.svg",
+      "audio": "pal_gato",
+      "tts": "gato",
+      "juntar": true
+    },
+    "galo": {
+      "texto": "GALO",
+      "silabas": [
+        "ga",
+        "lo"
+      ],
+      "inicial": "g",
+      "figura": "assets/svg/figuras/galo.svg",
+      "audio": "pal_galo",
+      "tts": "galo",
+      "juntar": true
+    },
+    "gota": {
+      "texto": "GOTA",
+      "silabas": [
+        "go",
+        "ta"
+      ],
+      "inicial": "g",
+      "figura": "assets/svg/figuras/gota.svg",
+      "audio": "pal_gota",
+      "tts": "gota",
+      "juntar": true
+    }
+  }
+}
