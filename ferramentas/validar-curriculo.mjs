@@ -17,11 +17,14 @@ const FIGURAS = {
   f: ['foca', 'fada', 'fita'], v: ['vaca', 'vela', 'vaso'], s: ['sapo', 'sino', 'suco'],
   l: ['lua', 'lobo', 'lupa'], n: ['navio', 'nuvem', 'nariz'], d: ['dado', 'dedo', 'dente'],
   c: ['copo', 'cubo', 'cama'], g: ['gato', 'galo', 'gota'],
+  j: ['jacare', 'janela', 'joaninha'], z: ['zebra', 'ziper'], r: ['rato', 'rosa', 'roda'],
 };
 const ORDEM = Object.keys(FIGURAS);
 const VOGAIS = ['a', 'e', 'i', 'o', 'u'];
 const OCLUSIVAS = ['p', 'b', 't', 'd', 'c', 'g'];
-const NOMES_LETRAS = ['eme', 'pe', 'be', 'te', 'efe', 've', 'esse', 'ese', 'ele', 'ene', 'de', 'ce', 'se', 'ge', 'em', 'en', 'es', 'ef', 'el', 'em-e'];
+// J e R: a grafia repetida não faz o som certo na voz sintética; usam tts null (vale o arquivo gerado).
+const SEM_TTS = ['j', 'r'];
+const NOMES_LETRAS = ['jota', 'ze', 'erre', 'eme', 'pe', 'be', 'te', 'efe', 've', 'esse', 'ese', 'ele', 'ene', 'de', 'ce', 'se', 'ge', 'em', 'en', 'es', 'ef', 'el', 'em-e'];
 
 const sem = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
@@ -75,7 +78,7 @@ for (const l of ordem) {
   if (x.audio !== `som_${l}`) erro(`${p}.audio deve ser "som_${l}"`);
   if (!x.dica) erro(`${p}.dica ausente`);
   if (!('tts' in x)) erro(`${p}.tts ausente (use null para oclusivas)`);
-  if (!Array.isArray(x.palavras) || x.palavras.length !== 3) erro(`${p}.palavras deve ter 3 palavras`);
+  if (!Array.isArray(x.palavras) || x.palavras.length < 2 || x.palavras.length > 3) erro(`${p}.palavras deve ter 2 ou 3 palavras`);
   else {
     for (const w of x.palavras) {
       if (!FIGURAS[l].includes(w)) erro(`${p}.palavras: "${w}" não é figura da letra ${l} na lista fixa`);
@@ -83,7 +86,10 @@ for (const l of ordem) {
     }
   }
   if (!VOGAIS.includes(l)) {
-    if (OCLUSIVAS.includes(l)) {
+    if (SEM_TTS.includes(l)) {
+      if (x.tts !== null) erro(`${p}: "${l}" deve ter tts null`);
+      if (!x.continuo) erro(`${p}: "${l}" é som contínuo`);
+    } else if (OCLUSIVAS.includes(l)) {
       if (x.tts !== null) erro(`${p}: oclusiva deve ter tts null (achei ${JSON.stringify(x.tts)})`);
       if (x.continuo) erro(`${p}: oclusiva não pode ser continuo:true`);
     } else {

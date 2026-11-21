@@ -47,6 +47,10 @@ gerar l "llllllllllllllllll" 0.7
 gerar f "ffffffffff"    0.7
 gerar v "vvvvvvvvvvvv" 0.7
 gerar s "ssssssssss"    0.7
+gerar j "ZZZZZZZZZZ"    0.7
+gerar z "zzzzzzzzzz"    0.7
+# R forte do inicio da palavra (rato, rosa, roda): fricativa da garganta, como no Brasil
+gerar r "xxxxxxxx"      0.7
 # Oclusivas: pega-se a silaba com "a" e corta-se logo depois da soltura (antes da vogal soar).
 gerar p "pa"        0.04 0.015
 gerar t "ta"        0.04 0.015

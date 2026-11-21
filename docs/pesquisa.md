@@ -92,3 +92,10 @@ Valores iguais aos sugeridos no contrato: a pesquisa não pede mudança. Nada bl
 - Frequência de letras e sílabas no português infantil e detalhes do método de Capovilla (ordem das letras): não consultei.
 - Pronúncia regional: a validação fonética assume o português falado no Sudeste/Brasil geral; em outras regiões TI/DI e o E/O átonos podem variar.
 - Comportamento real da voz pt-BR do aparelho com "mmmmm", "ê", "ô" e sílabas acentuadas: depende do dispositivo; o áudio gravado é o caminho principal.
+
+## 7. Acréscimo: J, Z e R (depois do MVP)
+
+- **J** (/ʒ/) e **Z** (/z/) têm um som só e regular no português do Brasil; entram como sons contínuos, fáceis de prolongar.
+- **R**: só o R forte do começo da palavra (rato, roda, rosa), que no Brasil soa como um sopro na garganta (/h/ ou /x/, varia com o sotaque). O R fraco de "caro", o RR e o R final ficam para depois, como casos de posição.
+- Ficam fora, por serem irregulares ou raros: H (sem som próprio), Q (só com U), X (quatro sons), K, W, Y (palavras estrangeiras), além de C e G antes de E e I.
+- Palavras para Junte os Sons: rato e roda. Rosa fica fora (S com som de Z), assim como jacaré (R fraco), janela (3 sílabas), joaninha, zebra (BR) e zíper.

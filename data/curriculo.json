@@ -28,7 +28,10 @@
     "n",
     "d",
     "c",
-    "g"
+    "g",
+    "j",
+    "z",
+    "r"
   ],
   "etapas": [
     {
@@ -71,6 +74,14 @@
         "d",
         "c",
         "g"
+      ]
+    },
+    {
+      "id": "jzr",
+      "letras": [
+        "j",
+        "z",
+        "r"
       ]
     }
   ],
@@ -312,6 +323,47 @@
         "gota"
       ],
       "dica": "Para a adulta: som /g/ lá no fundo da garganta, com voz, curtinho, sem vogal depois (não é 'gê'). Só nas sílabas GA, GO, GU."
+    },
+    "j": {
+      "maiuscula": "J",
+      "tipo": "consoante",
+      "fonema": "/ʒ/",
+      "continuo": true,
+      "audio": "som_j",
+      "tts": null,
+      "palavras": [
+        "janela",
+        "jacare",
+        "joaninha"
+      ],
+      "dica": "Para a adulta: lábios para a frente, dentes quase juntos, e faz 'jjjj' contínuo, com voz, como no começo de 'janela'. Sem dizer 'jota' e sem vogal no fim."
+    },
+    "z": {
+      "maiuscula": "Z",
+      "tipo": "consoante",
+      "fonema": "/z/",
+      "continuo": true,
+      "audio": "som_z",
+      "tts": "zzzzz",
+      "palavras": [
+        "zebra",
+        "ziper"
+      ],
+      "dica": "Para a adulta: igual ao 'ssss', mas com voz: 'zzzz' contínuo, como uma abelha voando. Sem dizer 'zê'."
+    },
+    "r": {
+      "maiuscula": "R",
+      "tipo": "consoante",
+      "fonema": "/h/",
+      "continuo": true,
+      "audio": "som_r",
+      "tts": null,
+      "palavras": [
+        "rato",
+        "roda",
+        "rosa"
+      ],
+      "dica": "Para a adulta: é o R forte do começo de 'rato': um sopro rouco na garganta, contínuo, do jeito do seu sotaque. Sem vogal no fim e sem dizer 'erre'. Aqui só se ensina o R do começo da palavra; o R de 'caro' fica para depois."
     }
   },
   "silabas": {
@@ -854,6 +906,141 @@
       ],
       "audio": "sil_ui",
       "tts": "ui"
+    },
+    "ja": {
+      "texto": "JA",
+      "letras": [
+        "j",
+        "a"
+      ],
+      "audio": "sil_ja",
+      "tts": "já"
+    },
+    "je": {
+      "texto": "JE",
+      "letras": [
+        "j",
+        "e"
+      ],
+      "audio": "sil_je",
+      "tts": "jê"
+    },
+    "ji": {
+      "texto": "JI",
+      "letras": [
+        "j",
+        "i"
+      ],
+      "audio": "sil_ji",
+      "tts": "jí"
+    },
+    "jo": {
+      "texto": "JO",
+      "letras": [
+        "j",
+        "o"
+      ],
+      "audio": "sil_jo",
+      "tts": "jô"
+    },
+    "ju": {
+      "texto": "JU",
+      "letras": [
+        "j",
+        "u"
+      ],
+      "audio": "sil_ju",
+      "tts": "jú"
+    },
+    "za": {
+      "texto": "ZA",
+      "letras": [
+        "z",
+        "a"
+      ],
+      "audio": "sil_za",
+      "tts": "zá"
+    },
+    "ze": {
+      "texto": "ZE",
+      "letras": [
+        "z",
+        "e"
+      ],
+      "audio": "sil_ze",
+      "tts": "zê"
+    },
+    "zi": {
+      "texto": "ZI",
+      "letras": [
+        "z",
+        "i"
+      ],
+      "audio": "sil_zi",
+      "tts": "zí"
+    },
+    "zo": {
+      "texto": "ZO",
+      "letras": [
+        "z",
+        "o"
+      ],
+      "audio": "sil_zo",
+      "tts": "zô"
+    },
+    "zu": {
+      "texto": "ZU",
+      "letras": [
+        "z",
+        "u"
+      ],
+      "audio": "sil_zu",
+      "tts": "zú"
+    },
+    "ra": {
+      "texto": "RA",
+      "letras": [
+        "r",
+        "a"
+      ],
+      "audio": "sil_ra",
+      "tts": "rá"
+    },
+    "re": {
+      "texto": "RE",
+      "letras": [
+        "r",
+        "e"
+      ],
+      "audio": "sil_re",
+      "tts": "rê"
+    },
+    "ri": {
+      "texto": "RI",
+      "letras": [
+        "r",
+        "i"
+      ],
+      "audio": "sil_ri",
+      "tts": "rí"
+    },
+    "ro": {
+      "texto": "RO",
+      "letras": [
+        "r",
+        "o"
+      ],
+      "audio": "sil_ro",
+      "tts": "rô"
+    },
+    "ru": {
+      "texto": "RU",
+      "letras": [
+        "r",
+        "u"
+      ],
+      "audio": "sil_ru",
+      "tts": "rú"
     }
   },
   "palavras": {
@@ -1407,6 +1594,91 @@
       "audio": "pal_gota",
       "tts": "gota",
       "juntar": true
+    },
+    "janela": {
+      "texto": "JANELA",
+      "silabas": [
+        "ja",
+        "ne",
+        "la"
+      ],
+      "inicial": "j",
+      "figura": "assets/svg/figuras/janela.svg",
+      "audio": "pal_janela",
+      "tts": "janela",
+      "juntar": false
+    },
+    "jacare": {
+      "texto": "JACARÉ",
+      "silabas": [],
+      "inicial": "j",
+      "figura": "assets/svg/figuras/jacare.svg",
+      "audio": "pal_jacare",
+      "tts": "jacaré",
+      "juntar": false
+    },
+    "joaninha": {
+      "texto": "JOANINHA",
+      "silabas": [],
+      "inicial": "j",
+      "figura": "assets/svg/figuras/joaninha.svg",
+      "audio": "pal_joaninha",
+      "tts": "joaninha",
+      "juntar": false
+    },
+    "zebra": {
+      "texto": "ZEBRA",
+      "silabas": [],
+      "inicial": "z",
+      "figura": "assets/svg/figuras/zebra.svg",
+      "audio": "pal_zebra",
+      "tts": "zebra",
+      "juntar": false
+    },
+    "ziper": {
+      "texto": "ZÍPER",
+      "silabas": [],
+      "inicial": "z",
+      "figura": "assets/svg/figuras/ziper.svg",
+      "audio": "pal_ziper",
+      "tts": "zíper",
+      "juntar": false
+    },
+    "rato": {
+      "texto": "RATO",
+      "silabas": [
+        "ra",
+        "to"
+      ],
+      "inicial": "r",
+      "figura": "assets/svg/figuras/rato.svg",
+      "audio": "pal_rato",
+      "tts": "rato",
+      "juntar": true
+    },
+    "roda": {
+      "texto": "RODA",
+      "silabas": [
+        "ro",
+        "da"
+      ],
+      "inicial": "r",
+      "figura": "assets/svg/figuras/roda.svg",
+      "audio": "pal_roda",
+      "tts": "roda",
+      "juntar": true
+    },
+    "rosa": {
+      "texto": "ROSA",
+      "silabas": [
+        "ro",
+        "sa"
+      ],
+      "inicial": "r",
+      "figura": "assets/svg/figuras/rosa.svg",
+      "audio": "pal_rosa",
+      "tts": "rosa",
+      "juntar": false
     }
   }
 }
