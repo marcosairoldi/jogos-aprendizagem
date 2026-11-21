@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../"><title>Teste de áudio</title></head>
+<body>
+<button id="comecar" style="font-size:32px;padding:24px">Começar</button>
+<script type="module">
+import * as audio from './js/audio.js';
+const [curriculo, frases] = await Promise.all([fetch('data/curriculo.json').then(r => r.json()), fetch('data/frases.json').then(r => r.json())]);
+let nome = '';
+audio.configurar({ curriculo, frases, obterNome: () => nome });
+window.audio = audio;
+window.setNome = (n) => { nome = n; };
+document.getElementById('comecar').addEventListener('click', async () => {
+  await audio.desbloquear();
+  document.body.dataset.pronto = '1';
+});
+if ('serviceWorker' in navigator) {
+  await navigator.serviceWorker.register('sw.js');
+  await navigator.serviceWorker.ready;
+  if (!navigator.serviceWorker.controller) await new Promise((r) => navigator.serviceWorker.addEventListener('controllerchange', r, { once: true }));
+}
+document.body.dataset.carregado = '1';
+</script></body></html>

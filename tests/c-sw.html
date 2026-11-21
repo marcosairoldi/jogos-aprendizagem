@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><title>Teste do SW</title></head>
+<body><script>
+navigator.serviceWorker.register('../sw.js').then(() => navigator.serviceWorker.ready).then(() => { document.body.dataset.sw = 'pronto'; });
+</script></body></html>
