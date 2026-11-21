@@ -219,15 +219,18 @@ export function auditarNaPagina(opcoes) {
     const c = typeof e.className === 'string' ? e.className : '';
     return e.tagName.toLowerCase() + (c ? '.' + c.trim().split(/\s+/).join('.') : '') + (e.getAttribute('aria-label') ? `[${e.getAttribute('aria-label')}]` : '');
   };
-  const out = { textos: [], toque: [], foraTela: [], semAria: [], rolagem: null, estilos: {}, dimTela: [vw, vh] };
+  const out = { textos: [], textosAdulta: [], toque: [], foraTela: [], semAria: [], rolagem: null, estilos: {}, dimTela: [vw, vh] };
 
   // textos visíveis (nós de texto próprios)
   const todos = [...document.body.querySelectorAll('*')];
   for (const e of todos) {
     if (e.tagName === 'SCRIPT' || e.tagName === 'STYLE') continue;
     if (!visivel(e)) continue;
+    // texto escrito para a adulta (rótulo de botão, legenda da fala, indicador de etapa) vem marcado com data-i;
+    // fica separado do conteúdo da criança (letras, sílabas, palavras)
+    const paraAdulta = !!(e.closest && e.closest('[data-i]'));
     for (const n of e.childNodes) {
-      if (n.nodeType === 3 && n.textContent.trim()) out.textos.push(n.textContent.trim());
+      if (n.nodeType === 3 && n.textContent.trim()) (paraAdulta ? out.textosAdulta : out.textos).push(n.textContent.trim());
     }
   }
 
@@ -606,7 +609,8 @@ export function verificarAuditoria(relator, rotulo, a, { exigirSemRolagem = true
   const ok = relator.ok;
   if (!textoLivre) {
     const ruins = a.textos.filter((t) => !PERMITIDOS.has(t));
-    ok(ruins.length === 0, `${rotulo}: sem texto de instrução visível`, 'texto indevido: ' + JSON.stringify(ruins));
+    // a tela da criança continua funcionando só com áudio: o texto visível existe só como rótulo/legenda/indicador (data-i) ou conteúdo (letras, sílabas, palavras)
+    ok(ruins.length === 0, `${rotulo}: texto visível só como conteúdo ou rótulo/legenda para a adulta`, 'texto indevido: ' + JSON.stringify(ruins));
   }
   ok(a.toque.length === 0, `${rotulo}: alvos de toque >= 64px e >= 12px das bordas`, a.toque.join('\n'));
   ok(a.semAria.length === 0, `${rotulo}: todo botão tem aria-label`, a.semAria.join(', '));

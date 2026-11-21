@@ -4,10 +4,10 @@ import { executarJogo } from './jogo.js';
 import { mostrarRecompensa } from './recompensa.js';
 
 const JOGOS = [
-  ['escute', 'Escute e toque', '♪'],
-  ['caca', 'Caça-som', '✶'],
-  ['junte', 'Junte os sons', '≈'],
-  ['trace', 'Trace a letra', '✎'],
+  ['escute', 'Escute e Toque', '♪', 'Escute e toque'],
+  ['caca', 'Caça-Som', '✶', 'Caça-som'],
+  ['junte', 'Junte os Sons', '≈', 'Junte os sons'],
+  ['trace', 'Trace a Letra', '✎', 'Trace a letra'],
 ];
 
 export default {
@@ -20,8 +20,10 @@ export default {
 
     function mostrarMenu() {
       const grade = el('div', { classe: 'menu-jogos' });
-      for (const [id, rotulo, glifo] of JOGOS) {
-        const b = el('button', { type: 'button', classe: 'btn-jogo', attrs: { 'aria-label': rotulo, 'data-glifo': glifo } }, imagem(`assets/svg/ui/jogo-${id}.svg`));
+      for (const [id, rotulo, glifo, aria] of JOGOS) {
+        const b = el('button', { type: 'button', classe: 'btn-jogo', attrs: { 'aria-label': aria, 'data-glifo': glifo } },
+          el('span', { classe: 'figura-jogo' }, imagem(`assets/svg/ui/jogo-${id}.svg`)),
+          el('span', { classe: 'rotulo', texto: rotulo, attrs: { 'data-i': 'rotulo' } }));
         b.addEventListener('click', () => jogar(id));
         grade.append(b);
       }

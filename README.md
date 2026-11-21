@@ -57,16 +57,28 @@ Você vai precisar de uma conta gratuita no GitHub (https://github.com). O site 
 3. Na trilha, toque na parada que brilha. Cada parada é uma letra nova.
 4. Uma sessão dura cerca de 8 minutos e termina com uma despedida carinhosa. Pouco por dia funciona melhor do que muito de uma vez.
 
+### Para a adulta que acompanha
+
+Tudo é **falado** para a criança: ela não precisa ler nada. O texto na tela é para você.
+
+- **Rótulos:** todo botão de ícone tem o nome escrito embaixo (Começar, Ouvir de novo, Início, Brincadeiras, Coleção, Pais, Continuar, Voltar), e os cartões do menu mostram o nome de cada jogo.
+- **Como funciona:** o botão com "?" na tela inicial abre uma tela curta com o objetivo, como acompanhar, o que é cada brincadeira e como a trilha avança.
+- **Legenda da fala:** no alto da tela aparece o texto do que o guia está falando. Quando toca um **som**, a legenda mostra um alto-falante e a letra em maiúscula (por exemplo, alto-falante e M); para sílabas e palavras, MA ou MAPA. **Leia o SOM, não o nome da letra**: para o M, um "mmm" com a boca fechada, sem juntar vogal. No jogo Escute e Toque a legenda mostra só o alto-falante, para não entregar a resposta. Dá para desligar em **Pais > Mostrar legendas**.
+- **Onde a criança está:** na trilha aparece "Letra N de 20" e o nome da etapa; na lição, "Lição da letra A · 2 de 4 · Caça-Som" com bolinhas de progresso; ao fim da lição, uma frase escrita com o resultado (por exemplo, "Letra A dominada! A próxima letra foi liberada.").
+- **Como acompanhar:** deixe a criança tocar, repita o som junto, elogie o esforço e use sessões de 5 a 10 minutos.
+
 ### Área dos pais
 
 Toque na **engrenagem pequena** da tela inicial e responda a conta de somar. Lá você pode:
 
+- ver o resumo: tempo de uso, sessões e recompensas;
+- ver a grade com todas as letras do currículo, coloridas por estado: verde com ✓ (dominada), amarelo (em prática) e cinza tracejado (ainda não liberada);
 - digitar o nome da criança (fica só no celular; o jogo passa a chamá-la pelo nome);
+- ligar ou desligar as legendas;
 - trocar a amiga guia;
-- ver as letras que ela já domina e as que está praticando;
-- ver o tempo de uso;
-- liberar a próxima letra manualmente;
-- reiniciar o progresso.
+- gravar a sua voz;
+- liberar a próxima letra manualmente (use se a criança já sabe o som);
+- reiniciar o progresso (pede um segundo toque; não apaga as gravações).
 
 ### Gravar a sua voz
 
@@ -80,7 +92,7 @@ Sem gravação, o jogo usa sons gerados por computador e a voz do aparelho. A su
 Dicas:
 
 - Escolha um lugar silencioso (quarto com a porta fechada) e deixe o celular a um palmo da boca, um pouco de lado.
-- **Comece pelos sons das letras** (o grupo mais importante). Fale só o som, sem vogal: "mmm", não "eme".
+- **Comece pelos sons das letras** (o grupo mais importante). Fale só o som, sem vogal: "mmm".
 - Fale devagar e alegre. Frases com o nome da criança são gravadas sem o nome ("Muito bem!").
 - O que não for gravado continua com a voz do aparelho. Dá para gravar aos poucos.
 

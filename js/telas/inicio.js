@@ -1,14 +1,18 @@
 // Tela inicial: guia, botão Começar enorme e botão discreto dos pais.
-import { el, imagem, botaoIcone, botaoOuvir, srcGuia } from '../ui.js';
+import { el, imagem, botaoIcone, botaoOuvir, srcGuia, slotLegenda } from '../ui.js';
 
 export default {
   montar(raiz, app) {
     const guia = app.progresso.guia();
     const pais = botaoIcone({
-      src: 'assets/svg/ui/pais.svg', rotulo: 'Área dos pais', glifo: '⚙', classe: 'discreto',
+      src: 'assets/svg/ui/pais.svg', rotulo: 'Área dos pais', texto: 'Pais', glifo: '⚙', classe: 'discreto',
       aoClicar: () => app.ir('pais'),
     });
-    const topo = el('div', { classe: 'topo' }, pais);
+    const ajuda = botaoIcone({
+      rotulo: 'Como funciona', texto: 'Como funciona', glifo: '?', classe: 'discreto',
+      aoClicar: () => app.ir('ajuda'),
+    });
+    const topo = el('div', { classe: 'topo' }, ajuda, pais);
 
     const pers = el('div', { classe: 'personagens' });
     if (guia) {
@@ -20,7 +24,7 @@ export default {
     }
 
     const comecar = botaoIcone({
-      src: 'assets/svg/ui/comecar.svg', rotulo: 'Começar', classe: 'enorme pulsa',
+      src: 'assets/svg/ui/comecar.svg', rotulo: 'Começar', texto: 'Começar', classe: 'enorme pulsa',
       aoClicar: async () => {
         comecar.disabled = true;
         await app.audio.desbloquear();
@@ -34,7 +38,7 @@ export default {
     });
     const baixo = el('div', { classe: 'baixo' }, comecar, ouvir);
 
-    raiz.append(el('section', { classe: 'tela inicio fundo-ceu' }, topo, pers, baixo));
+    raiz.append(el('section', { classe: 'tela inicio fundo-ceu' }, topo, slotLegenda(), pers, baixo));
     return {};
   },
 };

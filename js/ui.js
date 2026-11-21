@@ -32,18 +32,26 @@ export function imagem(src, classe = '') {
 }
 
 /**
- * Botão com ícone. `glifo` é só um símbolo de reserva se o SVG faltar.
- * Todo botão tem aria-label.
+ * Botão com ícone e rótulo escrito embaixo (para a adulta). `glifo` é só um símbolo de reserva se o SVG faltar.
+ * `rotulo` é o aria-label (descrição completa); `texto` é o rótulo curto visível (padrão: o próprio rotulo).
+ * Todo botão tem aria-label. O botão inteiro (ícone + rótulo) é o alvo de toque.
  */
-export function botaoIcone({ src, rotulo, glifo = '', classe = '', aoClicar }) {
-  const b = el('button', { type: 'button', classe: `btn-icone ${classe}`.trim(), attrs: { 'aria-label': rotulo, 'data-glifo': glifo } });
-  if (src) b.append(imagem(src));
+export function botaoIcone({ src, rotulo, texto, glifo = '', classe = '', aoClicar }) {
+  const b = el('button', { type: 'button', classe: `btn-icone ${classe}`.trim(), attrs: { 'aria-label': rotulo } });
+  const disco = el('span', { classe: 'disco', attrs: { 'data-glifo': glifo, 'aria-hidden': 'true' } });
+  if (src) disco.append(imagem(src)); else disco.classList.add('sem-img');
+  b.append(disco, el('span', { classe: 'rotulo', texto: texto || rotulo, attrs: { 'data-i': 'rotulo' } }));
   if (aoClicar) b.addEventListener('click', aoClicar);
   return b;
 }
 
 export function botaoOuvir(aoClicar, classe = '') {
-  return botaoIcone({ src: 'assets/svg/ui/ouvir.svg', rotulo: 'Ouvir de novo', glifo: '♫', classe: `ouvir ${classe}`, aoClicar });
+  return botaoIcone({ src: 'assets/svg/ui/ouvir.svg', rotulo: 'Ouvir de novo', texto: 'Ouvir de novo', glifo: '♫', classe: `ouvir ${classe}`, aoClicar });
+}
+
+/** Espaço da legenda da fala (ver js/legenda.js). */
+export function slotLegenda() {
+  return el('div', { classe: 'legenda-slot' });
 }
 
 export function srcGuia(guia, festa = false) {
@@ -62,9 +70,9 @@ export function falarComLimite(app, itens, max = 9000) {
  * `aoCasa` é chamado ao tocar na casa.
  */
 export function quadro(app, raiz, { aoCasa, guia } = {}) {
-  const casa = botaoIcone({ src: 'assets/svg/ui/casa.svg', rotulo: 'Voltar para a trilha', glifo: '⌂', aoClicar: aoCasa });
+  const casa = botaoIcone({ src: 'assets/svg/ui/casa.svg', rotulo: 'Voltar para a trilha', texto: 'Voltar', glifo: '⌂', aoClicar: aoCasa });
   const g = el('div', { classe: 'barra-guia' }, imagem(srcGuia(guia || app.progresso.guia())));
-  const barra = el('div', { classe: 'barra' }, casa, g);
+  const barra = el('div', { classe: 'barra' }, casa, slotLegenda(), g);
   const palco = el('div', { classe: 'palco' });
   const tela = el('section', { classe: 'tela tela-jogo' }, barra, palco);
   raiz.append(tela);
@@ -92,4 +100,12 @@ export function gradeColecao(rec, maximo = 24, filas = 6) {
     grade.append(linha);
   }
   return grade;
+}
+
+/** Nome legível da etapa do currículo (para a adulta). */
+const NOMES_ETAPAS = { vogais: 'Vogais', mpbt: 'Sons M, P, B, T', fvs: 'Sons F, V, S', ln: 'Sons L, N', dcg: 'Sons D, C, G', jzr: 'Sons J, Z, R' };
+export function nomeEtapa(curriculo, letra) {
+  const et = (curriculo && curriculo.etapas || []).find((e) => (e.letras || []).includes(letra));
+  if (!et) return '';
+  return NOMES_ETAPAS[et.id] || (et.id.charAt(0).toUpperCase() + et.id.slice(1));
 }

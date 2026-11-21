@@ -10,8 +10,10 @@ import colecao from './telas/colecao.js';
 import despedida from './telas/despedida.js';
 import pais from './telas/pais.js';
 import gravar from './telas/gravar.js';
+import ajuda from './telas/ajuda.js';
+import { iniciarLegenda, anexar as anexarLegenda, limpar as limparLegenda } from './legenda.js';
 
-const TELAS = { inicio, guia, trilha, licao, menu, colecao, despedida, pais, gravar };
+const TELAS = { inicio, guia, trilha, licao, menu, colecao, despedida, pais, gravar, ajuda };
 const raiz = document.getElementById('app');
 
 // Áudio reserva (silencioso) caso js/audio.js não carregue.
@@ -40,10 +42,13 @@ const app = {
     this.telaAtual = null;
     try { if (anterior && anterior.destruir) anterior.destruir(); } catch (e) { console.warn('[app] erro ao destruir tela', e); }
     try { this.audio.parar(); } catch (e) { /* sem áudio */ }
+    limparLegenda();
     raiz.replaceChildren();
+    raiz.dataset.tela = nome;
     const tela = TELAS[nome] || TELAS.inicio;
     this.telaAtual = tela.montar(raiz, this, params) || {};
     this.telaAtual.nome = nome;
+    try { anexarLegenda(raiz); } catch (e) { console.warn('[app] legenda', e); }
   },
 
   /** Importa js/jogos/<id>.js; se falhar, devolve null (o jogo é pulado). */
@@ -144,6 +149,7 @@ async function iniciar() {
     console.warn('[app] falha ao configurar o áudio', e);
   }
   iniciarContagemTempo();
+  iniciarLegenda();
   app.ir('inicio');
 }
 

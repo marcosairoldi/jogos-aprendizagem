@@ -381,6 +381,21 @@ function textoReserva(tipo, chave, vars) {
   return '';
 }
 
+// Legenda para a adulta: avisa a casca do que está sendo falado (a criança continua só ouvindo).
+function emitirFala(detalhe) {
+  try {
+    if (typeof window !== 'undefined' && typeof CustomEvent === 'function') window.dispatchEvent(new CustomEvent('trilha:fala', { detail: detalhe }));
+  } catch (e) { /* legenda é opcional */ }
+}
+function legendaDe(tipo, chave, vars) {
+  const cur = cfg.curriculo || {};
+  if (tipo === 'frase') return textoFrase(chave, vars);
+  if (tipo === 'som') { const l = cur.letras && cur.letras[chave]; return l ? (l.maiuscula || chave.toUpperCase()) : ''; }
+  if (tipo === 'sil') { const s = cur.silabas && cur.silabas[chave]; return s ? (s.texto || chave.toUpperCase()) : ''; }
+  if (tipo === 'pal') { const p = cur.palavras && cur.palavras[chave]; return p ? (p.texto || chave.toUpperCase()) : ''; }
+  return '';
+}
+
 async function executarItem(item, meu) {
   const { tipo, chave } = item;
   if (tipo === 'pausa') return esperar(parseInt(chave, 10) || 0);
@@ -390,6 +405,7 @@ async function executarItem(item, meu) {
   }
   if (!ID_PREFIXO[tipo]) return false;
   const id = ID_PREFIXO[tipo] + chave;
+  { const t = legendaDe(tipo, chave, item.vars); if (t) emitirFala({ tipo, texto: t }); }
   const url = await resolverArquivo(id);
   if (meu !== seq) return true;
   if (url) return tocarArquivo(url);
@@ -414,6 +430,7 @@ export function falar(itens) {
         const cancelou = await executarItem(item, meu);
         if (cancelou === true || meu !== seq) return { cancelado: true };
       }
+      if (meu === seq) emitirFala({ fim: true });
       return { cancelado: meu !== seq };
     } catch (e) {
       console.info('[audio] falha ao falar', e && e.message);
@@ -430,6 +447,7 @@ function pararInterno() {
 
 export function parar() {
   seq++;
+  emitirFala({ fim: true });
   pararInterno();
   pararEfeitos();
 }

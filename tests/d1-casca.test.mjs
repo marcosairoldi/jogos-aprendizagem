@@ -308,7 +308,7 @@ console.log('\n[7] área dos pais');
   await page.waitForSelector('#campo-nome');
   await conferirBotoes(page, 'painel dos pais', { baixo: false });
   ok(await page.locator('#aviso-voz').count() === 1, 'aviso de voz pt-BR aparece');
-  ok(/7 min/.test(await page.textContent('#resumo-uso')) && /Sessões: 3/.test(await page.textContent('#resumo-uso')), 'tempo total e sessões');
+  ok(/7 min/.test(await page.textContent('#resumo-uso')) && /Sessões\s*3/.test(await page.textContent('#resumo-uso')), 'tempo total e sessões (cards do resumo)');
   await page.fill('#campo-nome', 'Flor');
   ok((await progressoSalvo(page)).nome === 'Flor', 'nome salvo no aparelho');
   await foto(page, 'pais-painel');

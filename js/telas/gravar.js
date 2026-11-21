@@ -151,9 +151,9 @@ function montarGrupos(cur, frases) {
   }));
   return [
     { chave: 'sons', titulo: 'Sons das letras (mais importante)', itens: sons, aberto: true,
-      aviso: 'Fale só o SOM da letra, sem vogal: "mmm", não "eme"; "p" só o sopro, não "pê".' },
+      aviso: 'Fale só o SOM da letra, sem juntar vogal: "mmm" para o M; para o P, só o sopro dos lábios.' },
     { chave: 'frases', titulo: 'Frases', itens: fr, aberto: false },
-    { chave: 'silabas', titulo: 'Sílabas', itens: sil, aberto: false, aviso: 'Fale a sílaba juntinha, como numa palavra: "má", não "eme-a".' },
+    { chave: 'silabas', titulo: 'Sílabas', itens: sil, aberto: false, aviso: 'Fale a sílaba juntinha, como numa palavra: "má".' },
     { chave: 'palavras', titulo: 'Palavras', itens: pal, aberto: false },
   ];
 }

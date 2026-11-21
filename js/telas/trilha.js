@@ -1,6 +1,6 @@
 // Trilha Encantada: caminho rosa sinuoso, de baixo para cima, uma parada por letra.
 // Mostra só uma janela de 6 paradas, centrada na letra foco (sem rolagem).
-import { el, imagem, botaoIcone, botaoOuvir, srcGuia } from '../ui.js';
+import { el, imagem, botaoIcone, botaoOuvir, srcGuia, slotLegenda, nomeEtapa } from '../ui.js';
 
 const JANELA = 6;
 const XS = [32, 68, 34, 66, 32, 68]; // posições x (%) em zigue-zague, de baixo para cima
@@ -85,15 +85,24 @@ export default {
       }
     });
 
-    const casa = botaoIcone({ src: 'assets/svg/ui/casa.svg', rotulo: 'Voltar ao início', glifo: '⌂', aoClicar: () => app.ir('inicio') });
+    const casa = botaoIcone({ src: 'assets/svg/ui/casa.svg', rotulo: 'Voltar ao início', texto: 'Início', glifo: '⌂', aoClicar: () => app.ir('inicio') });
     const falaInstr = ['frase:trilha_instrucao'];
     const ouvir = botaoOuvir(() => app.audio.falar(falaInstr));
-    const barra = el('div', { classe: 'barra' }, casa, ouvir);
-    const jogos = botaoIcone({ src: 'assets/svg/ui/jogo-trilha.svg', rotulo: 'Brincadeiras', glifo: '★', classe: 'grande', aoClicar: () => app.ir('menu') });
-    const colecao = botaoIcone({ src: 'assets/svg/ui/colecao.svg', rotulo: 'Minha coleção', glifo: '❦', classe: 'grande', aoClicar: () => app.ir('colecao') });
+    const barra = el('div', { classe: 'barra' }, casa, slotLegenda(), ouvir);
+    const jogos = botaoIcone({ src: 'assets/svg/ui/jogo-trilha.svg', rotulo: 'Brincadeiras', texto: 'Brincadeiras', glifo: '★', classe: 'grande', aoClicar: () => app.ir('menu') });
+    const colecao = botaoIcone({ src: 'assets/svg/ui/colecao.svg', rotulo: 'Minha coleção', texto: 'Coleção', glifo: '❦', classe: 'grande', aoClicar: () => app.ir('colecao') });
     const rodape = el('div', { classe: 'rodape' }, jogos, colecao);
 
-    raiz.append(el('section', { classe: 'tela fundo-trilha' }, barra, area, rodape));
+    // indicador para a adulta: em que letra a criança está e em que etapa
+    const letraAtual = foco || liberadas[liberadas.length - 1];
+    const indice = ordem.indexOf(letraAtual) + 1;
+    const etapa = nomeEtapa(app.curriculo, letraAtual);
+    const indicador = el('div', { classe: 'indicador', attrs: { 'data-i': 'indicador', id: 'indicador-trilha' } },
+      el('strong', { texto: `Letra ${indice} de ${ordem.length}` }),
+      etapa ? el('span', { texto: ` · ${etapa}` }) : null,
+      params.novaLetra ? el('span', { classe: 'indicador-nova', texto: 'Nova letra liberada!' }) : null);
+
+    raiz.append(el('section', { classe: 'tela fundo-trilha' }, barra, indicador, area, rodape));
 
     let fala = falaInstr;
     if (params.novaLetra) fala = ['frase:letra_dominada', 'pausa:300', 'frase:trilha_nova_letra', 'pausa:300', ...falaInstr];

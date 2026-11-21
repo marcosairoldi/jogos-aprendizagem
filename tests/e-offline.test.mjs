@@ -115,7 +115,9 @@ try {
     // todas as figuras mostradas carregaram de verdade
     const quebradas = await page.evaluate(() => [...document.images].filter((i) => i.complete && i.naturalWidth === 0).map((i) => i.src));
     ok(quebradas.length === 0, 'nenhuma imagem quebrada na tela', quebradas.join(', '));
-    ok(coleta.falhas.length === 0 && coleta.respostasRuins.length === 0, 'sem falhas de rede nem 404 offline', coleta.falhas.concat(coleta.respostasRuins).join('\n'));
+    // net::ERR_ABORTED = um som interrompido pela fala seguinte (cancelamento normal), não arquivo faltando
+    const falhasReais = coleta.falhas.filter((f) => !f.startsWith('net::ERR_ABORTED'));
+    ok(falhasReais.length === 0 && coleta.respostasRuins.length === 0, 'sem falhas de rede nem 404 offline', falhasReais.concat(coleta.respostasRuins).join('\n'));
     ok(coleta.pageerrors.length === 0 && coleta.erros.length === 0 && coleta.avisos.length === 0, 'sem erros/avisos de console offline', coleta.pageerrors.concat(coleta.erros, coleta.avisos).join('\n'));
     await app.ctx.close();
   }

@@ -100,7 +100,9 @@ export function criarCartao({ ciclo, conteudo, aria, classe = '', aoEscolher }) 
 
 // Botão grande de ouvir de novo.
 export function criarBotaoOuvir({ ciclo, aoOuvir }) {
-  const b = el('button', { type: 'button', class: 'j-ouvir', aria: 'Ouvir de novo' }, imagem('assets/svg/ui/ouvir.svg'));
+  const b = el('button', { type: 'button', class: 'j-ouvir', aria: 'Ouvir de novo' },
+    el('span', { class: 'j-disco', 'aria-hidden': 'true' }, imagem('assets/svg/ui/ouvir.svg')),
+    el('span', { class: 'j-rotulo', 'data-i': 'rotulo' }, 'Ouvir de novo'));
   aoTocar(ciclo, b, () => aoOuvir());
   return b;
 }

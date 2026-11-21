@@ -185,7 +185,7 @@ try {
   await page.locator('#campo-nome').fill('Bia');
   ok(await page.evaluate(() => JSON.parse(localStorage.getItem('trilhaSons.v1')).nome === 'Bia'), 'nome digitado é gravado');
   const resumo = await page.locator('#resumo-uso').innerText();
-  ok(/Sessões: 1/.test(resumo), 'painel mostra tempo e sessões', resumo);
+  ok(/Sessões\s*1/.test(resumo), 'painel mostra tempo e sessões', resumo);
   // libera a próxima letra pelo atalho dos pais e confere
   await tocar(page, 'button[aria-label="Liberar próxima letra"]');
   ok(/Liberada: E/.test(await page.locator('.nota').nth(1).innerText().catch(() => '') + (await page.locator('.pais').innerText())), 'atalho dos pais libera a letra E');
