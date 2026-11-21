@@ -9,8 +9,9 @@ import menu from './telas/menu.js';
 import colecao from './telas/colecao.js';
 import despedida from './telas/despedida.js';
 import pais from './telas/pais.js';
+import gravar from './telas/gravar.js';
 
-const TELAS = { inicio, guia, trilha, licao, menu, colecao, despedida, pais };
+const TELAS = { inicio, guia, trilha, licao, menu, colecao, despedida, pais, gravar };
 const raiz = document.getElementById('app');
 
 // Áudio reserva (silencioso) caso js/audio.js não carregue.
@@ -20,6 +21,7 @@ const audioMudo = {
   async falar() { return { cancelado: false }; },
   efeito() {},
   parar() {},
+  gravacoesMudaram() {},
   estado: () => ({ desbloqueado: false, temVozPtBr: true }),
 };
 

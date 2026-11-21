@@ -68,11 +68,25 @@ Toque na **engrenagem pequena** da tela inicial e responda a conta de somar. Lá
 - liberar a próxima letra manualmente;
 - reiniciar o progresso.
 
-### Gravar a sua voz (opcional)
+### Gravar a sua voz
 
-O som das letras vem de arquivos prontos, feitos por voz sintética. A sua voz fica muito melhor. A lista do que gravar, com o nome exato de cada arquivo e dicas de como fazer cada som, está em [`assets/audio/LISTA.md`](assets/audio/LISTA.md).
+Sem gravação, o jogo usa sons gerados por computador e a voz do aparelho. A sua voz ensina muito melhor, e dá para gravar dentro do próprio jogo:
 
-**Atenção à privacidade:** este repositório é público. Qualquer gravação enviada para ele pode ser ouvida por qualquer pessoa na internet. Não grave nomes nem informações pessoais.
+1. Abra o jogo, toque no botão discreto da **Área dos pais** (canto da tela inicial) e resolva a conta.
+2. Toque em **Gravar minha voz**.
+3. Em cada item, toque em **Gravar**, fale, e toque em **Parar** (ou espere 6 segundos). O jogo corta o silêncio do começo e do fim, ajusta o volume e toca a gravação para você conferir. Se não gostou, grave de novo. Para comparar, **Ouvir como está hoje** toca o som atual.
+4. A primeira vez o Chrome pede permissão para usar o microfone: toque em **Permitir**. Se negar sem querer, toque no cadeado ao lado do endereço e permita o microfone para este site.
+
+Dicas:
+
+- Escolha um lugar silencioso (quarto com a porta fechada) e deixe o celular a um palmo da boca, um pouco de lado.
+- **Comece pelos sons das letras** (o grupo mais importante). Fale só o som, sem vogal: "mmm", não "eme".
+- Fale devagar e alegre. Frases com o nome da criança são gravadas sem o nome ("Muito bem!").
+- O que não for gravado continua com a voz do aparelho. Dá para gravar aos poucos.
+
+**Onde ficam as gravações:** só neste celular (no armazenamento do navegador). Elas não vão para a internet nem para o repositório, e ninguém mais as ouve. Por isso: se você apagar os dados do navegador ou desinstalar o app, as gravações somem; **"Reiniciar progresso" não apaga as gravações**; e elas não passam sozinhas para outro celular (grave de novo no outro). A Área dos pais mostra quantos itens já estão gravados e tem o botão **Apagar todas as gravações**.
+
+**Alternativa avançada (arquivos no repositório):** quem quiser que as gravações valham em todos os celulares pode colocar arquivos `.mp3` ou `.m4a`, com o nome exato de cada item, na pasta `assets/audio/gravacoes/`. A lista de nomes e dicas de cada som está em [`assets/audio/LISTA.md`](assets/audio/LISTA.md). **Atenção à privacidade:** este repositório é público. Qualquer gravação enviada para ele pode ser ouvida por qualquer pessoa na internet. Só faça isso se quem falou concordar, e não grave nomes nem informações pessoais. A gravação feita no celular tem prioridade sobre esses arquivos.
 
 ### Mudar letras, palavras e frases
 

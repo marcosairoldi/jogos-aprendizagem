@@ -305,3 +305,30 @@ img.quebrada { display: none; }
   .btn-icone.enorme { width: 140px; height: 140px; }
   .letra-gigante { font-size: min(36vw, 150px); }
 }
+
+/* ---------- tela de gravação da voz (adulta) ---------- */
+.gravar { gap: 12px; }
+.gv-msg { font-weight: 700; }
+.gv-msg.gv-ok { background: #d3f9d8; border-color: #2b8a3e; }
+.gv-grupo { border: 3px solid var(--rosa); border-radius: 20px; background: #fff; padding: 0 12px 12px; display: flex; flex-direction: column; gap: 12px; }
+.gv-resumo { list-style: none; cursor: pointer; min-height: 56px; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 8px 0; }
+.gv-resumo::-webkit-details-marker { display: none; }
+.gv-titulo { font-size: 19px; font-weight: 700; color: var(--rosa-forte); }
+.gv-titulo::before { content: '\25B8  '; }
+.gv-grupo[open] > .gv-resumo .gv-titulo::before { content: '\25BE  '; }
+.gv-contador { font-size: 15px; opacity: 0.85; }
+.gv-grupo > .aviso { font-size: 16px; }
+.gv-item { background: var(--rosa-claro); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 8px; border: 3px solid transparent; }
+.gv-item.gravado { border-color: #2b8a3e; background: #ebfbee; }
+.gv-item.gravando { border-color: #e03131; background: #fff5f5; }
+.gv-topo { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.gv-alvo { font-weight: 700; color: var(--texto); word-break: break-word; font-size: 22px; }
+.gv-alvo.som { font-size: 56px; line-height: 1; color: var(--rosa-forte); }
+.gv-marca { font-size: 15px; font-weight: 700; color: #2b8a3e; background: #d3f9d8; border-radius: 12px; padding: 4px 10px; white-space: nowrap; }
+.gv-dica { margin: 0; }
+.gv-botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+.gv-botoes .btn-texto { min-height: 48px; font-size: 17px; padding: 6px 14px; flex: 1 1 auto; }
+.gv-botoes .btn-texto[disabled] { opacity: 0.45; }
+.btn-texto.gv-gravar.ativo { background: #e03131; position: relative; padding-left: 40px; }
+.btn-texto.gv-gravar.ativo::before { content: ''; position: absolute; left: 16px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: #fff; animation: gv-pulsa 0.9s ease-in-out infinite; }
+@keyframes gv-pulsa { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.4; } }

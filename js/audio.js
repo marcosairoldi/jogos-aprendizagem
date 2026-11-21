@@ -4,6 +4,8 @@
 // consoante isolada para o speechSynthesis; sem arquivo, usa-se o "tts" do currículo
 // (som alongado) ou, se for null, a primeira palavra-âncora da letra.
 
+import * as gravacoes from './gravacoes.js';
+
 const BASE_GRAVACOES = 'assets/audio/gravacoes/';
 const BASE_GERADO = 'assets/audio/gerado/';
 
@@ -178,10 +180,59 @@ function carregarIndice() {
   return carregandoIndice;
 }
 
+// ---------- gravações da adulta (neste aparelho, têm prioridade máxima) ----------
+let gravIds = null; // Set de ids gravados
+let carregandoGrav = null;
+let geracao = 0; // muda quando as gravações mudam; resoluções antigas não entram no cache
+const urlsGrav = new Map(); // id -> blob: URL
+
+function carregarGravados() {
+  if (gravIds) return Promise.resolve(gravIds);
+  if (!carregandoGrav) {
+    carregandoGrav = gravacoes.listarIds()
+      .then((s) => { gravIds = s; return s; })
+      .catch(() => { gravIds = new Set(); return gravIds; });
+  }
+  return carregandoGrav;
+}
+
+async function urlGravacao(id) {
+  const ids = await carregarGravados();
+  if (!ids.has(id)) return null;
+  if (urlsGrav.has(id)) return urlsGrav.get(id);
+  const blob = await gravacoes.obter(id);
+  if (!blob) return null;
+  try {
+    const u = URL.createObjectURL(blob);
+    urlsGrav.set(id, u);
+    return u;
+  } catch (e) {
+    return null;
+  }
+}
+
+/** A tela de gravação chama depois de salvar/apagar: limpa os caches e recarrega o conjunto. */
+export function gravacoesMudaram() {
+  geracao++;
+  urlsGrav.forEach((u) => { try { URL.revokeObjectURL(u); } catch (e) { /* ignora */ } });
+  urlsGrav.clear();
+  existe.clear();
+  buscas.clear();
+  gravIds = null;
+  carregandoGrav = null;
+  return carregarGravados().then(() => undefined);
+}
+
 function resolverArquivo(id) {
   if (existe.has(id)) return Promise.resolve(existe.get(id));
   if (buscas.has(id)) return buscas.get(id);
+  const minha = geracao;
   const p = (async () => {
+    const gravada = await urlGravacao(id);
+    if (gravada) {
+      if (minha === geracao) { buscas.delete(id); existe.set(id, gravada); }
+      return gravada;
+    }
     const candidatos = [BASE_GRAVACOES + id + '.mp3', BASE_GRAVACOES + id + '.m4a'];
     if (id.startsWith('som_')) candidatos.push(BASE_GERADO + id + '.mp3');
     const idx = await carregarIndice();
@@ -195,6 +246,7 @@ function resolverArquivo(id) {
         if (await existeUrl(url)) { achada = url; break; }
       } else if (!idx && (await existeUrl(url))) { achada = url; break; }
     }
+    if (minha !== geracao) return achada; // as gravações mudaram no meio: não memoriza
     buscas.delete(id);
     if (!achada && pulou) return null; // não memoriza: tenta de novo quando o SW assumir
     existe.set(id, achada);

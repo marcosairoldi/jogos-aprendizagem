@@ -1,5 +1,7 @@
 # Lista de gravações da Trilha dos Sons
 
+> **Jeito recomendado: grave pelo próprio app.** Abra o jogo, entre na **Área dos pais** e toque em **Gravar minha voz**. As gravações ficam só no seu celular (não vão para a internet nem para este repositório) e o jogo passa a usá-las na hora. Esta lista serve de roteiro e, para quem preferir, de referência para enviar arquivos ao repositório (opção avançada, veja a atenção de privacidade abaixo).
+
 Este roteiro é para quem quiser gravar a própria voz no jogo. **Nada aqui é obrigatório**: sem gravação, o jogo usa sons gerados por computador e a voz do aparelho. Mas a sua voz, falando devagar e alegre, ensina muito melhor.
 
 > **ATENÇÃO, PRIVACIDADE:** o repositório deste jogo é **público**. Qualquer gravação colocada lá fica pública, para qualquer pessoa na internet. A voz de uma pessoa é um dado pessoal. Só envie uma gravação se a pessoa que falou concordou, sabendo disso. Se preferir, **não suba as gravações para o repositório**: use-as só no seu próprio aparelho/cópia do jogo.

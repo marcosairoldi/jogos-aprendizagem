@@ -1,5 +1,6 @@
 // Área dos pais: porta com conta de somar e painel para a adulta (aqui pode ter texto).
 import { el, botaoIcone } from '../ui.js';
+import * as gravacoes from '../gravacoes.js';
 
 const sorteio = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 
@@ -17,7 +18,7 @@ function novaConta() {
 }
 
 export default {
-  montar(raiz, app) {
+  montar(raiz, app, params = {}) {
     const tela = el('section', { classe: 'tela rolavel pais' });
     raiz.append(tela);
     const voltar = () => app.ir('inicio');
@@ -92,6 +93,15 @@ export default {
         painel();
       });
 
+      const gravarBtn = el('button', { type: 'button', classe: 'btn-texto', texto: 'Gravar minha voz', attrs: { 'aria-label': 'Gravar minha voz', 'data-acao': 'gravar-voz' } });
+      gravarBtn.addEventListener('click', () => app.ir('gravar'));
+      if (gravacoes.disponivel()) {
+        gravacoes.listarIds().then((s) => {
+          const r = tela.querySelector('#resumo-voz');
+          if (r) r.textContent = s.size === 1 ? 'Voz gravada: 1 item' : `Voz gravada: ${s.size} itens`;
+        });
+      }
+
       const minutos = Math.round(rec.tempoTotal() / 60000);
       const semVoz = app.audio.estado && app.audio.estado().temVozPtBr === false;
 
@@ -101,6 +111,10 @@ export default {
         el('h2', { texto: 'Nome da criança' }),
         campo,
         el('p', { classe: 'nota', texto: 'O nome fica salvo só neste aparelho e é usado para o jogo chamar a criança. Sem nome, o jogo diz "princesa".' }),
+        el('h2', { texto: 'Voz gravada' }),
+        el('p', { classe: 'nota', texto: 'Grave a sua voz para o jogo falar com você. As gravações ficam só neste celular.' }),
+        el('p', { id: 'resumo-voz', texto: gravacoes.disponivel() ? 'Voz gravada: contando…' : 'Gravação indisponível neste navegador (aba anônima?).' }),
+        el('div', { classe: 'linha' }, gravarBtn),
         el('h2', { texto: 'Guia' }),
         el('div', { classe: 'linha' }, trocar),
         el('h2', { texto: 'Letras dominadas' }),
@@ -113,13 +127,14 @@ export default {
         el('h2', { texto: 'Progresso' }),
         el('div', { classe: 'linha' }, liberar),
         liberarMsg,
+        el('p', { classe: 'nota', texto: 'Reiniciar o progresso não apaga as gravações da sua voz.' }),
         el('p', { classe: 'nota', texto: `Há ${letras.length} letras na trilha. ${lib.length} liberadas.` }),
         el('div', { classe: 'linha' }, reiniciar),
         el('div', { classe: 'linha', estilo: 'padding-bottom:16px' }, voltarBtn),
       );
     }
 
-    porta();
+    if (params && params.painel) painel(); else porta();
     return { destruir() { clearTimeout(temporizador); } };
   },
 };
