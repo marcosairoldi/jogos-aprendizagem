@@ -8,6 +8,8 @@ import * as gravacoes from './gravacoes.js';
 
 const BASE_GRAVACOES = 'assets/audio/gravacoes/';
 const BASE_GERADO = 'assets/audio/gerado/';
+// Voz sintética de alta qualidade importada (ferramentas/importar-voz.mjs); vem antes do som gerado.
+const BASE_VOZ = 'assets/audio/voz/';
 
 let cfg = { curriculo: null, frases: {}, obterNome: () => '' };
 let ctx = null; // AudioContext
@@ -234,6 +236,7 @@ function resolverArquivo(id) {
       return gravada;
     }
     const candidatos = [BASE_GRAVACOES + id + '.mp3', BASE_GRAVACOES + id + '.m4a'];
+    candidatos.push(BASE_VOZ + id + '.mp3');
     if (id.startsWith('som_')) candidatos.push(BASE_GERADO + id + '.mp3');
     const idx = await carregarIndice();
     let achada = null;

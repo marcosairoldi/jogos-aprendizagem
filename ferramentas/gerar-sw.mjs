@@ -23,7 +23,7 @@ function varrer(dir, saida) {
 
 // Indice dos audios GERADOS (gravacoes novas sao achadas por sondagem, sem regenerar nada), lido por js/audio.js (evita requisicoes que dariam 404).
 const audios = [];
-for (const sub of ['assets/audio/gerado']) {
+for (const sub of ['assets/audio/voz', 'assets/audio/gerado']) {
   const d = join(raiz, sub);
   if (!existsSync(d)) continue;
   for (const n of readdirSync(d).sort()) if (/\.(mp3|m4a)$/.test(n)) audios.push(`${sub}/${n}`);
