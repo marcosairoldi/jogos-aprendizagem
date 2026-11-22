@@ -1,6 +1,6 @@
 // Service worker da Trilha dos Sons. A lista de arquivos e o nome do cache sao
 // gerados por `node ferramentas/gerar-sw.mjs`: nao edite entre os marcadores.
-const CACHE = 'trilha-sons-74e3eab0c2'; // CACHE-AUTO
+const CACHE = 'trilha-sons-614ba7cdda'; // CACHE-AUTO
 const ARQUIVOS = [
 // <ARQUIVOS>
   "./",

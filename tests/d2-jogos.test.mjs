@@ -87,9 +87,10 @@ await teste('disponivel(): regras de cada jogo', async () => {
     assert.equal(mods[j].icone, `assets/svg/ui/jogo-${j}.svg`);
     assert.equal(typeof mods[j].iniciar, 'function');
   }
-  assert.equal(mods.junte.disponivel(['a'], curriculoMock), false, 'só "a": sem sílaba possível');
+  // sem sílaba só com as liberadas, o Junte usa os pares de vogais: nunca fica trancado
+  assert.equal(mods.junte.disponivel(['a'], curriculoMock), true, 'só "a": usa pares de vogais');
   assert.equal(mods.junte.disponivel(['a', 'i'], curriculoMock), true, 'a+i: "ai"');
-  assert.equal(mods.junte.disponivel(['m'], curriculoMock), false);
+  assert.equal(mods.junte.disponivel(['m'], curriculoMock), true, 'só "m": completa com vogais');
   assert.equal(mods.junte.disponivel(['m', 'a'], curriculoMock), true, '"ma"');
   assert.equal(mods.junte.disponivel(['m', 'a', 'p'], curriculoMock), true, 'mapa');
   assert.equal(mods.escute.disponivel(['a'], curriculoMock), true);

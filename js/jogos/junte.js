@@ -14,7 +14,17 @@ function letrasDaPalavra(cur, p) {
 function todasLiberadas(letras, lib) {
   return letras.length > 0 && letras.every((l) => lib.includes(l));
 }
+const VOGAIS = ['a', 'e', 'i', 'o', 'u'];
+
+// Itens possíveis com as letras liberadas. Se ainda não há nenhum (ex.: só A e E liberadas, e os pares
+// de vogais do currículo são AI, AU, EI, EU, OI, UI), usa os pares de vogais mesmo com vogais que ainda
+// não chegaram na trilha: juntar sons de vogais é o exercício certo nessa etapa e o jogo nunca fica trancado.
 function candidatos(lib, cur) {
+  const c = candidatosCom(lib, cur);
+  if (c.silabas.length + c.palavras.length > 0) return c;
+  return candidatosCom([...new Set([...lib, ...VOGAIS])], cur);
+}
+function candidatosCom(lib, cur) {
   const silabas = Object.entries(cur.silabas || {})
     .filter(([, s]) => todasLiberadas(s.letras || [], lib))
     .map(([id, s]) => ({ tipo: 'silaba', id, letras: s.letras }));

@@ -121,7 +121,7 @@ try {
     console.log('   jogo concluído:', jogo);
   }
   console.log('   jogos:', jogosJogados.join(', '), '| recompensas:', rec);
-  ok(jogosJogados.join(',') === 'escute,caca,trace', 'lição de A (só 1 letra liberada): escute, caça e trace; Junte é pulado por falta de sílabas');
+  ok(jogosJogados.join(',') === 'escute,caca,trace,junte', 'lição de A (só 1 letra liberada): escute, caça, trace e junte (com pares de vogais)');
   ok(rec === 4, 'recompensas: 3 estrelas + 1 final', String(rec));
   const ev0 = await esp.eventos(0);
   ok(J.errosFeitos >= 3, `erros de propósito feitos (${J.errosFeitos})`);

@@ -77,7 +77,7 @@ try {
       if (t === 'trilha') break;
       if (t === 'recompensa') { await dormir(300); await sairRecompensa(page); } else jogos.push(await J.jogarRodada());
     }
-    ok(jogos.join(',') === 'escute,caca,trace', 'lição completa offline: ' + jogos.join(', '));
+    ok(jogos.join(',') === 'escute,caca,trace,junte', 'lição completa offline: ' + jogos.join(', '));
     const fontes = await page.evaluate(async () => { await document.fonts.ready; return [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family + ' ' + f.weight); });
     ok(fontes.some((f) => /Andika/.test(f)), 'fonte Andika carregada (do cache) e usada nas letras', JSON.stringify(fontes));
     // figuras realmente carregadas (naturalWidth > 0) em todo o percurso: confere as do caça-som com a página atual
