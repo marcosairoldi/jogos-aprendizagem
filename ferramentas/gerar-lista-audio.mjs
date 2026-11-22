@@ -46,7 +46,7 @@ Algumas frases têm \`{nome}\` (por exemplo "Muito bem, {nome}!"). **Grave essas
 
 ## Os sons das letras (muito importante)
 
-O jogo ensina o **som** da letra, **nunca o nome**. Diga "mmmm", não "eme"; "p" (só o sopro), não "pê". **Não coloque vogal depois da consoante.** A coluna "como fazer" explica cada som. Os sons contínuos (a e i o u m f v s l n) podem durar quase um segundo; os "estourinhos" (p b t d c g) são bem curtos.
+O jogo ensina o **nome** da letra e, logo depois, o **som** dela, sempre separados. Nesta seção grave só o **som**: "mmmm" (não o nome da letra); "p" (só o sopro). **Não coloque vogal depois da consoante.** Os nomes das letras ficam numa seção própria, logo abaixo. A coluna "como fazer" explica cada som. Os sons contínuos (a e i o u m f v s l n) podem durar quase um segundo; os "estourinhos" (p b t d c g) são bem curtos.
 `);
 
 // ---- sons das letras
@@ -61,8 +61,20 @@ for (const l of ordem) {
 }
 L.push('');
 
+// ---- nomes das letras
+const NOMES_EXTRA = { h: 'agá', k: 'cá', q: 'quê', w: 'dáblio', x: 'xis', y: 'ípsilon' };
+L.push('### 2. Nomes das letras\n');
+L.push('Aqui é o **NOME** da letra, dito sozinho, devagar e alegre (não o som). O jogo toca o nome e, em seguida, o som, e deixa claro qual é qual. Letras sem gravação usam a voz do aparelho.\n');
+L.push('| arquivo | letra | o que falar |');
+L.push('|---|---|---|');
+for (const l of [...ordem, ...Object.keys(NOMES_EXTRA)]) {
+  const nome = cur?.letras?.[l]?.nome || NOMES_EXTRA[l] || '';
+  L.push(`| \`nome_${l}.mp3\` | ${l.toUpperCase()} | ${esc(nome)} |`);
+}
+L.push('');
+
 if (cur) {
-  L.push('### 2. Sílabas\n');
+  L.push('### 3. Sílabas\n');
   L.push('Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a").\n');
   L.push('| arquivo | o que falar |');
   L.push('|---|---|');
@@ -70,7 +82,7 @@ if (cur) {
     L.push(`| \`${esc(s.audio || 'sil_' + id)}.mp3\` | ${esc((s.tts || s.texto || id).toLowerCase())} (${esc(s.texto || id.toUpperCase())}) |`);
   }
   L.push('');
-  L.push('### 3. Palavras\n');
+  L.push('### 4. Palavras\n');
   L.push('| arquivo | o que falar |');
   L.push('|---|---|');
   for (const [id, p] of Object.entries(cur.palavras || {})) {
@@ -79,7 +91,7 @@ if (cur) {
   L.push('');
 }
 
-L.push(`### ${cur ? 4 : 2}. Frases\n`);
+L.push(`### ${cur ? 5 : 3}. Frases\n`);
 L.push('Frases com `{nome}`: grave **sem o nome**, como mostrado.\n');
 L.push('| arquivo | o que falar |');
 L.push('|---|---|');

@@ -26,7 +26,9 @@ const dominada = (jogos = ['escute', 'caca', 'trace']) => Array.from({ length: 6
 
 async function juntarTextos(page) {
   const a = await auditar(page);
-  for (const t of [...a.textos, ...a.textosAdulta]) textosVistos.add(t);
+  // o nome da letra só pode aparecer na legenda, depois do rótulo "nome:" (regra do nome e som)
+  const nomesLegenda = await page.evaluate(() => [...document.querySelectorAll('#legenda .legenda-rotulo')].filter((e) => e.textContent === 'nome:').map((e) => e.nextElementSibling && e.nextElementSibling.textContent));
+  for (const t of [...a.textos, ...a.textosAdulta]) if (!nomesLegenda.includes(t)) textosVistos.add(t);
   return a;
 }
 async function marcarFalas(page) {
@@ -83,7 +85,7 @@ console.log('\n# 1. Rótulos visíveis em todos os botões de ícone');
   await tocar(page, 'button[aria-label="Brincadeiras"]'); await esperarTela(page, 'menu'); await dormir(500);
   await conferirRotulos(page, 'menu', ['Voltar', 'Ouvir de novo']);
   const nomesJogos = await page.locator('.btn-jogo .rotulo').allInnerTexts();
-  ok(JSON.stringify(nomesJogos) === JSON.stringify(['Escute e Toque', 'Caça-Som', 'Junte os Sons', 'Trace a Letra']), 'menu: cartões com o nome de cada jogo', JSON.stringify(nomesJogos));
+  ok(JSON.stringify(nomesJogos) === JSON.stringify(['Escute e Toque', 'Caça-Som', 'Junte os Sons', 'Trace a Letra', 'Casinhas dos Sons']), 'menu: cartões com o nome de cada jogo', JSON.stringify(nomesJogos));
   await juntarTextos(page);
   await tocar(page, '.btn-jogo', { indice: 0 }); await page.waitForSelector('.j-ouvir'); await dormir(500);
   const jr = await page.locator('.j-ouvir .j-rotulo').innerText();
@@ -121,13 +123,19 @@ console.log('\n# 2. Legenda da fala');
   ok(rect.cobre === 0, 'a legenda não cobre nenhum botão');
   await esperarAte(async () => page.evaluate(() => !document.getElementById('legenda').classList.contains('visivel')), { timeout: 8000, msg: 'legenda some' });
   ok(true, 'a legenda some alguns segundos depois do fim da fala');
-  // som: alto-falante + letra em maiúscula, nunca texto que induza a dizer o nome
+  // parada: diz o nome e depois o som; a legenda marca "nome:" e, em seguida, "som:" (alto-falante + letra em maiúscula)
   await page.evaluate(() => { window.__fala.length = 0; });
   await tocar(page, '.parada:not(.foco)');
   await esperarAte(async () => (await lerFalas(page)).some((x) => x.d.tipo === 'som'), { msg: 'fala de som' });
-  const som = (await lerFalas(page)).find((x) => x.d.tipo === 'som');
+  const fl = await lerFalas(page);
+  const nomeEv = fl.find((x) => x.d.tipo === 'nome');
+  ok(!!nomeEv && fl.indexOf(nomeEv) < fl.findIndex((x) => x.d.tipo === 'som'), 'parada: o nome vem antes do som');
+  ok(/legenda-rotulo[^>]*>nome:</.test(nomeEv.html) && nomeEv.html.includes(`>${nomeEv.d.texto}<`), `nome: legenda mostra "nome:" e o nome (${nomeEv.d.texto})`, nomeEv.html);
+  const som = fl.find((x) => x.d.tipo === 'som');
   ok(/^[A-Z]$/.test(som.d.texto), `som: legenda mostra só a letra maiúscula (${som.d.texto})`);
-  ok(/legenda-icone/.test(som.html) && /legenda-texto grande/.test(som.html) && !/\//.test(som.html.replace(/<[^>]*>/g, '')), 'som: alto-falante + letra, sem barras nem texto extra');
+  const txtSom = som.html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+  ok(/legenda-icone/.test(som.html) && /legenda-texto grande/.test(som.html) && !/\//.test(txtSom), 'som: alto-falante + letra, sem barras');
+  ok(txtSom === `nome: ${nomeEv.d.texto} · som: ${som.d.texto}`, 'a dupla fica clara: "nome: ... · som: ..."', txtSom);
   await tocar(page, 'button[aria-label="Brincadeiras"]'); await esperarTela(page, 'menu');
   // no Escute e Toque a letra é a resposta: só o alto-falante
   await page.evaluate(() => { window.__fala.length = 0; });
@@ -272,13 +280,15 @@ console.log('\n# 5. Tela "Como funciona"');
 }
 
 // ---------------------------------------------------------------- 6. nomes de consoantes
-console.log('\n# 6. Nenhum nome de consoante escrito');
+console.log('\n# 6. Nome de letra só aparece como nome (legenda "nome:" e gravação), nunca solto');
 {
   const NOMES = ['eme', 'pê', 'bê', 'tê', 'efe', 'vê', 'esse', 'ele', 'ene', 'dê', 'cê', 'gê', 'jota', 'zê', 'erre', 'agá', 'cá', 'quê', 'xis', 'dáblio', 'ípsilon'];
   // "esse", "ele", "cá" também são palavras comuns: só contam quando aparecem como nome de letra
   const AMBIGUOS = new Set(['esse', 'ele', 'cá']);
   const re = (n) => new RegExp(`(^|[^\\p{L}])${n}([^\\p{L}]|$)`, 'iu');
   const reLetra = (n) => new RegExp(`(letra|chama|nome|som d[oa])\\s+(d[oa]\\s+)?["“']?${n}(["”']|[^\\p{L}]|$)|["“']${n}["”']`, 'iu');
+  // tira as frases que explicitamente falam do NOME da letra (permitidas desde a regra nome e depois som)
+  const tirarFrasesDeNome = (t) => t.split(/(?<=[.!?])\s+/).filter((f) => !/\bnome\b/i.test(f)).join(' ');
   const proibido = (texto) => NOMES.filter((n) => (AMBIGUOS.has(n) ? reLetra(n) : re(n)).test(texto));
   const fontes = [];
   const lerDir = (d) => { for (const f of readdirSync(path.join(raizProjeto, d))) if (f.endsWith('.js')) fontes.push([`${d}/${f}`, readFileSync(path.join(raizProjeto, d, f), 'utf8')]); };
@@ -286,13 +296,16 @@ console.log('\n# 6. Nenhum nome de consoante escrito');
   fontes.push(['index.html', readFileSync(path.join(raizProjeto, 'index.html'), 'utf8')]);
   fontes.push(['README.md', readFileSync(path.join(raizProjeto, 'README.md'), 'utf8')]);
   for (const [arq, t] of fontes) {
-    const sem = t.replace(/\/\/.*$/gm, ''); // comentários de código podem falar em nomes
-    const r = proibido(sem);
+    // comentários de código podem falar em nomes; a tabela de nomes das letras fora do currículo (audio.js) é a única exceção
+    const sem = t.replace(/\/\/.*$/gm, '').replace(/^.*NOMES_EXTRA =.*$/gm, '');
+    // regra nova (nome e depois som): a ajuda para a adulta pode citar um nome numa frase que diz que é o NOME
+    const semAjuda = arq.endsWith('ajuda.js') ? tirarFrasesDeNome(sem) : sem;
+    const r = proibido(semAjuda);
     ok(r.length === 0, `${arq}: sem nome de consoante`, r.join(', '));
   }
   const fr = Object.entries(frases).filter(([k]) => !k.startsWith('_'));
   ok(fr.every(([, v]) => proibido(v).length === 0), 'frases.json: nenhuma frase com nome de consoante');
-  const vistos = [...textosVistos].filter((t) => proibido(t).length);
+  const vistos = [...textosVistos].filter((t) => proibido(tirarFrasesDeNome(t)).length && !/^Diga o NOME da letra: /.test(t));
   ok(vistos.length === 0, 'textos vistos nas telas: sem nome de consoante', vistos.join(' | '));
   ok(textosVistos.size > 20, `(${textosVistos.size} textos conferidos nas telas)`);
 }

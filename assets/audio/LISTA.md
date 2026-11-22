@@ -28,7 +28,7 @@ Algumas frases têm `{nome}` (por exemplo "Muito bem, {nome}!"). **Grave essas f
 
 ## Os sons das letras (muito importante)
 
-O jogo ensina o **som** da letra, **nunca o nome**. Diga "mmmm", não "eme"; "p" (só o sopro), não "pê". **Não coloque vogal depois da consoante.** A coluna "como fazer" explica cada som. Os sons contínuos (a e i o u m f v s l n) podem durar quase um segundo; os "estourinhos" (p b t d c g) são bem curtos.
+O jogo ensina o **nome** da letra e, logo depois, o **som** dela, sempre separados. Nesta seção grave só o **som**: "mmmm" (não o nome da letra); "p" (só o sopro). **Não coloque vogal depois da consoante.** Os nomes das letras ficam numa seção própria, logo abaixo. A coluna "como fazer" explica cada som. Os sons contínuos (a e i o u m f v s l n) podem durar quase um segundo; os "estourinhos" (p b t d c g) são bem curtos.
 
 ### 1. Sons das letras
 
@@ -55,7 +55,40 @@ O jogo ensina o **som** da letra, **nunca o nome**. Diga "mmmm", não "eme"; "p"
 | `som_z.mp3` | Z | igual ao 'ssss', mas com voz: 'zzzz' contínuo, como uma abelha voando. Sem dizer 'zê'. (som /z/) |
 | `som_r.mp3` | R | é o R forte do começo de 'rato': um sopro rouco na garganta, contínuo, do jeito do seu sotaque. Sem vogal no fim e sem dizer 'erre'. Aqui só se ensina o R do começo da palavra; o R de 'caro' fica para depois. (som /h/) |
 
-### 2. Sílabas
+### 2. Nomes das letras
+
+Aqui é o **NOME** da letra, dito sozinho, devagar e alegre (não o som). O jogo toca o nome e, em seguida, o som, e deixa claro qual é qual. Letras sem gravação usam a voz do aparelho.
+
+| arquivo | letra | o que falar |
+|---|---|---|
+| `nome_a.mp3` | A | á |
+| `nome_e.mp3` | E | é |
+| `nome_i.mp3` | I | i |
+| `nome_o.mp3` | O | ó |
+| `nome_u.mp3` | U | u |
+| `nome_m.mp3` | M | eme |
+| `nome_p.mp3` | P | pê |
+| `nome_b.mp3` | B | bê |
+| `nome_t.mp3` | T | tê |
+| `nome_f.mp3` | F | efe |
+| `nome_v.mp3` | V | vê |
+| `nome_s.mp3` | S | esse |
+| `nome_l.mp3` | L | ele |
+| `nome_n.mp3` | N | ene |
+| `nome_d.mp3` | D | dê |
+| `nome_c.mp3` | C | cê |
+| `nome_g.mp3` | G | gê |
+| `nome_j.mp3` | J | jota |
+| `nome_z.mp3` | Z | zê |
+| `nome_r.mp3` | R | erre |
+| `nome_h.mp3` | H | agá |
+| `nome_k.mp3` | K | cá |
+| `nome_q.mp3` | Q | quê |
+| `nome_w.mp3` | W | dáblio |
+| `nome_x.mp3` | X | xis |
+| `nome_y.mp3` | Y | ípsilon |
+
+### 3. Sílabas
 
 Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a").
 
@@ -137,7 +170,7 @@ Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a"
 | `sil_ro.mp3` | rô (RO) |
 | `sil_ru.mp3` | rú (RU) |
 
-### 3. Palavras
+### 4. Palavras
 
 | arquivo | o que falar |
 |---|---|
@@ -201,7 +234,7 @@ Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a"
 | `pal_roda.mp3` | roda |
 | `pal_rosa.mp3` | rosa |
 
-### 4. Frases
+### 5. Frases
 
 Frases com `{nome}`: grave **sem o nome**, como mostrado.
 
@@ -213,28 +246,32 @@ Frases com `{nome}`: grave **sem o nome**, como mostrado.
 | `frase_guia_marola.mp3` | Oi! Eu sou a Marola, a sereia. Vamos juntas pela trilha! |
 | `frase_trilha_instrucao.mp3` | Toque na parada que está brilhando para continuar a trilha. |
 | `frase_trilha_nova_letra.mp3` | Uma letra nova apareceu na trilha! |
-| `frase_apresentar_letra.mp3` | Olha esta letra! Ela faz este som: |
+| `frase_apresentar_letra.mp3` | Olha a letra nova! |
 | `frase_repita_comigo.mp3` | Faz comigo: |
 | `frase_como_no_comeco.mp3` | Como no começo de |
 | `frase_menu_jogos.mp3` | Escolha uma brincadeira! |
-| `frase_escute_instrucao.mp3` | Escute o som e toque na letra que faz esse som. |
-| `frase_escute_pergunta.mp3` | Qual letra faz este som? |
-| `frase_caca_instrucao.mp3` | Escute o som e toque na figura que começa com ele. |
-| `frase_caca_pergunta.mp3` | Qual começa com este som? |
+| `frase_escute_instrucao.mp3` | Vamos jogar! |
+| `frase_escute_pergunta.mp3` | Toque na letra que faz este som. |
+| `frase_caca_instrucao.mp3` | Vamos jogar! |
+| `frase_caca_pergunta.mp3` | Qual figura começa com este som? |
 | `frase_junte_instrucao.mp3` | Toque na sereia para ela nadar e juntar os sons. |
 | `frase_junte_resultado.mp3` | Juntando, fica assim: |
-| `frase_trace_instrucao.mp3` | Passe o dedinho em cima dos pontinhos da letra. |
+| `frase_trace_instrucao.mp3` | Vamos desenhar a letra! Siga os pontinhos. |
 | `frase_trace_completo.mp3` | Que traço lindo! |
 | `frase_trace_escolher.mp3` | Escolha uma letra para traçar! |
 | `frase_acerto_1.mp3` | Isso mesmo! |
 | `frase_acerto_2.mp3` | Muito bem! |
-| `frase_acerto_3.mp3` | Você acertou! |
+| `frase_acerto_3.mp3` | Você conseguiu! |
 | `frase_acerto_4.mp3` | Que lindo! |
-| `frase_quase.mp3` | Quase! Escuta de novo: |
-| `frase_rodada_fim.mp3` | Você brincou muito bem! |
+| `frase_quase.mp3` | Quase! Escute de novo e tente outra vez. |
+| `frase_rodada_fim.mp3` | Parabéns! |
 | `frase_recompensa_estrela.mp3` | Você ganhou uma estrela! |
 | `frase_recompensa_concha.mp3` | Você ganhou uma concha! |
 | `frase_recompensa_chifre.mp3` | Você ganhou um chifre de unicórnio! |
 | `frase_letra_dominada.mp3` | Você já sabe o som desta letra! A trilha vai continuar. |
 | `frase_colecao.mp3` | Olha tudo o que você juntou! |
-| `frase_despedida.mp3` | Que brincadeira gostosa! Agora vamos descansar. Amanhã tem mais! |
+| `frase_despedida.mp3` | Tchau tchau! Você brincou muito bem hoje. Até amanhã! |
+| `frase_ouca_nome_som.mp3` | Ouça o nome e o som da letra. |
+| `frase_casinhas_instrucao.mp3` | Arraste as letras para as casinhas e escute o som que elas fazem juntas. |
+| `frase_casinhas_monte.mp3` | Monte este som: |
+| `frase_casinhas_palavra.mp3` | Monte a palavra: |

@@ -88,6 +88,7 @@
   "letras": {
     "a": {
       "maiuscula": "A",
+      "nome": "á",
       "tipo": "vogal",
       "fonema": "/a/",
       "continuo": true,
@@ -102,6 +103,7 @@
     },
     "e": {
       "maiuscula": "E",
+      "nome": "é",
       "tipo": "vogal",
       "fonema": "/e/",
       "continuo": true,
@@ -116,6 +118,7 @@
     },
     "i": {
       "maiuscula": "I",
+      "nome": "i",
       "tipo": "vogal",
       "fonema": "/i/",
       "continuo": true,
@@ -130,6 +133,7 @@
     },
     "o": {
       "maiuscula": "O",
+      "nome": "ó",
       "tipo": "vogal",
       "fonema": "/o/",
       "continuo": true,
@@ -144,6 +148,7 @@
     },
     "u": {
       "maiuscula": "U",
+      "nome": "u",
       "tipo": "vogal",
       "fonema": "/u/",
       "continuo": true,
@@ -158,6 +163,7 @@
     },
     "m": {
       "maiuscula": "M",
+      "nome": "eme",
       "tipo": "consoante",
       "fonema": "/m/",
       "continuo": true,
@@ -172,6 +178,7 @@
     },
     "p": {
       "maiuscula": "P",
+      "nome": "pê",
       "tipo": "consoante",
       "fonema": "/p/",
       "continuo": false,
@@ -186,6 +193,7 @@
     },
     "b": {
       "maiuscula": "B",
+      "nome": "bê",
       "tipo": "consoante",
       "fonema": "/b/",
       "continuo": false,
@@ -200,6 +208,7 @@
     },
     "t": {
       "maiuscula": "T",
+      "nome": "tê",
       "tipo": "consoante",
       "fonema": "/t/",
       "continuo": false,
@@ -214,6 +223,7 @@
     },
     "f": {
       "maiuscula": "F",
+      "nome": "efe",
       "tipo": "consoante",
       "fonema": "/f/",
       "continuo": true,
@@ -228,6 +238,7 @@
     },
     "v": {
       "maiuscula": "V",
+      "nome": "vê",
       "tipo": "consoante",
       "fonema": "/v/",
       "continuo": true,
@@ -242,6 +253,7 @@
     },
     "s": {
       "maiuscula": "S",
+      "nome": "esse",
       "tipo": "consoante",
       "fonema": "/s/",
       "continuo": true,
@@ -256,6 +268,7 @@
     },
     "l": {
       "maiuscula": "L",
+      "nome": "ele",
       "tipo": "consoante",
       "fonema": "/l/",
       "continuo": true,
@@ -270,6 +283,7 @@
     },
     "n": {
       "maiuscula": "N",
+      "nome": "ene",
       "tipo": "consoante",
       "fonema": "/n/",
       "continuo": true,
@@ -284,6 +298,7 @@
     },
     "d": {
       "maiuscula": "D",
+      "nome": "dê",
       "tipo": "consoante",
       "fonema": "/d/",
       "continuo": false,
@@ -298,6 +313,7 @@
     },
     "c": {
       "maiuscula": "C",
+      "nome": "cê",
       "tipo": "consoante",
       "fonema": "/k/",
       "continuo": false,
@@ -312,6 +328,7 @@
     },
     "g": {
       "maiuscula": "G",
+      "nome": "gê",
       "tipo": "consoante",
       "fonema": "/ɡ/",
       "continuo": false,
@@ -326,6 +343,7 @@
     },
     "j": {
       "maiuscula": "J",
+      "nome": "jota",
       "tipo": "consoante",
       "fonema": "/ʒ/",
       "continuo": true,
@@ -340,6 +358,7 @@
     },
     "z": {
       "maiuscula": "Z",
+      "nome": "zê",
       "tipo": "consoante",
       "fonema": "/z/",
       "continuo": true,
@@ -353,6 +372,7 @@
     },
     "r": {
       "maiuscula": "R",
+      "nome": "erre",
       "tipo": "consoante",
       "fonema": "/h/",
       "continuo": true,

@@ -99,3 +99,12 @@ Valores iguais aos sugeridos no contrato: a pesquisa não pede mudança. Nada bl
 - **R**: só o R forte do começo da palavra (rato, roda, rosa), que no Brasil soa como um sopro na garganta (/h/ ou /x/, varia com o sotaque). O R fraco de "caro", o RR e o R final ficam para depois, como casos de posição.
 - Ficam fora, por serem irregulares ou raros: H (sem som próprio), Q (só com U), X (quatro sons), K, W, Y (palavras estrangeiras), além de C e G antes de E e I.
 - Palavras para Junte os Sons: rato e roda. Rosa fica fora (S com som de Z), assim como jacaré (R fraco), janela (3 sílabas), joaninha, zebra (BR) e zíper.
+
+## 8. Nome e som da letra
+
+Decisão do dono do projeto: o jogo também ensina o **nome** da letra e, depois, o **som**, como no projeto de referência com unicórnios.
+
+- **Fundamento.** Para Ehri (fases do desenvolvimento da leitura por palavras) e Treiman (conhecimento do nome das letras em crianças pré-escolares), conhecer o nome da letra ajuda a aprender o som dela, sobretudo quando o nome contém o som: em português isso vale para quase todas as consoantes (o nome de B, P, T, D, V, C e G traz o som no começo; M, N, F, L, S e R trazem o som no início ou no fim do nome). As exceções (nomes sem o som, como H, e as vogais, em que nome e som coincidem) são poucas e não atrapalham. Esses autores também descrevem o risco inverso: a criança pode dizer o nome em vez do som ao tentar juntar sílabas. **(não confirmado online nesta rodada; baseado em conhecimento prévio das fontes)**
+- **Cuidado de sempre separar "se chama" e "faz o som".** Nome e som nunca tocam juntos nem no mesmo item: a apresentação diz o nome (`nome:x`), uma pausa, e depois o som (`som:x`), e a legenda para a adulta marca "nome:" e "som:". Quem acompanha é orientada a repetir o som, não o nome, quando pede para a criança "fazer o som".
+- **Onde entra.** Só nos momentos de **apresentar** a letra: lição, toque numa parada da trilha, fim do traçado de uma letra. Os jogos de ouvir e juntar sons (Escute e Toque, Caça-Som, Junte os Sons) continuam só com o **som**, porque ali a tarefa é discriminar e combinar sons; ouvir o nome no meio atrapalharia.
+- **Currículo.** Cada letra tem o campo `nome`; o `tts` do SOM continua proibido de ser o nome.

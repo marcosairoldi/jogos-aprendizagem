@@ -77,6 +77,9 @@ for (const l of ordem) {
   if (typeof x.continuo !== 'boolean') erro(`${p}.continuo deve ser booleano`);
   if (x.audio !== `som_${l}`) erro(`${p}.audio deve ser "som_${l}"`);
   if (!x.dica) erro(`${p}.dica ausente`);
+  // nome da letra (ensinado antes do som, sempre separado dele): obrigatório
+  if (typeof x.nome !== 'string' || !x.nome.trim()) erro(`${p}.nome ausente (nome da letra, ex.: "bê")`);
+  else if (VOGAIS.includes(l) === false && typeof x.tts === 'string' && sem(x.tts) === sem(x.nome)) erro(`${p}: o tts do SOM não pode ser o nome da letra`);
   if (!('tts' in x)) erro(`${p}.tts ausente (use null para oclusivas)`);
   if (!Array.isArray(x.palavras) || x.palavras.length < 2 || x.palavras.length > 3) erro(`${p}.palavras deve ter 2 ou 3 palavras`);
   else {

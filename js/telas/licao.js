@@ -12,6 +12,7 @@ export default {
     const info = app.curriculo.letras[letra] || {};
     const guia = app.progresso.guia() || 'lumi';
     let vivo = true;
+    const limpezas = [];
     let jogoAtual = null;
 
     const q = quadro(app, raiz, { aoCasa: () => app.ir('trilha') });
@@ -55,10 +56,37 @@ export default {
     function apresentar() {
       return new Promise((resolver) => {
         const palavra = (info.palavras && info.palavras[0]) || null;
-        const fala = ['frase:apresentar_letra', `som:${letra}`, 'pausa:400', 'frase:repita_comigo', `som:${letra}`];
+        // primeiro o NOME da letra, depois o SOM (duas vezes), sempre separados; depois a palavra-âncora
+        const nomeESom = [`nome:${letra}`, 'pausa:500', `som:${letra}`, 'pausa:500', `som:${letra}`];
+        const fala = ['frase:ouca_nome_som', 'pausa:300', ...nomeESom];
         if (palavra) fala.push('pausa:600', 'frase:como_no_comeco', `pal:${palavra}`);
-        const gigante = el('button', { type: 'button', classe: 'letra-gigante', attrs: { 'aria-label': 'Ouvir o som da letra' }, texto: info.maiuscula || letra.toUpperCase() });
-        gigante.addEventListener('click', () => app.audio.falar([`som:${letra}`]));
+        const gigante = el('button', { type: 'button', classe: 'letra-gigante', attrs: { 'aria-label': 'Ouvir o nome e o som da letra' }, texto: info.maiuscula || letra.toUpperCase() });
+        gigante.addEventListener('click', () => app.audio.falar(nomeESom));
+        // dois balõezinhos para a adulta: acendem quando o nome e quando o som tocam
+        const balao = (rot) => el('span', {
+          classe: `balao-licao balao-${rot}`,
+          texto: rot,
+          attrs: { 'data-i': 'rotulo' },
+          estilo: 'padding:4px 16px;border-radius:999px;border:2px solid var(--rosa-claro);background:#fff;color:var(--texto);font-size:15px;font-weight:700;transition:background .2s,transform .2s',
+        });
+        const balaoNome = balao('nome');
+        const balaoSom = balao('som');
+        const baloes = el('div', { classe: 'baloes-licao', attrs: { 'aria-hidden': 'true' }, estilo: 'display:flex;gap:12px;justify-content:center' }, balaoNome, balaoSom);
+        const acender = (b, ligado) => {
+          b.classList.toggle('aceso', ligado);
+          b.style.background = ligado ? 'var(--rosa-claro)' : '#fff';
+          b.style.borderColor = ligado ? 'var(--rosa-forte)' : 'var(--rosa-claro)';
+          b.style.transform = ligado ? 'scale(1.12)' : 'none';
+        };
+        const aoFalar = (ev) => {
+          const d = (ev && ev.detail) || {};
+          if (d.fim) { acender(balaoNome, false); acender(balaoSom, false); return; }
+          if (d.chave !== letra) return;
+          if (d.tipo === 'nome') { acender(balaoNome, true); acender(balaoSom, false); }
+          else if (d.tipo === 'som') { acender(balaoNome, false); acender(balaoSom, true); }
+        };
+        window.addEventListener('trilha:fala', aoFalar);
+        limpezas.push(() => window.removeEventListener('trilha:fala', aoFalar));
         const fig = el('div', { classe: 'figura-licao' });
         if (palavra) fig.append(imagem(`assets/svg/figuras/${palavra}.svg`));
         const ouvir = botaoOuvir(() => app.audio.falar(fala));
@@ -67,7 +95,7 @@ export default {
           aoClicar: () => { continuar.disabled = true; resolver(); },
         });
         palco.replaceChildren(
-          el('div', { classe: 'apresenta' }, gigante, fig),
+          el('div', { classe: 'apresenta' }, gigante, baloes, fig),
           el('div', { classe: 'rodape' }, ouvir, continuar),
         );
         app.audio.falar(fala);
@@ -114,6 +142,7 @@ export default {
     return {
       destruir() {
         vivo = false;
+        limpezas.forEach((f) => f());
         if (jogoAtual) jogoAtual.destruir();
       },
     };

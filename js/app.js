@@ -8,11 +8,27 @@ import licao from './telas/licao.js';
 import menu from './telas/menu.js';
 import colecao from './telas/colecao.js';
 import despedida from './telas/despedida.js';
-import pais from './telas/pais.js';
-import gravar from './telas/gravar.js';
-import ajuda from './telas/ajuda.js';
 import { iniciar as iniciarAtualizacao } from './telas/pais-atualizar.js';
 import { iniciarLegenda, anexar as anexarLegenda, limpar as limparLegenda } from './legenda.js';
+
+// Telas da adulta (área dos pais, gravação e ajuda) só carregam quando abertas: a abertura do jogo fica leve.
+function telaPreguicosa(carregar) {
+  return {
+    montar(raiz, app, params) {
+      let real = null;
+      let destruida = false;
+      carregar().then((m) => {
+        if (destruida) return;
+        real = m.default.montar(raiz, app, params) || {};
+        try { anexarLegenda(raiz); } catch (e) { /* sem legenda */ }
+      }).catch((e) => console.warn('[app] tela indisponível', e && e.message));
+      return { destruir() { destruida = true; if (real && real.destruir) real.destruir(); } };
+    },
+  };
+}
+const pais = telaPreguicosa(() => import('./telas/pais.js'));
+const gravar = telaPreguicosa(() => import('./telas/gravar.js'));
+const ajuda = telaPreguicosa(() => import('./telas/ajuda.js'));
 
 const TELAS = { inicio, guia, trilha, licao, menu, colecao, despedida, pais, gravar, ajuda };
 const raiz = document.getElementById('app');

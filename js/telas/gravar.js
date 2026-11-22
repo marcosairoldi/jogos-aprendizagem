@@ -3,6 +3,10 @@
 import { el } from '../ui.js';
 import * as gravacoes from '../gravacoes.js';
 
+
+// Nomes das letras fora do currículo (mesma tabela de js/audio.js; repetida aqui para a tela não depender do módulo de áudio).
+const NOMES_EXTRA = { h: 'agá', k: 'cá', q: 'quê', w: 'dáblio', x: 'xis', y: 'ípsilon' };
+
 const LIMITE_MS = 6000;
 const TAXA_SAIDA = 22050;
 const MARGEM_S = 0.06;
@@ -140,6 +144,16 @@ function montarGrupos(cur, frases) {
       dica: (d.dica || '').replace(/^Para a adulta:\s*/i, ''),
     };
   });
+  // nomes das letras (nome_<l>): as do currículo e as 6 fora dele (usadas no Trace livre)
+  const letrasNomes = [...(cur.ordem || []), ...Object.keys(NOMES_EXTRA)];
+  const nomes = letrasNomes.map((l) => {
+    const d = (cur.letras && cur.letras[l]) || {};
+    const nome = d.nome || NOMES_EXTRA[l] || '';
+    return {
+      id: 'nome_' + l, item: { nome: l }, tipo: 'nome', alvo: d.maiuscula || l.toUpperCase(),
+      dica: `Diga o NOME da letra: ${nome}`,
+    };
+  });
   const fr = Object.entries(frases || {})
     .filter(([k, t]) => !k.startsWith('_') && typeof t === 'string')
     .map(([k, t]) => ({ id: 'frase_' + k, item: { frase: k }, tipo: 'frase', alvo: semNome(t), dica: '' }));
@@ -152,6 +166,8 @@ function montarGrupos(cur, frases) {
   return [
     { chave: 'sons', titulo: 'Sons das letras (mais importante)', itens: sons, aberto: true,
       aviso: 'Fale só o SOM da letra, sem juntar vogal: "mmm" para o M; para o P, só o sopro dos lábios.' },
+    { chave: 'nomes', titulo: 'Nomes das letras', itens: nomes, aberto: false,
+      aviso: 'Aqui é o NOME da letra, não o som. Grave o nome sozinho, devagar e alegre. O jogo diz o nome e logo depois o som, sempre separados.' },
     { chave: 'frases', titulo: 'Frases', itens: fr, aberto: false },
     { chave: 'silabas', titulo: 'Sílabas', itens: sil, aberto: false, aviso: 'Fale a sílaba juntinha, como numa palavra: "má".' },
     { chave: 'palavras', titulo: 'Palavras', itens: pal, aberto: false },
@@ -422,7 +438,7 @@ export function criarEditorVoz(app, { aoVoltar = null, aoMudar = null } = {}) {
       let achou = 0;
       for (const d of detalhes) {
         const gr = d.gr;
-        const mostrarGrupo = q ? true : filtro === 'todos' || gr.chave === 'sons';
+        const mostrarGrupo = q ? true : filtro === 'todos' || gr.chave === 'sons' || gr.chave === 'nomes';
         let visiveis = 0;
         if (q) { d.abrir(); }
         for (const it of gr.itens) {
@@ -469,7 +485,7 @@ export function criarEditorVoz(app, { aoVoltar = null, aoMudar = null } = {}) {
       tela.replaceChildren(...[
         aoVoltar ? el('div', { classe: 'topo-pais' }, el('h1', { texto: 'Gravar minha voz' })) : el('h2', { texto: 'Sua voz, som por som' }),
         el('p', { texto: 'Grave a sua voz (até 6 segundos) ou envie um áudio. Ouça e, se quiser, grave de novo. Sem uma gravação, o jogo usa a voz original daquele som. As gravações ficam só neste celular e não vão para a internet. Se você apagar os dados do navegador ou desinstalar o app, elas somem.' }),
-        el('p', { classe: 'nota', texto: 'Dica: fique num lugar silencioso, com o celular a um palmo da boca. Comece pelos sons das letras.' }),
+        el('p', { classe: 'nota', texto: 'Dica: fique num lugar silencioso, com o celular a um palmo da boca. Comece pelos sons das letras e pelos nomes delas.' }),
         msg,
         faixa,
         campoBusca,

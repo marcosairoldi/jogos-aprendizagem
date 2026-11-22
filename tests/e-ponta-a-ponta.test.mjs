@@ -83,10 +83,12 @@ try {
 
   // ---- apresentação ----
   await chegou('apresenta', { marca: m });
-  await esperarAte(async () => (await esp.eventos(m)).some((x) => x.id === 'repita_comigo'), { timeout: 8000 }).catch(() => {});
+  await esperarAte(async () => (await esp.eventos(m)).some((x) => x.id === 'como_no_comeco'), { timeout: 8000 }).catch(() => {});
   const evAp = await esp.eventos(m);
   ok(evAp.some((x) => x.tipo === 'som' && x.id === 'a'), 'apresentação: toca o som da letra A (arquivo)');
-  ok(evAp.some((x) => x.id === 'apresentar_letra') && evAp.some((x) => x.id === 'repita_comigo'), 'apresentação: fala as frases');
+  ok(evAp.some((x) => x.id === 'ouca_nome_som'), 'apresentação: fala a frase "ouça o nome e o som"');
+  // arquivo nome_a.mp3 (depois de rodar ferramentas/gerar-sw.mjs, que o põe no índice) ou, antes disso, a voz do aparelho pedida pelo id nome_a
+  ok((await esp.bruto()).slice(m).some((x) => (x.k === 'audio' && /\/nome_a\.mp3/.test(x.url)) || (x.k === 'fala' && x.idvoz === 'nome_a')), 'apresentação: toca o NOME da letra A (id nome_a)');
   m = await esp.tamanho();
   await tocar(page, 'button[aria-label="Continuar"]');
 
@@ -145,7 +147,7 @@ try {
   m = await esp.tamanho();
   await tocar(page, 'button[aria-label="Brincadeiras"]');
   await chegou('menu', { marca: m });
-  ok(await page.locator('.btn-jogo').count() === 4, 'menu: 4 brincadeiras');
+  ok(await page.locator('.btn-jogo').count() === 5, 'menu: 5 brincadeiras');
   await tocar(page, 'button[aria-label="Voltar para a trilha"]');
   await esperarTela(page, 'trilha');
 
@@ -273,9 +275,10 @@ try {
   // ============ Inegociáveis e console ============
   console.log('\n# Inegociáveis e console');
   const bruto = (await esp.bruto()).concat(bruto2);
-  const ruins = falasProibidas(bruto);
+  // o nome da letra só pode ser falado por item 'nome:' (id nome_*), nunca por outro item
+  const ruins = falasProibidas(bruto).filter((r) => !/\(nome_[a-z]\)$/.test(r));
   console.log('   sílabas faladas que soam como nome de letra:', silabasHomofonas(bruto).join(' ') || '(nenhuma)');
-  ok(ruins.length === 0, 'speechSynthesis.speak nunca recebe nome/letra de consoante isolada', JSON.stringify(ruins));
+  ok(ruins.length === 0, 'speechSynthesis.speak só recebe nome de letra vindo de item nome:* (nada de nome em som, sílaba, frase ou palavra)', JSON.stringify(ruins));
   const totalFalas = bruto.filter((x) => x.k === 'fala').length;
   const totalArq = bruto.filter((x) => x.k === 'audio').length;
   console.log(`   (espiado: ${totalFalas} falas por voz, ${totalArq} arquivos de áudio)`);

@@ -60,6 +60,48 @@ try {
   x = await t(`audio.falar(['som:zzz', 'frase:nao_existe', 'xyz', 'pausa:50'])`);
   ok(x.r.cancelado === false, 'itens invalidos nao quebram');
 
+  // ---------- nome da letra (item 'nome:') ----------
+  x = await t(`audio.falar(['nome:m', 'pausa:100', 'som:m', { nome: 'b' }])`);
+  ok(x.r.cancelado === false, `nome:m e {nome:'b'} resolvem junto com som:m em ${x.ms} ms`);
+  const legNome = await page.evaluate(async () => {
+    const ev = [];
+    const f = (e) => ev.push(e.detail);
+    window.addEventListener('trilha:fala', f);
+    await audio.falar(['nome:b', 'som:b']);
+    window.removeEventListener('trilha:fala', f);
+    return ev;
+  });
+  const dNome = legNome.find((d) => d.tipo === 'nome');
+  ok(!!dNome && dNome.texto === 'bê' && dNome.chave === 'b', 'evento de legenda tipo "nome" com o nome da letra (bê)', JSON.stringify(legNome));
+  ok(legNome.findIndex((d) => d.tipo === 'nome') < legNome.findIndex((d) => d.tipo === 'som'), 'nome vem antes do som');
+  const todas = await page.evaluate(async () => {
+    const letras = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const ev = [];
+    const f = (e) => { if (e.detail && e.detail.tipo === 'nome') ev.push([e.detail.chave, e.detail.texto]); };
+    window.addEventListener('trilha:fala', f);
+    const rs = [];
+    for (const l of letras) rs.push((await audio.falar([`nome:${l}`])).cancelado);
+    window.removeEventListener('trilha:fala', f);
+    return { rs, ev };
+  });
+  ok(todas.rs.length === 26 && todas.rs.every((c) => c === false), "'nome:' funciona para as 26 letras");
+  const mapa = Object.fromEntries(todas.ev);
+  ok(['h:agá', 'k:cá', 'q:quê', 'w:dáblio', 'x:xis', 'y:ípsilon', 'j:jota', 'z:zê'].every((p) => mapa[p[0]] === p.slice(2)), 'nomes das letras fora do currículo (tabela interna) e do currículo (campo nome)', JSON.stringify(mapa));
+  const semCur = await page.evaluate(async () => {
+    audio.configurar({ curriculo: null, frases: {}, obterNome: () => '' });
+    const ev = [];
+    const f = (e) => { if (e.detail && e.detail.tipo === 'nome') ev.push(e.detail.texto); };
+    window.addEventListener('trilha:fala', f);
+    const r = await audio.falar(['nome:h', 'nome:x']);
+    window.removeEventListener('trilha:fala', f);
+    return { r, ev };
+  });
+  ok(semCur.r.cancelado === false && semCur.ev.join(',') === 'agá,xis', "'nome:h' e 'nome:x' funcionam sem currículo", JSON.stringify(semCur));
+  await page.evaluate(async () => {
+    const [c, f] = await Promise.all([fetch('data/curriculo.json').then((r) => r.json()), fetch('data/frases.json').then((r) => r.json())]);
+    audio.configurar({ curriculo: c, frases: f, obterNome: () => '' });
+  });
+
   const cancel = await page.evaluate(async () => {
     const a = audio.falar(['pausa:1500', 'som:m']);
     await new Promise((r) => setTimeout(r, 100));

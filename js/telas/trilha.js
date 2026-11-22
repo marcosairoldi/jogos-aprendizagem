@@ -69,14 +69,14 @@ export default {
       }, imagem('assets/svg/ui/parada.svg', 'fundo-parada'), el('span', { classe: 'letra', texto: (app.curriculo.letras[l] && app.curriculo.letras[l].maiuscula) || l.toUpperCase() }));
       b.addEventListener('click', () => {
         if (ehFoco) return iniciarLicao(l);
-        // parada antiga: toca o som; um segundo toque seguido abre a lição daquela letra
+        // parada antiga: diz o nome e depois o som; um segundo toque seguido abre a lição daquela letra
         const agora = Date.now();
         if (ultimoToque.letra === l && agora - ultimoToque.t < 6000) return iniciarLicao(l);
         ultimoToque = { letra: l, t: agora };
         b.classList.remove('balanca');
         void b.offsetWidth;
         b.classList.add('balanca');
-        app.audio.falar([`som:${l}`]);
+        app.audio.falar([`nome:${l}`, 'pausa:400', `som:${l}`]);
       });
       area.append(b);
       if (ehFoco) {

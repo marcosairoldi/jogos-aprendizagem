@@ -151,7 +151,7 @@ console.log('\n[2] trilha, lição, sequência de jogos, recompensas, persistên
   await page.waitForSelector('.letra-gigante');
   ok((await page.textContent('.letra-gigante')) === 'A', 'lição mostra a letra A gigante');
   falas = await falasDe(page);
-  const esperado = ['frase:apresentar_letra', 'som:a', 'pausa:400', 'frase:repita_comigo', 'som:a', 'pausa:600', 'frase:como_no_comeco', 'pal:abelha'];
+  const esperado = ['frase:ouca_nome_som', 'pausa:300', 'nome:a', 'pausa:500', 'som:a', 'pausa:500', 'som:a', 'pausa:600', 'frase:como_no_comeco', 'pal:abelha'];
   ok(falas.some((f) => JSON.stringify(f) === JSON.stringify(esperado)), 'fala da apresentação exatamente como no contrato');
   ok(await semRolagem(page), 'apresentação sem rolagem');
   await conferirBotoes(page, 'apresentação');
@@ -200,10 +200,10 @@ console.log('\n[3] avanço por domínio libera nova letra');
   ok((await page.locator('.parada').count()) === 2, 'duas paradas liberadas');
   await conferirBotoes(page, 'trilha com 2 letras');
   await foto(page, 'trilha-nova');
-  // toque numa parada antiga toca o som; segundo toque abre a lição
+  // toque numa parada antiga diz o nome e depois o som; segundo toque abre a lição
   await page.locator('.parada:not(.foco)').click();
   const f2 = await falasDe(page);
-  ok(f2.some((f) => f.length === 1 && f[0] === 'som:a'), 'toque numa parada antiga toca o som');
+  ok(f2.some((f) => JSON.stringify(f) === JSON.stringify(['nome:a', 'pausa:400', 'som:a'])), 'toque numa parada antiga diz o nome e depois o som');
   await page.locator('.parada:not(.foco)').click();
   await page.waitForSelector('.letra-gigante');
   ok((await page.textContent('.letra-gigante')) === 'A', 'segundo toque abre a lição da letra antiga');
@@ -229,7 +229,7 @@ console.log('\n[4] menu de jogos, coleção, despedida');
   await clicar(page, 'Voltar para a trilha');
   await clicar(page, 'Brincadeiras');
   await page.waitForSelector('.btn-jogo');
-  ok(await page.locator('.btn-jogo').count() === 4, 'menu com 4 jogos');
+  ok(await page.locator('.btn-jogo').count() === 5, 'menu com 5 jogos');
   ok((await falasDe(page)).some((f) => f.includes('frase:menu_jogos')), 'fala menu_jogos');
   await conferirBotoes(page, 'menu');
   await foto(page, 'menu');

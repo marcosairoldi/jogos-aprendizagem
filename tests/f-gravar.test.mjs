@@ -85,10 +85,10 @@ try {
   await page.screenshot({ path: SHOTS + '/gravar-1-inicio.png' });
   ok(new RegExp('0 de ' + N).test(await page.locator('.gv-contador[data-grupo="sons"]').innerText()), 'contador dos sons: 0 de N');
   const nGrupos = await page.locator('details.gv-grupo').count();
-  ok(nGrupos === 4, '4 grupos recolhíveis');
+  ok(nGrupos === 5, '5 grupos recolhíveis (sons, nomes, frases, sílabas, palavras)');
   ok((await page.locator('.gv-item').count()) === N, 'só os sons aparecem (outros grupos recolhidos)');
   const tit = await page.locator('.gv-titulo').allInnerTexts();
-  ok(tit.join('|').indexOf('Sons das letras') < tit.join('|').indexOf('Frases') && tit[2].includes('Sílabas') && tit[3].includes('Palavras'), 'ordem dos grupos', tit.join('|'));
+  ok(tit[0].includes('Sons das letras') && tit[1].includes('Nomes das letras') && tit[2].includes('Frases') && tit[3].includes('Sílabas') && tit[4].includes('Palavras'), 'ordem dos grupos', tit.join('|'));
   ok(/mmm/.test(await page.locator('details[data-grupo="sons"] > .aviso').innerText()), 'aviso fixo sobre fonema sem vogal');
   const alvos = await page.locator('.gv-item[data-id="som_m"] .gv-botoes button').evaluateAll((bs) => bs.filter((b) => b.offsetParent).map((b) => b.getBoundingClientRect().height));
   ok(alvos.every((h) => h >= 47.5), 'botões visíveis >= 48 px', alvos.join(','));
@@ -138,7 +138,7 @@ try {
   await page.evaluate(() => { window.__esp.log.length = 0; });
   await tocar(page, '.ponto.parada.foco');
   await page.waitForSelector('.apresenta');
-  await esperarAte(async () => (await logAudio(page)).length > 0, { msg: 'áudio da lição' });
+  await esperarAte(async () => (await logAudio(page)).some((u) => /som_m\.mp3|^blob:/.test(u)), { timeout: 20000, msg: 'áudio da lição' });
   await dormir(500);
   let urls = await logAudio(page);
   ok(urls.some((u) => u.startsWith('blob:')), 'lição da letra M toca um blob: URL para o som', urls.join(' '));
@@ -175,7 +175,7 @@ try {
   await page.evaluate(() => { window.__esp.log.length = 0; });
   await tocar(page, '.ponto.parada.foco');
   await page.waitForSelector('.apresenta');
-  await esperarAte(async () => (await logAudio(page)).length > 0, { msg: 'áudio da lição' });
+  await esperarAte(async () => (await logAudio(page)).some((u) => /som_m\.mp3|^blob:/.test(u)), { timeout: 20000, msg: 'áudio da lição' });
   await dormir(500);
   urls = await logAudio(page);
   ok(urls.some((u) => /assets\/audio\/(voz|gerado)\/som_m\.mp3/.test(u)) && !urls.some((u) => u.startsWith('blob:')), 'apagada a gravação, o jogo volta a assets/audio/gerado/som_m.mp3', urls.join(' '));
@@ -206,6 +206,14 @@ try {
   ok((await page.locator('.gv-item[data-id="sil_ma"] .gv-alvo').innerText()) === 'MA', 'sílaba em maiúsculas');
   await tocar(page, 'details[data-grupo="palavras"] > summary');
   ok((await page.locator('.gv-item[data-id="pal_mapa"] .gv-alvo').innerText()) === 'MAPA', 'palavra em maiúsculas');
+  // nomes das letras: grupo próprio, com o texto "Diga o NOME da letra: ..."
+  await tocar(page, 'details[data-grupo="nomes"] > summary');
+  await page.waitForSelector('.gv-item[data-id="nome_m"]');
+  ok((await page.locator('details[data-grupo="nomes"] .gv-item').count()) === curriculo.ordem.length + 6, 'nomes: uma linha por letra (as do currículo e h k q w x y)');
+  ok((await page.locator('.gv-item[data-id="nome_b"] .gv-dica').innerText()) === 'Diga o NOME da letra: bê', 'nomes: texto "Diga o NOME da letra: bê"');
+  ok((await page.locator('.gv-item[data-id="nome_h"] .gv-dica').innerText()) === 'Diga o NOME da letra: agá', 'nomes: letras fora do currículo também (agá)');
+  ok(/NOME da letra, não o som/.test(await page.locator('details[data-grupo="nomes"] > .aviso').innerText()), 'nomes: aviso separando nome e som');
+  ok(new RegExp('0 de ' + (curriculo.ordem.length + 6)).test(await page.locator('.gv-contador[data-grupo="nomes"]').innerText()), 'nomes: contador próprio');
   await page.locator('.gv-item[data-id="pal_mapa"]').scrollIntoViewIfNeeded();
   await page.screenshot({ path: SHOTS + '/gravar-4-palavras.png' });
 
@@ -279,7 +287,7 @@ try {
     await a3.page.evaluate(() => { window.__esp.log.length = 0; });
     await tocar(a3.page, '.ponto.parada.foco');
     await a3.page.waitForSelector('.apresenta');
-    await esperarAte(async () => (await logAudio(a3.page)).length > 0, { msg: 'áudio sem IDB' });
+    await esperarAte(async () => (await logAudio(a3.page)).some((u) => /som_m\.mp3|^blob:/.test(u)), { timeout: 20000, msg: 'áudio sem IDB' });
     ok((await logAudio(a3.page)).some((u) => /audio\/(voz|gerado)\/som_m\.mp3/.test(u)), 'o jogo segue tocando o som gerado');
     if (modo === 'getter') await a3.page.screenshot({ path: SHOTS + '/gravar-sem-idb.png' });
     limpo(a3.coleta, 'IDB ' + modo);

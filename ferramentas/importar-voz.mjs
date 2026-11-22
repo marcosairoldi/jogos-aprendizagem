@@ -1,7 +1,7 @@
 // Importa a voz sintética de alta qualidade do projeto "Unicórnio dos Sons" para assets/audio/voz/,
 // renomeando cada arquivo para os ids deste jogo (som_, sil_, pal_, frase_).
 // Uso: node ferramentas/importar-voz.mjs <pasta public/audio do outro projeto>
-// Os nomes de letra (letra-x-nome) nunca são importados: o jogo ensina só o SOM.
+// Os nomes das letras (letra-x-nome) entram como nome_<letra>; o jogo ensina o NOME e depois o SOM, sempre separados.
 import { readFileSync, writeFileSync, copyFileSync, mkdirSync, existsSync, readdirSync, rmSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -56,6 +56,8 @@ for (const l of curriculo.ordem) {
 }
 for (const s of Object.keys(curriculo.silabas)) copiar(`silaba-${s}`, `sil_${s}`);
 for (const p of Object.keys(curriculo.palavras)) copiar(`palavra-${p}`, `pal_${p}`);
+// Nomes das letras (J e Z não existem na outra voz: ficam com a voz do aparelho).
+for (const l of curriculo.ordem) copiar(`letra-${l}-nome`, `nome_${l}`);
 for (const [chave, arq] of Object.entries(FRASES)) copiar(arq, `frase_${chave}`);
 
 // Sons contínuos muito longos atrasam o jogo: corta em 1,5 s com final suave (precisa de ffmpeg).

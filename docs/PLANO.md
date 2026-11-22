@@ -24,7 +24,7 @@ Ninguém edita arquivo de outro dono. Ninguém faz commit; o líder integra e co
 - JS puro, módulos ES (`<script type="module">`), sem frameworks, sem dependências em tempo de execução.
 - Todos os caminhos são relativos (`assets/...`, nunca `/assets/...`), para funcionar em `usuario.github.io/repo/`.
 - Ids em minúsculas ASCII sem acento: letra `m`, sílaba `ma`, palavra `aviao`.
-- Ids de áudio: `som_<letra>`, `sil_<silaba>`, `pal_<palavra>`, `frase_<chave>`.
+- Ids de áudio: `nome_<letra>`, `som_<letra>`, `sil_<silaba>`, `pal_<palavra>`, `frase_<chave>`.
 - Letras exibidas em MAIÚSCULA, fonte Andika (SIL OFL, feita para quem está aprendendo a ler), embutida em `assets/fontes/`.
 - Paleta: rosa dominante. Tokens CSS em `css/estilo.css` (`--rosa-forte #d6336c`, `--rosa #f783ac`, `--rosa-claro #ffdeeb`, `--lilas #b197fc`, `--agua #66d9e8`, `--dourado #ffd43b`, `--texto #5c2a3e`, `--fundo #fff0f6`).
 - Personagens originais: unicórnio **Lumi** e sereia **Marola**.
@@ -32,7 +32,7 @@ Ninguém edita arquivo de outro dono. Ninguém faz commit; o líder integra e co
 
 ## 3. Regras pedagógicas que o código obedece
 
-1. O jogo nunca fala o NOME de uma consoante ("eme", "pê"). Só o SOM, vindo de arquivo de áudio. Nenhuma frase interpola a letra como texto para TTS.
+1. O jogo ensina o NOME da letra e depois o SOM, sempre separados e na ordem nome, som, nos momentos de APRESENTAR a letra (lição, toque numa parada da trilha, fim do traçado). O nome vem só de item `nome:<letra>` (id `nome_<letra>`, texto de reserva do campo `nome` do currículo); o som, só de `som:<letra>` e nunca vira o nome (`tts` de som não pode ser o nome). Os jogos de ouvir e juntar sons (Escute e Toque, Caça-Som, Junte os Sons) usam só o SOM e nunca chamam `nome:`. Nenhuma frase interpola a letra como texto para TTS.
 2. Erro: sem som de falha, sem vermelho, sem pontos perdidos. A opção errada balança de leve e some; o som-alvo é repetido com carinho; as opções diminuem até sobrar a certa.
 3. Sem tempo limite. Toda tela fala sua instrução ao entrar e tem botão grande de "ouvir de novo" (ícone de orelha/alto-falante).
 4. Sessão de cerca de 8 minutos (`regras.minutosSessao`), com despedida carinhosa; a adulta pode continuar.
@@ -52,7 +52,7 @@ Ninguém edita arquivo de outro dono. Ninguém faz commit; o líder integra e co
   "etapas": [{ "id": "vogais", "letras": ["a","e","i","o","u"] }],
   "letras": {
     "m": {
-      "maiuscula": "M", "tipo": "consoante", "fonema": "/m/", "continuo": true,
+      "maiuscula": "M", "nome": "eme", "tipo": "consoante", "fonema": "/m/", "continuo": true,
       "audio": "som_m", "tts": "mmmmm", "palavras": ["mapa","moto","mala"],
       "dica": "Para a adulta: boca fechada, som contínuo, sem dizer 'mê'."
     }
@@ -89,7 +89,7 @@ audio.parar()
 audio.estado()                      // { desbloqueado, temVozPtBr }
 ```
 
-- Itens de `falar`: `frase:<chave>`, `som:<letra>`, `sil:<silaba>`, `pal:<palavra>`, `pausa:<ms>`, `efeito:<nome>`, ou `{ frase, vars }`.
+- Itens de `falar`: `frase:<chave>`, `nome:<letra>` (nome da letra; vale para as 26 letras, as de fora do currículo usam uma tabela interna), `som:<letra>`, `sil:<silaba>`, `pal:<palavra>`, `pausa:<ms>`, `efeito:<nome>`, ou `{ frase, vars }`.
 - Uma nova chamada a `falar` cancela a anterior. A Promise sempre resolve (nunca rejeita): `{ cancelado: boolean }`.
 - Busca de arquivo para um id: `assets/audio/gravacoes/<id>.mp3`, depois `.m4a` (gravações da adulta), depois `assets/audio/gerado/<id>.<ext>` (sons de letra gerados), depois `speechSynthesis` pt-BR com `tts` do currículo ou texto da frase, com `console.info('[audio] usando voz do aparelho para', id)`.
 - O módulo pausa tudo sozinho quando a página vai para segundo plano (`visibilitychange`).
@@ -153,4 +153,9 @@ Guarda: nome, guia, letras liberadas, histórico curto por letra (`[{ jogo, ok, 
 - Ajustes da adulta ficam em `progresso.ajustes` (`trilhaSons.v1`): `itensPorRodada` (3 a 8, `null` = regra do currículo, entregue aos jogos em `ctx.itensPorRodada`), `letrasRevisao` (0 a 3, `null` = `ceil(itens x proporcaoRevisao)`; com 0 a rodada só tem a letra nova) e `tracadoNaLicao` (padrão ligado; o Trace segue no menu de brincadeiras). `reiniciar()` preserva nome, guia, ajustes e a data da última cópia. Fora do escopo por depender de `js/audio.js`: volume do jogo e escolha "voz da mãe x original" (a gravação da adulta sempre tem prioridade; para voltar à original, apague a gravação).
 - Backup (`js/telas/pais-backup.js`): arquivo `trilha-dos-sons-AAAA-MM-DD.json` com `{ app, versao: 1, criadoEm, progresso, ajustes (inclui legendas), gravacoes: [{ id, mime, duracao, criadoEm, base64 }] }`. Importar valida tudo antes (`progresso.validar`, ids de áudio, base64 decodificado) sem tocar em nada, mostra um resumo e só restaura após confirmação. A restauração é atômica: progresso (localStorage, com retorno ao anterior se o aparelho não gravar) e gravações (IndexedDB, uma única transação `clear` + `put`, cancelada em qualquer erro); se a segunda parte falhar, a primeira é desfeita. O arquivo é baixado pela própria adulta; nada é enviado.
 - Atualização controlada: `sw.js` não chama mais `skipWaiting()` na instalação. A versão nova fica esperando; `js/telas/pais-atualizar.js` detecta `registration.waiting`, o painel mostra "Nova versão disponível" e o botão Atualizar envia `{ tipo: 'PULAR_ESPERA' }` ao SW, que faz `skipWaiting()`; em `controllerchange` a página recarrega. `{ tipo: 'VERSAO' }` devolve o nome do cache (mostrado no painel e usado nos testes). Na primeira instalação não há versão antiga, então o SW ativa direto. `data/*.json` e gravações seguem rede primeiro; o resto, cache primeiro.
-- UX trazida da referência para os jogos: a amiga guia da barra comemora o acerto (troca para a figura "festa" e dá dois pulinhos, em `celebrarGuia` de `js/jogos/comum.js`) e o Trace ganha uma dica sem pressa (após ~7 s parado, uma bolinha percorre o traço duas vezes; some ao avançar; sem contagem nem pontos). Deixado de fora: falar o nome da letra e os sons de número (regra do destino), fim automático da sessão após 1,5 s (a despedida tem botões para a adulta), tela de apresentação "Aa" (decisão pedagógica do líder), botão de traçado na tela inicial (o menu de brincadeiras já leva ao Trace livre).
+- UX trazida da referência para os jogos: a amiga guia da barra comemora o acerto (troca para a figura "festa" e dá dois pulinhos, em `celebrarGuia` de `js/jogos/comum.js`) e o Trace ganha uma dica sem pressa (após ~7 s parado, uma bolinha percorre o traço duas vezes; some ao avançar; sem contagem nem pontos). Deixado de fora: os sons de número (regra do destino), fim automático da sessão após 1,5 s (a despedida tem botões para a adulta), tela de apresentação "Aa" (decisão pedagógica do líder), botão de traçado na tela inicial (o menu de brincadeiras já leva ao Trace livre).
+- Nome e som (decisão do dono, substitui a regra antiga de nunca falar o nome): `nome:<letra>` resolve como os outros ids (gravação da adulta > `assets/audio/gravacoes` > `assets/audio/voz/nome_<l>.mp3` > voz do aparelho com o campo `nome` do currículo ou, fora dele, h agá, k cá, q quê, w dáblio, x xis, y ípsilon). A voz importada tem o nome de 18 letras do currículo; J e Z usam a voz do aparelho. Evento de legenda com tipo `nome` ("nome: bê", seguido de "som: B" quando o som da mesma letra vem logo depois). A lição fala `ouca_nome_som`, nome, som, som e a palavra-âncora; a Trace chama `nome:x` e `som:x` ao completar uma letra.
+
+## 10. Casinhas dos Sons
+
+Descrição e decisões em [`docs/casinhas.md`](casinhas.md). Na legenda, o alvo (som, sílaba e palavra) fica escondido durante o jogo para a criança montar ouvindo, e não copiando o desenho das letras.

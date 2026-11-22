@@ -86,6 +86,7 @@ try {
       await tocar(page, 'button[aria-label="Brincadeiras"]');
       await esperarTela(page, 'menu');
       await auditarTela(page, vp, 'menu');
+      // o 5º jogo (Casinhas dos Sons) tem seu próprio teste de layout em 5 tamanhos: tests/l-casinhas.test.mjs
       for (let i = 0; i < 4; i++) {
         await tocar(page, '.btn-jogo', { indice: i });
         const jogo = await J.jogarRodada();

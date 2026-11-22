@@ -6,7 +6,7 @@ import { legendasLigadas, definirLegendas } from '../legenda.js';
 
 export const APP_ID = 'trilha-dos-sons';
 const MAX_ARQUIVO_MB = 80;
-const ID_AUDIO = /^(som|sil|pal|frase)_[a-z0-9_]{1,60}$/;
+const ID_AUDIO = /^(som|nome|sil|pal|frase)_[a-z0-9_]{1,60}$/;
 const MIME = /^audio\/[\w.+-]+(;[\w= .+-]+)?$/;
 
 function blobParaBase64(blob) {

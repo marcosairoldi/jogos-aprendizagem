@@ -1,6 +1,7 @@
 // Legenda da fala para a adulta que acompanha. A criança continua só ouvindo.
 // Escuta o evento 'trilha:fala' (emitido por js/audio.js) e mostra o texto da frase.
-// Para sons, sílabas e palavras mostra um alto-falante e o texto em MAIÚSCULA: a adulta deve ler o SOM, não o nome da letra.
+// Para sons, sílabas e palavras mostra um alto-falante e o texto em MAIÚSCULA: a adulta deve ler o SOM.
+// Para o NOME da letra mostra "nome: bê"; quando o som vem logo depois, a dupla fica clara: "nome: bê · som: B".
 import { el } from './ui.js';
 import { ler, gravar } from './armazenamento.js';
 
@@ -10,6 +11,8 @@ const NS = 'http://www.w3.org/2000/svg';
 
 let ligada = null;
 let timer = null;
+let parNome = null; // { chave, texto, t }: nome da letra mostrado há pouco, à espera do som dela
+const PAR_MS = 8000;
 
 function icone() {
   const s = document.createElementNS(NS, 'svg');
@@ -39,6 +42,7 @@ export function definirLegendas(v) {
 
 export function limpar() {
   clearTimeout(timer);
+  parNome = null;
   caixa.classList.remove('visivel');
 }
 
@@ -46,14 +50,27 @@ function mostrar(d) {
   if (!legendasLigadas()) return;
   clearTimeout(timer);
   caixa.replaceChildren();
-  if (d.tipo === 'frase') {
+  const rotulo = (t) => el('span', { classe: 'legenda-texto legenda-rotulo', texto: t, estilo: 'font-size:13px' });
+  const valor = (t) => el('span', { classe: 'legenda-texto grande', texto: t, estilo: 'font-size:20px' });
+  if (d.tipo !== 'nome' && d.tipo !== 'som') parNome = null;
+  if (d.tipo === 'nome') {
+    parNome = { chave: d.chave, texto: d.texto, t: Date.now() };
+    caixa.classList.add('simbolo');
+    caixa.append(rotulo('nome:'), valor(d.texto));
+  } else if (d.tipo === 'som' && parNome && parNome.chave === d.chave && Date.now() - parNome.t < PAR_MS && !document.querySelector('.jogo-escute')) {
+    caixa.classList.add('simbolo');
+    caixa.append(rotulo('nome:'), valor(parNome.texto), el('span', { classe: 'legenda-texto legenda-rotulo', texto: '·', estilo: 'font-size:13px' }), rotulo('som:'), icone(), valor(d.texto));
+  } else if (d.tipo === 'frase') {
     caixa.classList.remove('simbolo');
     caixa.append(el('span', { classe: 'legenda-texto', texto: d.texto }));
   } else {
     caixa.classList.add('simbolo');
     caixa.append(icone());
-    // no Escute e Toque a letra é a resposta: só o alto-falante, para não entregar a resposta
-    const escondeTexto = d.tipo === 'som' && document.querySelector('.jogo-escute');
+    // no Escute e Toque e nas Casinhas dos Sons a letra é a resposta: só o alto-falante,
+    // para a criança não montar copiando o desenho das letras em vez de ouvir
+    if (d.tipo === 'som') parNome = null;
+    const escondeTexto = (d.tipo === 'som' && document.querySelector('.jogo-escute'))
+      || (['som', 'sil', 'pal'].includes(d.tipo) && document.querySelector('.jogo-casinhas'));
     if (!escondeTexto) caixa.append(el('span', { classe: 'legenda-texto grande', texto: d.texto }));
   }
   caixa.classList.add('visivel');

@@ -1,8 +1,9 @@
 // Camada de áudio da Trilha dos Sons.
 // API: configurar, desbloquear, falar, efeito, parar, estado (ver docs/PLANO.md, seção 5).
-// Regra pedagógica: o jogo ensina o SOM da letra, nunca o nome. Nunca mandamos uma
-// consoante isolada para o speechSynthesis; sem arquivo, usa-se o "tts" do currículo
-// (som alongado) ou, se for null, a primeira palavra-âncora da letra.
+// Regra pedagógica: ao apresentar a letra o jogo diz o NOME ('nome:x') e depois o SOM ('som:x'),
+// sempre separados. Os jogos de ouvir e juntar só usam 'som:'. O 'som' nunca vira o nome: sem arquivo,
+// usa-se o "tts" do currículo (som alongado) ou, se for null, a primeira palavra-âncora da letra.
+// O texto do nome (voz do aparelho) só sai de itens 'nome:' (ids nome_*).
 
 import * as gravacoes from './gravacoes.js';
 
@@ -22,6 +23,9 @@ const existe = new Map(); // id -> url (string) ou null
 const buscas = new Map(); // id -> Promise (evita HEAD duplicado)
 const cancelaveis = new Set(); // funções que interrompem o passo atual
 let infoTtsAvisado = new Set();
+
+// Nomes das letras fora do currículo (repetido em js/telas/gravar.js; o currículo traz o campo "nome" das 20 letras ensinadas).
+const NOMES_EXTRA = { h: 'agá', k: 'cá', q: 'quê', w: 'dáblio', x: 'xis', y: 'ípsilon' };
 
 const temSS = () => typeof speechSynthesis !== 'undefined' && typeof SpeechSynthesisUtterance !== 'undefined';
 
@@ -341,6 +345,7 @@ function normalizar(itens) {
     if (typeof it === 'object') {
       if (it.frase) saida.push({ tipo: 'frase', chave: it.frase, vars: it.vars });
       else if (it.som) saida.push({ tipo: 'som', chave: it.som });
+      else if (it.nome) saida.push({ tipo: 'nome', chave: it.nome });
       else if (it.sil) saida.push({ tipo: 'sil', chave: it.sil });
       else if (it.pal) saida.push({ tipo: 'pal', chave: it.pal });
       else if (it.pausa != null) saida.push({ tipo: 'pausa', chave: it.pausa });
@@ -355,9 +360,14 @@ function normalizar(itens) {
   return saida;
 }
 
-const ID_PREFIXO = { frase: 'frase_', som: 'som_', sil: 'sil_', pal: 'pal_' };
+const ID_PREFIXO = { frase: 'frase_', som: 'som_', sil: 'sil_', pal: 'pal_', nome: 'nome_' };
 
-// Texto de reserva para a voz do aparelho (nunca o nome de uma consoante).
+function nomeDaLetra(chave) {
+  const l = cfg.curriculo && cfg.curriculo.letras && cfg.curriculo.letras[chave];
+  return (l && l.nome) || NOMES_EXTRA[chave] || '';
+}
+
+// Texto de reserva para a voz do aparelho (o nome de uma letra só sai para itens 'nome:').
 function textoReserva(tipo, chave, vars) {
   const cur = cfg.curriculo || {};
   if (tipo === 'frase') return textoFrase(chave, vars);
@@ -369,6 +379,7 @@ function textoReserva(tipo, chave, vars) {
     const p = cur.palavras && cur.palavras[chave];
     return (p && (p.tts || chave)) || chave;
   }
+  if (tipo === 'nome') return nomeDaLetra(chave);
   if (tipo === 'som') {
     const l = cur.letras && cur.letras[chave];
     if (!l) return '';
@@ -393,6 +404,7 @@ function emitirFala(detalhe) {
 function legendaDe(tipo, chave, vars) {
   const cur = cfg.curriculo || {};
   if (tipo === 'frase') return textoFrase(chave, vars);
+  if (tipo === 'nome') return nomeDaLetra(chave);
   if (tipo === 'som') { const l = cur.letras && cur.letras[chave]; return l ? (l.maiuscula || chave.toUpperCase()) : ''; }
   if (tipo === 'sil') { const s = cur.silabas && cur.silabas[chave]; return s ? (s.texto || chave.toUpperCase()) : ''; }
   if (tipo === 'pal') { const p = cur.palavras && cur.palavras[chave]; return p ? (p.texto || chave.toUpperCase()) : ''; }
@@ -408,7 +420,7 @@ async function executarItem(item, meu) {
   }
   if (!ID_PREFIXO[tipo]) return false;
   const id = ID_PREFIXO[tipo] + chave;
-  { const t = legendaDe(tipo, chave, item.vars); if (t) emitirFala({ tipo, texto: t }); }
+  { const t = legendaDe(tipo, chave, item.vars); if (t) emitirFala({ tipo, texto: t, chave }); }
   const url = await resolverArquivo(id);
   if (meu !== seq) return true;
   if (url) return tocarArquivo(url);
