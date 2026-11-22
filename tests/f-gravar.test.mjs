@@ -24,7 +24,7 @@ async function entrarPais(page) {
   const t = await page.locator('.conta').innerText();
   const [, x, y] = t.match(/(\d+)\s*\+\s*(\d+)/);
   await tocar(page, `button[aria-label="Resposta ${+x + +y}"]`);
-  await page.waitForSelector('#campo-nome');
+  await page.waitForSelector('.abas');
 }
 const limpo = (coleta, rot) => {
   ok(coleta.erros.length === 0, rot + ': sem console.error', coleta.erros.join('\n'));
@@ -80,7 +80,7 @@ try {
   const { page, coleta } = app;
   await entrarPais(page);
   ok(/Voz gravada: 0 itens/.test(await page.locator('#resumo-voz').innerText().then(async (t) => { await esperarAte(async () => /0 itens/.test(await page.locator('#resumo-voz').innerText()), { timeout: 4000 }).catch(() => {}); return page.locator('#resumo-voz').innerText(); })), 'painel mostra "Voz gravada: 0 itens"');
-  await tocar(page, 'button[data-acao="gravar-voz"]');
+  await tocar(page, 'button.aba[data-aba="voz"]');
   await page.waitForSelector('.gv-item[data-id="som_m"]');
   await page.screenshot({ path: SHOTS + '/gravar-1-inicio.png' });
   ok(new RegExp('0 de ' + N).test(await page.locator('.gv-contador[data-grupo="sons"]').innerText()), 'contador dos sons: 0 de N');
@@ -120,12 +120,12 @@ try {
   await entrarPais(page);
   await esperarAte(async () => /Voz gravada: 1 item/.test(await page.locator('#resumo-voz').innerText()), { msg: 'resumo 1 item' });
   ok(true, 'painel mostra "Voz gravada: 1 item" após recarregar');
-  await tocar(page, 'button[data-acao="gravar-voz"]');
+  await tocar(page, 'button.aba[data-aba="voz"]');
   await page.waitForSelector('.gv-item[data-id="som_m"].gravado');
   ok(true, 'som_m continua gravado após recarregar');
 
   // voltar ao painel (sem nova conta)
-  await tocar(page, 'button[data-acao="voltar"]');
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   await page.waitForSelector('#campo-nome');
   ok(true, 'voltar leva direto ao painel');
 
@@ -142,13 +142,13 @@ try {
   await dormir(500);
   let urls = await logAudio(page);
   ok(urls.some((u) => u.startsWith('blob:')), 'lição da letra M toca um blob: URL para o som', urls.join(' '));
-  ok(!urls.some((u) => u.includes('gerado/som_m.mp3')), 'não toca o arquivo gerado enquanto há gravação');
+  ok(!urls.some((u) => /audio\/(voz|gerado)\/som_m\.mp3/.test(u)), 'não toca o arquivo original (voz importada ou gerado) enquanto há gravação');
 
   // apagar pela tela
   await page.reload({ waitUntil: 'load' });
   await page.waitForSelector('#app > *');
   await entrarPais(page);
-  await tocar(page, 'button[data-acao="gravar-voz"]');
+  await tocar(page, 'button.aba[data-aba="voz"]');
   await page.waitForSelector('.gv-item[data-id="som_m"].gravado');
   const bApagar = '.gv-item[data-id="som_m"] button[data-acao="apagar"]';
   await tocar(page, bApagar);
@@ -158,14 +158,14 @@ try {
   await page.waitForSelector('.gv-item[data-id="som_m"]:not(.gravado)');
   ok(true, 'segundo toque apagou');
   ok(new RegExp('0 de ' + N).test(await page.locator('.gv-contador[data-grupo="sons"]').innerText()), 'contador volta a 0 de N');
-  // "ouvir como está hoje" aparece sem gravação e toca o arquivo gerado
+  // "ouvir como está hoje" aparece sem gravação e toca o arquivo original (voz importada ou gerado)
   await page.evaluate(() => { window.__esp.log.length = 0; });
   await tocar(page, '.gv-item[data-id="som_m"] button[data-acao="hoje"]');
   await esperarAte(async () => (await logAudio(page)).length > 0, { msg: 'ouvir como está hoje' });
   urls = await logAudio(page);
-  ok(urls.some((u) => u.includes('assets/audio/gerado/som_m.mp3')), 'ouvir como está hoje toca o som gerado', urls.join(' '));
+  ok(urls.some((u) => /assets\/audio\/(voz|gerado)\/som_m\.mp3/.test(u)), 'ouvir como está hoje toca o som gerado', urls.join(' '));
   // jogo (sem recarregar a página): a resolução foi atualizada por gravacoesMudaram
-  await tocar(page, 'button[data-acao="voltar"]');
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   await page.waitForSelector('#campo-nome');
   // recarrega para jogar
   await page.reload({ waitUntil: 'load' });
@@ -178,14 +178,14 @@ try {
   await esperarAte(async () => (await logAudio(page)).length > 0, { msg: 'áudio da lição' });
   await dormir(500);
   urls = await logAudio(page);
-  ok(urls.some((u) => u.includes('assets/audio/gerado/som_m.mp3')) && !urls.some((u) => u.startsWith('blob:')), 'apagada a gravação, o jogo volta a assets/audio/gerado/som_m.mp3', urls.join(' '));
+  ok(urls.some((u) => /assets\/audio\/(voz|gerado)\/som_m\.mp3/.test(u)) && !urls.some((u) => u.startsWith('blob:')), 'apagada a gravação, o jogo volta a assets/audio/gerado/som_m.mp3', urls.join(' '));
 
   // ============ apagar todas, reiniciar progresso, sem sons ============
   console.log('\n# Apagar todas, reiniciar progresso, frases e grupos');
   await page.reload({ waitUntil: 'load' });
   await page.waitForSelector('#app > *');
   await entrarPais(page);
-  await tocar(page, 'button[data-acao="gravar-voz"]');
+  await tocar(page, 'button.aba[data-aba="voz"]');
   await page.waitForSelector('.gv-item[data-id="som_a"]');
   // grava duas letras
   for (const l of ['a', 'e']) {
@@ -197,6 +197,7 @@ try {
   }
   ok(new RegExp('2 de ' + N).test(await page.locator('.gv-contador[data-grupo="sons"]').innerText()), '2 de N gravados');
   // frases: abre o grupo, mostra texto sem {nome}
+  await tocar(page, 'button[data-filtro="todos"]');
   await tocar(page, 'details[data-grupo="frases"] > summary');
   await page.waitForSelector('.gv-item[data-id="frase_acerto_2"]');
   const txt = await page.locator('.gv-item[data-id="frase_acerto_2"] .gv-alvo').innerText();
@@ -209,7 +210,7 @@ try {
   await page.screenshot({ path: SHOTS + '/gravar-4-palavras.png' });
 
   // reiniciar progresso não apaga gravações
-  await tocar(page, 'button[data-acao="voltar"]');
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   await page.waitForSelector('#campo-nome');
   await tocar(page, 'button[aria-label="Reiniciar progresso"]');
   await tocar(page, 'button[aria-label="Reiniciar progresso"]');
@@ -218,7 +219,7 @@ try {
   ok(true, 'reiniciar progresso não apaga gravações (2 itens)');
   await page.screenshot({ path: SHOTS + '/pais-painel.png', fullPage: false });
 
-  await tocar(page, 'button[data-acao="gravar-voz"]');
+  await tocar(page, 'button.aba[data-aba="voz"]');
   await page.waitForSelector('button[data-acao="apagar-todas"]');
   const bt = 'button[data-acao="apagar-todas"]';
   await tocar(page, bt);
@@ -226,7 +227,6 @@ try {
   await tocar(page, bt);
   await esperarAte(async () => (await page.locator('.gv-item.gravado').count()) === 0, { msg: 'apagou tudo' });
   ok(new RegExp('0 de ' + N).test(await page.locator('.gv-contador[data-grupo="sons"]').innerText()), 'apagar todas funciona');
-  await tocar(page, 'button[data-acao="voltar"]');
   await esperarAte(async () => /Voz gravada: 0 itens/.test(await page.locator('#resumo-voz').innerText()), { msg: 'resumo 0' });
   ok(true, 'painel volta a "Voz gravada: 0 itens"');
   limpo(coleta, 'fluxo principal');
@@ -241,7 +241,7 @@ try {
       navigator.mediaDevices.getUserMedia = () => Promise.reject(new DOMException('negado', 'NotAllowedError'));
     });
     await entrarPais(a2.page);
-    await tocar(a2.page, 'button[data-acao="gravar-voz"]');
+    await tocar(a2.page, 'button.aba[data-aba="voz"]');
     await a2.page.waitForSelector('.gv-item[data-id="som_m"]');
     await tocar(a2.page, '.gv-item[data-id="som_m"] button[data-acao="gravar"]');
     await a2.page.waitForSelector('#msg-gravar:not([style*="none"])');
@@ -266,11 +266,11 @@ try {
     const a3 = await abrirApp(browser, srv.base, { contexto: c3, rapido: true, seed });
     await entrarPais(a3.page);
     ok(await a3.page.locator('#resumo-voz').count() === 1, 'painel dos pais abre');
-    await tocar(a3.page, 'button[data-acao="gravar-voz"]');
+    await tocar(a3.page, 'button.aba[data-aba="voz"]');
     await a3.page.waitForSelector('.gv-item, #gv-indisponivel');
     // sem DB: ou mostra aviso de indisponível, ou (open lançando) lista vazia sem quebrar
     ok(true, 'tela de gravação abre sem quebrar');
-    await tocar(a3.page, 'button[data-acao="voltar"]');
+    await tocar(a3.page, 'button.aba[data-aba="ajustes"]');
     await a3.page.waitForSelector('#campo-nome');
     await a3.page.reload({ waitUntil: 'load' });
     await a3.page.waitForSelector('#app > *');
@@ -280,7 +280,7 @@ try {
     await tocar(a3.page, '.ponto.parada.foco');
     await a3.page.waitForSelector('.apresenta');
     await esperarAte(async () => (await logAudio(a3.page)).length > 0, { msg: 'áudio sem IDB' });
-    ok((await logAudio(a3.page)).some((u) => u.includes('gerado/som_m.mp3')), 'o jogo segue tocando o som gerado');
+    ok((await logAudio(a3.page)).some((u) => /audio\/(voz|gerado)\/som_m\.mp3/.test(u)), 'o jogo segue tocando o som gerado');
     if (modo === 'getter') await a3.page.screenshot({ path: SHOTS + '/gravar-sem-idb.png' });
     limpo(a3.coleta, 'IDB ' + modo);
     await c3.close();

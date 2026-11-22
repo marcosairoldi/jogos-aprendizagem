@@ -35,6 +35,7 @@ export function executarJogo(app, palco, id, { letras, letraFoco, modo }) {
       guia: app.progresso.guia() || 'lumi',
       letras,
       letraFoco,
+      itensPorRodada: app.progresso.getRegras().itensPorRodada,
       letrasLiberadas: liberadas,
       ...(modo ? { modo } : {}),
       estadoLetra: (l) => app.progresso.estadoLetra(l),

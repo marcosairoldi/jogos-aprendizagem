@@ -84,7 +84,12 @@ export async function abrirApp(browser, base, opcoes = {}) {
   });
   page.on('pageerror', (e) => coleta.pageerrors.push(e.message));
   page.on('response', (r) => { if (r.status() >= 400) coleta.respostasRuins.push(r.status() + ' ' + r.url()); });
-  page.on('requestfailed', (r) => coleta.falhas.push((r.failure() && r.failure().errorText) + ' ' + r.url()));
+  page.on('requestfailed', (r) => {
+    const erro = (r.failure() && r.failure().errorText) || '';
+    // net::ERR_ABORTED = um som interrompido pela fala seguinte (cancelamento normal), não arquivo faltando
+    if (erro === 'net::ERR_ABORTED') return;
+    coleta.falhas.push(erro + ' ' + r.url());
+  });
   page.on('request', (r) => {
     const u = r.url();
     if (/^(data|blob|about):/.test(u)) return;

@@ -155,7 +155,7 @@ async function abrirPainel(page) {
   const m = /(\d+)\s*\+\s*(\d+)/.exec(c); const soma = +m[1] + +m[2];
   const rs = await page.locator('.respostas button').allInnerTexts();
   await tocar(page, '.respostas button', { indice: rs.findIndex((x) => +x === soma) });
-  await page.waitForSelector('#campo-nome');
+  await page.waitForSelector('.abas');
 }
 {
   const seed = sementeBase({ liberadas: ['a', 'e', 'i', 'o'], hist: { a: dominada(), e: dominada() } });
@@ -166,9 +166,9 @@ async function abrirPainel(page) {
   await page.screenshot({ path: `${FOTOS}/teste-pais.png` });
   await juntarTextos(page);
   const titulos = await page.locator('.painel h2').allInnerTexts();
-  for (const t of ['Resumo', 'Letras do currículo', 'Nome da criança', 'Legendas', 'Guia', 'Voz gravada', 'Progresso']) ok(titulos.includes(t), `pais: seção "${t}"`, JSON.stringify(titulos));
+  for (const t of ['Pequenas grandes conquistas', 'Letras do currículo', 'Letra por letra', 'Onde precisou de mais ajuda', 'Histórico recente', 'Prática do seu jeito', 'Guia', 'Progresso', 'Ajuda', 'Uma cópia das descobertas', 'Versão do jogo']) ok(titulos.includes(t), `pais: seção "${t}"`, JSON.stringify(titulos));
   const cards = await page.locator('.estatistica .est-titulo').allInnerTexts();
-  ok(['Tempo de uso', 'Sessões', 'Recompensas'].every((c) => cards.includes(c)), 'pais: cards de tempo de uso, sessões e recompensas', JSON.stringify(cards));
+  ok(['Letras dominadas', 'Tempo de uso', 'Sessões', 'Recompensas'].every((c) => cards.includes(c)), 'pais: cards de tempo de uso, sessões e recompensas', JSON.stringify(cards));
   const estados = await page.$$eval('#grade-letras .cel', (cs) => cs.map((c) => ({ e: c.dataset.estado, t: c.querySelector('.cel-letra').textContent, bg: getComputedStyle(c).backgroundColor })));
   ok(estados.length === ORDEM.length, `pais: grade com as ${ORDEM.length} letras do currículo`);
   const cont = (e) => estados.filter((x) => x.e === e).length;
@@ -177,10 +177,12 @@ async function abrirPainel(page) {
   const leg = await page.locator('.legenda-cores').innerText();
   ok(/dominadas/.test(leg) && /em prática/.test(leg) && /ainda não liberadas/.test(leg), 'pais: legenda de cores escrita', leg);
   ok((await page.locator('.estatisticas').innerText()).includes('7 min'), 'pais: tempo de uso em minutos');
-  for (const t of ['Liberar próxima letra', 'Reiniciar progresso', 'Gravar minha voz', 'Trocar guia', 'Voltar']) ok(await page.locator(`button[aria-label="${t}"]`).count() === 1, `pais: botão "${t}"`);
+  for (const t of ['Liberar próxima letra', 'Reiniciar progresso', 'Sua voz', 'Backup', 'Ajustes', 'Progresso', 'Trocar guia', 'Voltar', 'Exportar cópia', 'Importar cópia', 'Mostrar legendas']) ok(await page.locator(`button[aria-label="${t}"]`).count() === 1, `pais: botão "${t}"`);
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   ok(/use se a criança já sabe/i.test(await page.locator('.painel').innerText()), 'pais: explicação de uma linha em cada ação (liberar)');
   ok(await page.locator('#resumo-voz').count() === 1, 'pais: contagem de gravações');
   // chave de legendas
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   const chave = 'button[aria-label="Mostrar legendas"]';
   ok((await page.locator(chave).getAttribute('aria-checked')) === 'true', 'legendas ligadas por padrão');
   await tocar(page, chave);
@@ -257,7 +259,7 @@ console.log('\n# 5. Tela "Como funciona"');
   const h2 = await page.locator('.ajuda h2').allInnerTexts();
   for (const t of ['O objetivo', 'Como acompanhar', 'As brincadeiras', 'Como a trilha avança', 'Gravar a sua voz']) ok(h2.includes(t), `ajuda: seção "${t}"`, JSON.stringify(h2));
   const txt = await page.locator('.ajuda').innerText();
-  ok(/SOM das letras/.test(txt) && /5 a 10 minutos/.test(txt) && /revisão/.test(txt) && /Gravar minha voz/.test(txt), 'ajuda: objetivo, sessões, revisão e onde gravar a voz');
+  ok(/SOM das letras/.test(txt) && /5 a 10 minutos/.test(txt) && /revisão/.test(txt) && /Sua voz/.test(txt), 'ajuda: objetivo, sessões, revisão e onde gravar a voz');
   for (const j of ['Escute e Toque', 'Caça-Som', 'Junte os Sons', 'Trace a Letra']) ok(txt.includes(j), `ajuda: descreve ${j}`);
   const rol = await page.evaluate(() => { const t = document.querySelector('.ajuda'); return { rola: t.scrollHeight > t.clientHeight, ov: getComputedStyle(t).overflowY }; });
   ok(rol.ov === 'auto' || rol.ov === 'scroll', 'ajuda: tela rolável');

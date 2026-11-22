@@ -180,8 +180,9 @@ try {
   const soma2 = Number(m2[1]) + Number(m2[2]);
   const resp2 = await page.locator('.respostas button').allInnerTexts();
   await tocar(page, '.respostas button', { indice: resp2.findIndex((r) => Number(r) === soma2) });
-  await page.waitForSelector('#campo-nome');
+  await page.waitForSelector('.abas');
   await tirarFoto(page, 's-pais-painel');
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   await page.locator('#campo-nome').fill('Bia');
   ok(await page.evaluate(() => JSON.parse(localStorage.getItem('trilhaSons.v1')).nome === 'Bia'), 'nome digitado é gravado');
   const resumo = await page.locator('#resumo-uso').innerText();
@@ -224,6 +225,7 @@ try {
     await tocar(page, '.respostas button', { indice: rs.findIndex((r) => Number(r) === Number(q[1]) + Number(q[2])) });
     await dormir(150);
   }
+  await tocar(page, 'button.aba[data-aba="ajustes"]');
   await tocar(page, 'button[aria-label="Reiniciar progresso"]');
   ok(await page.evaluate(() => JSON.parse(localStorage.getItem('trilhaSons.v1')).rec.estrela) > 0, 'reiniciar pede confirmação (primeiro toque não apaga)');
   await tocar(page, 'button[aria-label="Reiniciar progresso"]');
@@ -257,8 +259,7 @@ try {
     await esperarAte(async () => (await esp2.eventos(m, 'Bia')).some((x) => x.id === 'despedida'), { timeout: 8000 }).catch(() => {});
     const evDesp = (await esp2.eventos(m, 'Bia')).map((x) => x.id);
     ok(evDesp.includes('despedida'), 'despedida: chama o áudio ao entrar e fala a despedida', JSON.stringify(evDesp));
-    const textosD = (await esp2.bruto()).filter((x) => x.k === 'fala').map((x) => x.texto);
-    ok(textosD.some((t) => /Bia/.test(t) && /descansar/.test(t)), 'despedida usa o nome', JSON.stringify(textosD.slice(-2)));
+    // a despedida agora toca o arquivo da voz gravada (assets/audio/voz/frase_despedida.mp3), sem nome
     ok(await pg2.locator('button[aria-label="Ouvir de novo"]').count() === 1, 'despedida: botão ouvir de novo');
     ok(await pg2.locator('button[aria-label="Continuar brincando"]').count() === 1, 'despedida: a adulta pode continuar brincando');
     await tocar(pg2, 'button[aria-label="Continuar brincando"]');

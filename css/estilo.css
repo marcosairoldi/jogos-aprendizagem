@@ -37,6 +37,8 @@
   --bloq-fundo: #f1f3f5; --bloq-texto: #565e66; --bloq-borda: #8d959c;
 }
 
+[hidden] { display: none !important; }
+
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
@@ -448,3 +450,68 @@ img.quebrada { display: none; }
 .btn-texto.gv-gravar.ativo { background: #e03131; position: relative; padding-left: 40px; }
 .btn-texto.gv-gravar.ativo::before { content: ''; position: absolute; left: 16px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: #fff; animation: gv-pulsa 0.9s ease-in-out infinite; }
 @keyframes gv-pulsa { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.5); opacity: 0.4; } }
+
+
+/* ---------- painel dos pais em abas (inspirado no painel do app de referência) ---------- */
+.icone-pais { flex: none; width: 26px; height: 26px; }
+.icone-porta { width: 56px; height: 56px; color: var(--rosa-forte); }
+.icone-pais.gira { transform: rotate(180deg); }
+.porta .conta { background: var(--fundo); border: 3px solid var(--rosa-claro); border-radius: var(--raio-cartao); padding: 12px 28px; margin: 8px 0; }
+.painel .cabecalho-pais h1 { flex: 1; min-width: 0; }
+.mascote-pais { flex: none; width: 56px; height: 56px; object-fit: contain; }
+.abas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.aba { min-height: 72px; border-radius: 20px; background: #fff; border: 3px solid var(--rosa); color: var(--texto); font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 12px; box-shadow: var(--sombra-cartao); transition: background 0.15s, color 0.15s; }
+.aba.ativa { background: var(--rosa-forte); border-color: var(--rosa-forte); color: #fff; }
+.aba:active { filter: brightness(0.94); }
+.aba-painel { display: flex; flex-direction: column; gap: 16px; }
+.aba-painel > * { flex-shrink: 0; }
+.aviso-copia, .aviso-nova { border-left: 6px solid var(--dourado); background: #fff3bf; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.aviso-titulo { font-weight: 700; }
+.estatisticas { grid-template-columns: 1fr 1fr; }
+.est-valor { font-size: 24px; }
+.cartoes-letras { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cartao-letra { border: 3px solid; border-radius: 18px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.cartao-letra.dominada { background: var(--ok-fundo); border-color: var(--ok-borda); color: var(--ok-texto); }
+.cartao-letra.pratica { background: var(--pratica-fundo); border-color: var(--pratica-borda); color: var(--pratica-texto); }
+.cartao-letra .nota { color: inherit; font-size: 14px; }
+.cartao-letra-topo { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.cartao-letra-grande { font-size: 34px; font-weight: 700; line-height: 1; }
+.cartao-letra-estado { font-size: 14px; font-weight: 700; text-align: right; }
+.lista-linhas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.lista-linhas li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 2px solid var(--rosa-claro); font-size: 16px; }
+.lista-linhas li span:last-child { color: var(--texto-suave); text-align: right; flex: none; }
+.linha-ajuste { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 2px solid var(--rosa-claro); }
+.linha-ajuste:last-child { border-bottom: 0; padding-bottom: 0; }
+.linha-ajuste-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: var(--alvo-min); }
+.ajuste-nome { font-size: 18px; font-weight: 700; }
+.passo { display: flex; align-items: center; gap: 10px; }
+.passo-btn { width: var(--alvo-min); height: var(--alvo-min); border-radius: 18px; background: #fff; border: 3px solid var(--rosa); color: var(--rosa-forte); display: grid; place-items: center; }
+.passo-btn:active { filter: brightness(0.93); }
+.passo-btn[disabled] { opacity: 0.4; }
+.passo-valor { min-width: 32px; text-align: center; font-size: 28px; font-weight: 700; color: var(--texto); }
+.btn-texto.largo { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.btn-texto[disabled] { opacity: 0.5; }
+.ultima-copia { font-weight: 700; }
+.rodape-pais { text-align: center; font-size: 15px; color: var(--texto-suave); padding: 4px 0 8px; }
+.msg-pais { position: sticky; bottom: 4px; z-index: 3; background: #fff; border: 3px solid var(--rosa); border-radius: 16px; padding: 12px 16px; font-weight: 700; box-shadow: var(--sombra-cartao); }
+.painel .secao-pais .linha-ajuste input[type='text'] { margin-top: 2px; }
+
+/* diálogo de confirmação */
+.modal-fundo { position: fixed; inset: 0; z-index: 20; background: rgba(92, 42, 62, 0.55); display: flex; align-items: center; justify-content: center; padding: var(--margem-borda); }
+.modal { width: min(100%, 420px); max-height: 100%; overflow-y: auto; background: #fff; border-radius: var(--raio-cartao); padding: 20px; display: flex; flex-direction: column; gap: 12px; font-size: 17px; line-height: 1.4; box-shadow: 0 12px 40px rgba(92, 42, 62, 0.35); }
+.modal h2 { margin: 0; font-size: 21px; color: var(--rosa-forte); }
+.modal p { margin: 0; }
+.modal-botoes { display: flex; flex-direction: column; gap: 10px; }
+
+/* editor de voz dentro da aba */
+.editor-voz { display: flex; flex-direction: column; gap: 12px; }
+.editor-voz h2 { margin: 0; }
+.gv-filtro { display: flex; gap: 10px; }
+.gv-filtro-btn { flex: 1; padding: 8px 12px; }
+.gv-filtro-btn.ativo { background: var(--rosa-forte); border-color: var(--rosa-forte); color: #fff; }
+.editor-voz input[type='text'] { user-select: text; -webkit-user-select: text; font: inherit; font-size: 18px; height: var(--alvo-min); width: 100%; border: 3px solid var(--rosa); border-radius: 16px; padding: 0 16px; color: var(--texto); background: #fff; }
+.gv-original { font-size: 14px; font-weight: 700; color: var(--texto-suave); background: var(--bloq-fundo); border-radius: 12px; padding: 4px 10px; white-space: nowrap; }
+.gv-arquivo { display: none; }
+
+.voltar-pais { display: flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 17px; }
+.painel .cabecalho-pais h1 { font-size: 22px; line-height: 1.15; }

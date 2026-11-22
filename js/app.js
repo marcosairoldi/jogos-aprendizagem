@@ -11,6 +11,7 @@ import despedida from './telas/despedida.js';
 import pais from './telas/pais.js';
 import gravar from './telas/gravar.js';
 import ajuda from './telas/ajuda.js';
+import { iniciar as iniciarAtualizacao } from './telas/pais-atualizar.js';
 import { iniciarLegenda, anexar as anexarLegenda, limpar as limparLegenda } from './legenda.js';
 
 const TELAS = { inicio, guia, trilha, licao, menu, colecao, despedida, pais, gravar, ajuda };
@@ -150,6 +151,7 @@ async function iniciar() {
   }
   iniciarContagemTempo();
   iniciarLegenda();
+  iniciarAtualizacao();
   app.ir('inicio');
 }
 

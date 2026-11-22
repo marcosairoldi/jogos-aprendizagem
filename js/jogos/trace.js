@@ -122,10 +122,40 @@ export default {
       if (letraAtual) ctx.audio.falar(['frase:trace_instrucao', ...somDe(letraAtual)]);
     }
 
+    // Ajuda sem pressa (inspirada no dedo-guia do app de referência): se a criança fica parada ~7 s, uma bolinha
+    // mostra o caminho do traço, duas vezes, e volta a esperar. Nada é cobrado nem contado; qualquer toque que avança some com ela.
+    let timerDica = null;
+    function agendarDica(ms = 7000) {
+      clearTimeout(timerDica);
+      if (!estado || concluindo) return;
+      timerDica = ciclo.depois(mostrarDica, ms);
+    }
+    function limparDica() {
+      if (!estado) return;
+      const d = estado.gGuia.querySelector('.j-trace-demo');
+      if (d) d.remove();
+    }
+    function mostrarDica() {
+      const e = estado;
+      if (!e || concluindo) return;
+      const t = e.tracos[e.iTraco];
+      const resto = t ? t.slice(e.iPonto) : [];
+      if (resto.length < 2) { agendarDica(); return; }
+      limparDica();
+      const [x0, y0] = resto[0];
+      const caminho = 'M0 0 ' + resto.slice(1).map(([x, y]) => `L${(x - x0).toFixed(1)} ${(y - y0).toFixed(1)}`).join(' ');
+      const ponto = svg('circle', { cx: x0, cy: y0, r: 6, class: 'j-trace-demo-ponto' });
+      ponto.append(svg('animateMotion', { dur: '2s', repeatCount: '2', path: caminho, fill: 'freeze' }));
+      e.gGuia.append(svg('g', { class: 'j-trace-demo' }));
+      e.gGuia.lastChild.append(ponto);
+      agendarDica(6500);
+    }
+
     // Estrelinha no início do traço atual e seta de direção.
     function marcarGuia() {
       const { gGuia, tracos, iTraco } = estado;
       gGuia.innerHTML = '';
+      agendarDica();
       const t = tracos[iTraco];
       if (!t) return;
       const [x, y] = t[0];
@@ -150,6 +180,7 @@ export default {
       pointerId = ev.pointerId;
       try { estado.svg.setPointerCapture(ev.pointerId); } catch (e) { /* ok */ }
       ev.preventDefault();
+      agendarDica();
       progredir(paraViewBox(ev));
     }
     function aoMover(ev) {
@@ -178,6 +209,8 @@ export default {
         if (e.iPonto >= t.length) break;
       }
       if (!pegou) return;
+      limparDica();
+      agendarDica();
       e.trilhas[e.iTraco].setAttribute('points', pts(t.slice(0, e.iPonto)));
       if (e.iPonto >= t.length) tracoCompleto();
     }
@@ -198,6 +231,7 @@ export default {
 
     async function letraCompleta() {
       concluindo = true;
+      clearTimeout(timerDica);
       const e = estado;
       e.gGuia.innerHTML = '';
       const l = letraAtual;

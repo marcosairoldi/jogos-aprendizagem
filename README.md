@@ -69,24 +69,22 @@ Tudo é **falado** para a criança: ela não precisa ler nada. O texto na tela �
 
 ### Área dos pais
 
-Toque na **engrenagem pequena** da tela inicial e responda a conta de somar. Lá você pode:
+Toque em **Pais** na tela inicial e responda a conta de somar. O painel tem quatro abas:
 
-- ver o resumo: tempo de uso, sessões e recompensas;
-- ver a grade com todas as letras do currículo, coloridas por estado: verde com ✓ (dominada), amarelo (em prática) e cinza tracejado (ainda não liberada);
-- digitar o nome da criança (fica só no celular; o jogo passa a chamá-la pelo nome);
-- ligar ou desligar as legendas;
-- trocar a amiga guia;
-- gravar a sua voz;
-- liberar a próxima letra manualmente (use se a criança já sabe o som);
-- reiniciar o progresso (pede um segundo toque; não apaga as gravações).
+- **Progresso:** tempo de uso, sessões, letras dominadas e recompensas; a grade com todas as letras do currículo, coloridas por estado (verde com ✓ = dominada, amarelo = em prática, cinza tracejado = ainda não liberada); um cartão por letra liberada; "Onde precisou de mais ajuda" e o histórico recente das brincadeiras.
+- **Ajustes:** nome da criança (fica só no celular), **atividades por rodada** (3 a 8), **letras de revisão** por rodada (0 a 3), incluir ou não o **Trace a Letra** na lição, ligar ou desligar as **legendas**, trocar a amiga guia, liberar a próxima letra (use se a criança já sabe o som), reiniciar o progresso (pede um segundo toque; não apaga nome, ajustes nem gravações) e o link **Como funciona**.
+- **Sua voz:** grave a sua voz, som por som (veja a seção abaixo).
+- **Backup:** **Exportar cópia** baixa um arquivo `.json` com o progresso, os ajustes e as suas gravações; **Importar cópia** lê esse arquivo, mostra um resumo e só substitui os dados depois da sua confirmação. Arquivo inválido ou falha no meio do caminho não mudam nada. O arquivo fica com você: nada é enviado pela internet. O painel avisa quando a última cópia tem mais de 14 dias.
+
+Embaixo das abas, o cartão **Versão do jogo** mostra se há versão nova. Quando você publica uma atualização, o celular a baixa sozinho, mas **só troca de versão quando você toca em Atualizar** (aparece "Nova versão disponível"): assim a criança nunca é surpreendida no meio de uma brincadeira. Atualizar recarrega a página e não apaga progresso nem gravações.
 
 ### Gravar a sua voz
 
 Sem gravação, o jogo usa sons gerados por computador e a voz do aparelho. A sua voz ensina muito melhor, e dá para gravar dentro do próprio jogo:
 
 1. Abra o jogo, toque no botão discreto da **Área dos pais** (canto da tela inicial) e resolva a conta.
-2. Toque em **Gravar minha voz**.
-3. Em cada item, toque em **Gravar**, fale, e toque em **Parar** (ou espere 6 segundos). O jogo corta o silêncio do começo e do fim, ajusta o volume e toca a gravação para você conferir. Se não gostou, grave de novo. Para comparar, **Ouvir como está hoje** toca o som atual.
+2. Abra a aba **Sua voz**. **Letras** mostra só os sons das letras; **Todos os sons** inclui frases, sílabas e palavras. Dá para **buscar** um som ou uma palavra.
+3. Em cada item, toque em **Gravar**, fale, e toque em **Parar** (ou espere 6 segundos). O jogo corta o silêncio do começo e do fim, ajusta o volume e toca a gravação para você conferir. Se não gostou, grave de novo. Para comparar, **Ouvir como está hoje** toca o som atual. Em vez de gravar, você pode **Enviar áudio** (um arquivo seu). Cada item mostra "Voz original" ou "gravado".
 4. A primeira vez o Chrome pede permissão para usar o microfone: toque em **Permitir**. Se negar sem querer, toque no cadeado ao lado do endereço e permita o microfone para este site.
 
 Dicas:
@@ -96,7 +94,7 @@ Dicas:
 - Fale devagar e alegre. Frases com o nome da criança são gravadas sem o nome ("Muito bem!").
 - O que não for gravado continua com a voz do aparelho. Dá para gravar aos poucos.
 
-**Onde ficam as gravações:** só neste celular (no armazenamento do navegador). Elas não vão para a internet nem para o repositório, e ninguém mais as ouve. Por isso: se você apagar os dados do navegador ou desinstalar o app, as gravações somem; **"Reiniciar progresso" não apaga as gravações**; e elas não passam sozinhas para outro celular (grave de novo no outro). A Área dos pais mostra quantos itens já estão gravados e tem o botão **Apagar todas as gravações**.
+**Onde ficam as gravações:** só neste celular (no armazenamento do navegador). Elas não vão para a internet nem para o repositório, e ninguém mais as ouve. Por isso: se você apagar os dados do navegador ou desinstalar o app, as gravações somem; **"Reiniciar progresso" não apaga as gravações**; e elas só passam para outro celular pelo **Backup** (Exportar cópia no celular antigo, Importar cópia no novo). A aba Sua voz mostra quantos itens já estão gravados e tem o botão **Apagar todas as gravações**.
 
 **Alternativa avançada (arquivos no repositório):** quem quiser que as gravações valham em todos os celulares pode colocar arquivos `.mp3` ou `.m4a`, com o nome exato de cada item, na pasta `assets/audio/gravacoes/`. A lista de nomes e dicas de cada som está em [`assets/audio/LISTA.md`](assets/audio/LISTA.md). **Atenção à privacidade:** este repositório é público. Qualquer gravação enviada para ele pode ser ouvida por qualquer pessoa na internet. Só faça isso se quem falou concordar, e não grave nomes nem informações pessoais. A gravação feita no celular tem prioridade sobre esses arquivos.
 
@@ -107,7 +105,7 @@ Dicas:
 
 Dá para editar direto no GitHub: abra o arquivo, clique no lápis, altere o texto entre aspas, e clique em **Commit changes**. O fundamento pedagógico e as fontes estão em [`docs/pesquisa.md`](docs/pesquisa.md).
 
-Depois de mudar arquivos, o celular atualiza o jogo sozinho na próxima vez que abrir com internet (às vezes é preciso fechar e abrir o app duas vezes).
+Depois de mudar arquivos, o celular baixa a versão nova na próxima vez que abrir com internet. Para usá-la, abra **Pais > Atualizar** (aparece "Nova versão disponível"); sem tocar, o jogo continua na versão antiga, sem surpresa para a criança. Os arquivos `data/*.json` e as gravações do repositório são buscados na rede primeiro.
 
 ---
 

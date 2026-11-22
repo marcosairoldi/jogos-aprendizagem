@@ -130,7 +130,7 @@ export function criarElogio() {
 }
 
 export function itensPorRodada(ctx) {
-  return ctx.curriculo?.regras?.itensPorRodada ?? 5;
+  return ctx.itensPorRodada ?? ctx.curriculo?.regras?.itensPorRodada ?? 5; // ctx.itensPorRodada: ajuste da adulta
 }
 
 // Sequência de n alvos (letras) sem repetir em seguida; a letra foco aparece mais.
@@ -209,6 +209,29 @@ export function escolherDistratoresPalavras(ctx, letraAlvo, palavraId, qtd, excl
 export function festejar(elemento) {
   elemento.classList.remove('j-convida');
   elemento.classList.add('j-acerto');
+  celebrarGuia();
+}
+
+// A amiga guia (na barra da casca) comemora o acerto: troca por "festa" e dá dois pulinhos (como o unicórnio do app de referência).
+let timerGuia = null;
+export function celebrarGuia() {
+  try {
+    const img = document.querySelector('.barra-guia img');
+    if (!img) return;
+    if (!img.dataset.normal) img.dataset.normal = img.getAttribute('src') || '';
+    const festa = img.dataset.normal.replace(/(lumi|marola)\.svg$/, '$1-festa.svg');
+    if (festa === img.dataset.normal) return;
+    img.setAttribute('src', festa);
+    img.classList.remove('guia-pula');
+    void img.offsetWidth; // reinicia a animação
+    img.classList.add('guia-pula');
+    clearTimeout(timerGuia);
+    timerGuia = setTimeout(() => {
+      if (!img.isConnected) return;
+      img.setAttribute('src', img.dataset.normal);
+      img.classList.remove('guia-pula');
+    }, 1300);
+  } catch (e) { /* enfeite: nunca quebra o jogo */ }
 }
 
 // Cintilância: partículas de brilho em CSS que se espalham a partir do centro do container.

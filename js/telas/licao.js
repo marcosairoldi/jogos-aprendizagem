@@ -38,7 +38,9 @@ export default {
     const preparo = (async () => {
       const lib = app.progresso.letrasLiberadas();
       const ok = [];
+      const comTrace = app.progresso.ajustes().tracadoNaLicao; // ajuste da adulta: Trace a Letra na lição
       for (const id of SEQUENCIA) {
+        if (id === 'trace' && !comTrace) continue;
         try {
           const j = await app.carregarJogo(id);
           if (j && j.disponivel(lib, app.curriculo)) ok.push(id);

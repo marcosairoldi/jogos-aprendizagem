@@ -1,6 +1,6 @@
 // Service worker da Trilha dos Sons. A lista de arquivos e o nome do cache sao
 // gerados por `node ferramentas/gerar-sw.mjs`: nao edite entre os marcadores.
-const CACHE = 'trilha-sons-7e88c9e302'; // CACHE-AUTO
+const CACHE = 'trilha-sons-33b94d3533'; // CACHE-AUTO
 const ARQUIVOS = [
 // <ARQUIVOS>
   "./",
@@ -259,6 +259,8 @@ const ARQUIVOS = [
   "js/telas/jogo.js",
   "js/telas/licao.js",
   "js/telas/menu.js",
+  "js/telas/pais-atualizar.js",
+  "js/telas/pais-backup.js",
   "js/telas/pais.js",
   "js/telas/recompensa.js",
   "js/telas/trilha.js",
@@ -277,8 +279,17 @@ self.addEventListener('install', (evento) => {
         console.info('[sw] nao foi possivel guardar', url);
       }
     }));
-    await self.skipWaiting();
+    // Sem skipWaiting aqui: a versao nova fica esperando ate a adulta tocar em "Atualizar" (Area dos pais).
   })());
+});
+
+self.addEventListener('message', (evento) => {
+  const d = evento.data || {};
+  if (d.tipo === 'PULAR_ESPERA') {
+    self.skipWaiting();
+  } else if (d.tipo === 'VERSAO' && evento.ports && evento.ports[0]) {
+    evento.ports[0].postMessage({ versao: CACHE });
+  }
 });
 
 self.addEventListener('activate', (evento) => {

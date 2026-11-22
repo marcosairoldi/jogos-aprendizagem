@@ -91,3 +91,56 @@ export async function apagar(id) {
 export async function apagarTodas() {
   try { await pedido('readwrite', (s) => s.clear()); return true; } catch (e) { return false; }
 }
+
+// ---------------------------------------------------------------------------
+// Backup (Área dos pais): exportar tudo e substituir tudo de uma vez
+// ---------------------------------------------------------------------------
+
+/** Todas as gravações: [{ id, blob, tipo, duracao, criadoEm }]. Sem banco, devolve lista vazia. */
+export async function exportarTodas() {
+  try {
+    const db = await abrir();
+    return await new Promise((resolve, reject) => {
+      const tx = db.transaction(LOJA, 'readonly');
+      const loja = tx.objectStore(LOJA);
+      const chaves = loja.getAllKeys();
+      const valores = loja.getAll();
+      tx.oncomplete = () => {
+        const ks = chaves.result || [];
+        const vs = valores.result || [];
+        resolve(ks.map((k, i) => ({ id: String(k), blob: vs[i] && vs[i].blob, tipo: (vs[i] && vs[i].tipo) || '', duracao: (vs[i] && vs[i].duracao) || 0, criadoEm: (vs[i] && vs[i].criadoEm) || 0 })).filter((x) => x.blob));
+      };
+      tx.onerror = () => reject(tx.error || new Error('falha na leitura'));
+      tx.onabort = () => reject(tx.error || new Error('leitura cancelada'));
+    });
+  } catch (e) {
+    return [];
+  }
+}
+
+/**
+ * Troca TODAS as gravações pela lista dada, numa única transação: se qualquer parte falhar,
+ * a transação é cancelada e as gravações atuais continuam como estavam. Devolve true se deu certo.
+ */
+export async function substituirTodas(lista) {
+  try {
+    const db = await abrir();
+    return await new Promise((resolve) => {
+      let tx;
+      try { tx = db.transaction(LOJA, 'readwrite'); } catch (e) { resolve(false); return; }
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+      tx.onabort = () => resolve(false);
+      try {
+        const loja = tx.objectStore(LOJA);
+        loja.clear();
+        for (const g of lista) loja.put({ blob: g.blob, tipo: g.tipo || (g.blob && g.blob.type) || '', duracao: g.duracao || 0, criadoEm: g.criadoEm || Date.now() }, g.id);
+      } catch (e) {
+        try { tx.abort(); } catch (e2) { /* já cancelada */ }
+        resolve(false);
+      }
+    });
+  } catch (e) {
+    return false;
+  }
+}

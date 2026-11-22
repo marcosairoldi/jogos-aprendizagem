@@ -35,7 +35,7 @@ export default {
       secao('Legendas',
         par('No alto da tela aparece o texto do que o guia está falando. Quando o guia toca um som, aparece um alto-falante e a letra. Leia o som, não o nome. Dá para desligar as legendas na Área dos pais.')),
       secao('Gravar a sua voz',
-        par('A sua voz ensina melhor do que a voz do aparelho. Entre em Pais, resolva a conta, toque em "Gravar minha voz" e grave os sons um por um. Comece pelos sons das letras. As gravações ficam só neste celular.')),
+        par('A sua voz ensina melhor do que a voz do aparelho. Entre em Pais, resolva a conta, abra a aba "Sua voz" e grave os sons um por um. Dá para buscar um som, enviar um arquivo de áudio e ouvir antes de decidir. Comece pelos sons das letras. As gravações ficam só neste celular.')),
     ));
     return {};
   },

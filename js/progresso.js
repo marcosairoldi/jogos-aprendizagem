@@ -18,6 +18,10 @@ const REGRAS_PADRAO = {
   opcoesMax: 4,
 };
 
+// Ajustes da adulta (Área dos pais > Ajustes). `null` = usar a regra do currículo.
+const AJUSTES_PADRAO = { itensPorRodada: null, letrasRevisao: null, tracadoNaLicao: true };
+export const LIMITES = { itensPorRodada: [3, 8], letrasRevisao: [0, 3] };
+
 let regras = { ...REGRAS_PADRAO };
 let ordem = [];
 let dados = null;
@@ -36,6 +40,8 @@ function vazio() {
     sessoes: 0,
     sessaoId: 0,
     ultima: 0,
+    ajustes: { ...AJUSTES_PADRAO },
+    ultimoBackup: null,
   };
 }
 
@@ -59,13 +65,47 @@ export function carregar(curriculo) {
   dados.liberadas = (Array.isArray(dados.liberadas) ? dados.liberadas : []).filter((l) => ordem.includes(l));
   if (!dados.liberadas.length && ordem.length) dados.liberadas = [ordem[0]];
   if (dados.guia !== 'lumi' && dados.guia !== 'marola') dados.guia = null;
+  dados.ajustes = normalizarAjustes(dados.ajustes);
+  if (!(Number.isFinite(dados.ultimoBackup) && dados.ultimoBackup > 0)) dados.ultimoBackup = null;
   novaSessaoSeNecessario();
   salvar();
   return dados;
 }
 
+/** Regras do currículo já com os ajustes da adulta (itens por rodada). */
 export function getRegras() {
-  return regras;
+  const a = (dados && dados.ajustes) || AJUSTES_PADRAO;
+  return a.itensPorRodada != null ? { ...regras, itensPorRodada: a.itensPorRodada } : { ...regras };
+}
+
+function inteiroNoLimite(v, [min, max]) {
+  return Number.isInteger(v) && v >= min && v <= max ? v : null;
+}
+function normalizarAjustes(a) {
+  const o = a && typeof a === 'object' ? a : {};
+  return {
+    itensPorRodada: inteiroNoLimite(o.itensPorRodada, LIMITES.itensPorRodada),
+    letrasRevisao: inteiroNoLimite(o.letrasRevisao, LIMITES.letrasRevisao),
+    tracadoNaLicao: o.tracadoNaLicao !== false,
+  };
+}
+
+/** Ajustes em vigor (já com os valores do currículo onde a adulta não mudou nada). */
+export function ajustes() {
+  const a = dados.ajustes;
+  const itens = a.itensPorRodada != null ? a.itensPorRodada : regras.itensPorRodada;
+  const rev = a.letrasRevisao != null ? a.letrasRevisao : Math.max(1, Math.ceil(itens * regras.proporcaoRevisao));
+  return { itensPorRodada: itens, letrasRevisao: Math.min(rev, LIMITES.letrasRevisao[1]), tracadoNaLicao: a.tracadoNaLicao };
+}
+/** Muda um ajuste. Valor fora do limite é ignorado. Devolve os ajustes em vigor. */
+export function definirAjuste(chave, valor) {
+  if (chave === 'tracadoNaLicao') dados.ajustes.tracadoNaLicao = !!valor;
+  else if (chave in LIMITES) {
+    const v = inteiroNoLimite(valor, LIMITES[chave]);
+    if (v != null) dados.ajustes[chave] = v;
+  }
+  salvar();
+  return ajustes();
 }
 
 export function nome() {
@@ -160,7 +200,9 @@ export function escolherLetrasRodada(n = regras.itensPorRodada, foco) {
     .filter((l) => l !== f)
     .sort((a, b) => ultimaVez(a) - ultimaVez(b) || acertosRecentes(a) - acertosRecentes(b));
   if (!f) return antigas.slice(0, Math.max(1, n));
-  const qtdRev = Math.min(antigas.length, Math.max(1, Math.ceil(n * regras.proporcaoRevisao)));
+  const fixas = dados.ajustes.letrasRevisao; // ajuste da adulta: quantidade fixa de letras de revisão (pode ser 0)
+  const qtdRev = Math.min(antigas.length, fixas != null ? fixas : Math.max(1, Math.ceil(n * regras.proporcaoRevisao)));
+  if (qtdRev <= 0) return [f];
   // priorizar também quem tem menos acertos: ordena os candidatos mais antigos por acertos
   const candidatas = antigas.slice(0, Math.max(qtdRev * 2, qtdRev))
     .sort((a, b) => acertosRecentes(a) - acertosRecentes(b) || ultimaVez(a) - ultimaVez(b));
@@ -216,13 +258,94 @@ export function numeroSessoes() {
   return dados.sessoes;
 }
 
-/** Apaga o progresso (letras, histórico, recompensas, tempo). Mantém nome e guia. */
+/** Apaga o progresso (letras, histórico, recompensas, tempo). Mantém nome, guia, ajustes e data da última cópia. */
 export function reiniciar() {
-  const { nome: n, guia: g } = dados;
+  const { nome: n, guia: g, ajustes: aj, ultimoBackup: ub } = dados;
   remover(CHAVE);
   dados = vazio();
   dados.nome = n;
   dados.guia = g;
+  dados.ajustes = aj;
+  dados.ultimoBackup = ub;
   novaSessaoSeNecessario();
   salvar();
+}
+
+// ---------------------------------------------------------------------------
+// Backup: exportar, validar e substituir (usado pela Área dos pais)
+// ---------------------------------------------------------------------------
+
+export function ultimoBackup() {
+  return dados.ultimoBackup;
+}
+export function marcarBackup(t = Date.now()) {
+  dados.ultimoBackup = t;
+  salvar();
+}
+
+/** Cópia (profunda) de tudo o que está guardado. */
+export function exportar() {
+  return JSON.parse(JSON.stringify(dados));
+}
+
+const ehNum = (v) => typeof v === 'number' && Number.isFinite(v) && v >= 0;
+const ehInt = (v) => Number.isInteger(v) && v >= 0;
+
+/**
+ * Valida um objeto vindo de um arquivo de backup e devolve uma cópia normalizada.
+ * Não mexe em nada; lança Error com mensagem clara se algo estiver errado.
+ */
+export function validar(o) {
+  const erro = (m) => { throw new Error(m); };
+  if (!o || typeof o !== 'object' || Array.isArray(o)) erro('dados de progresso ausentes');
+  if (o.v !== 1) erro('versão de progresso desconhecida');
+  if (typeof o.nome !== 'string' || o.nome.length > 30) erro('nome inválido');
+  if (o.guia !== null && o.guia !== 'lumi' && o.guia !== 'marola') erro('guia inválido');
+  if (!Array.isArray(o.liberadas) || !o.liberadas.length) erro('lista de letras liberadas inválida');
+  for (const l of o.liberadas) if (!ordem.includes(l)) erro(`letra desconhecida na lista de liberadas: ${String(l).slice(0, 8)}`);
+  if (new Set(o.liberadas).size !== o.liberadas.length) erro('letras liberadas repetidas');
+  if (!o.hist || typeof o.hist !== 'object' || Array.isArray(o.hist)) erro('histórico inválido');
+  const hist = {};
+  for (const [l, lista] of Object.entries(o.hist)) {
+    if (!ordem.includes(l) || !Array.isArray(lista) || lista.length > 500) erro('histórico inválido');
+    hist[l] = lista.slice(-MAX_HISTORICO).map((x) => {
+      if (!x || typeof x.jogo !== 'string' || x.jogo.length > 30 || typeof x.ok !== 'boolean' || !ehNum(x.sessao) || !ehNum(x.t)) erro('histórico inválido');
+      return { jogo: x.jogo, ok: x.ok, sessao: x.sessao, t: x.t };
+    });
+  }
+  const recs = (r) => {
+    if (!r || typeof r !== 'object') erro('recompensas inválidas');
+    const saida = {};
+    for (const k of ['estrela', 'concha', 'chifre']) { if (!ehInt(r[k])) erro('recompensas inválidas'); saida[k] = r[k]; }
+    return saida;
+  };
+  for (const k of ['tempoTotal', 'tempoSessao', 'sessoes', 'sessaoId', 'ultima']) if (!ehNum(o[k])) erro('números de uso inválidos');
+  const aj = o.ajustes === undefined ? { ...AJUSTES_PADRAO } : o.ajustes;
+  if (!aj || typeof aj !== 'object') erro('ajustes inválidos');
+  for (const k of ['itensPorRodada', 'letrasRevisao']) if (aj[k] != null && inteiroNoLimite(aj[k], LIMITES[k]) == null) erro('ajustes inválidos');
+  if (aj.tracadoNaLicao !== undefined && typeof aj.tracadoNaLicao !== 'boolean') erro('ajustes inválidos');
+  return {
+    v: 1, nome: o.nome.trim(), guia: o.guia, liberadas: o.liberadas.slice(), hist,
+    rec: recs(o.rec), recSessao: recs(o.recSessao),
+    tempoTotal: o.tempoTotal, tempoSessao: o.tempoSessao, sessoes: o.sessoes, sessaoId: o.sessaoId, ultima: o.ultima,
+    ajustes: normalizarAjustes(aj),
+    ultimoBackup: ehNum(o.ultimoBackup) && o.ultimoBackup > 0 ? o.ultimoBackup : null,
+  };
+}
+
+/** Troca todo o progresso por `novo` (já validado). Devolve o anterior, ou null se o aparelho não conseguiu guardar (nada muda). */
+export function substituir(novo) {
+  const anterior = dados;
+  dados = novo;
+  if (!gravar(CHAVE, dados)) {
+    dados = anterior;
+    gravar(CHAVE, anterior);
+    return null;
+  }
+  return anterior;
+}
+/** Desfaz uma substituição (usa o objeto devolvido por substituir). */
+export function desfazerSubstituicao(anterior) {
+  dados = anterior;
+  gravar(CHAVE, dados);
 }

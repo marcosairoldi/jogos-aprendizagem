@@ -165,10 +165,13 @@ function escolherMime() {
   return '';
 }
 
-export default {
-  montar(raiz, app) {
-    const tela = el('section', { classe: 'tela rolavel pais gravar' });
-    raiz.append(tela);
+/**
+ * Editor de voz (para a adulta). Pode ficar dentro da Área dos pais (aba "Sua voz") ou numa tela própria.
+ * Opções: aoVoltar (mostra "Voltar ao painel"), aoMudar(qtdGravada) (chamado quando a lista de gravações muda).
+ * Devolve { no, destruir }.
+ */
+export function criarEditorVoz(app, { aoVoltar = null, aoMudar = null } = {}) {
+    const tela = el('div', { classe: 'editor-voz gravar' });
     const audio = app.audio;
     let destruida = false;
     let gravando = null; // { id, rec, stream, chunks, timer, descartar }
@@ -185,8 +188,9 @@ export default {
       msg.classList.toggle('gv-ok', !ruim);
     };
 
-    const voltar = () => app.ir('pais', { painel: true });
+    const voltar = () => aoVoltar && aoVoltar();
     const botaoVoltar = () => {
+      if (!aoVoltar) return null;
       const b = el('button', { type: 'button', classe: 'btn-texto claro', texto: 'Voltar ao painel', attrs: { 'aria-label': 'Voltar ao painel', 'data-acao': 'voltar' } });
       b.addEventListener('click', voltar);
       return b;
@@ -211,6 +215,8 @@ export default {
       }
       if (total) total.textContent = ids.size === 1 ? '1 item gravado neste celular.' : `${ids.size} itens gravados neste celular.`;
       if (apagarTudo) apagarTudo.disabled = ids.size === 0;
+      if (resumoVoz) resumoVoz.textContent = `${ids.size} de ${totalSons} sons com a sua voz`;
+      if (aoMudar) { try { aoMudar(ids.size); } catch (e) { /* ignora */ } }
     }
 
     // ---------- gravar ----------
@@ -279,6 +285,10 @@ export default {
       if (g.descartar || destruida || !it) { atualizarTudo(); return; }
       const blob = new Blob(g.chunks, { type: g.rec.mimeType || 'audio/webm' });
       if (!blob.size) { mostrar('Não ouvi nada, tente de novo mais perto do celular.'); atualizarTudo(); return; }
+      await guardarBlob(it, blob);
+    }
+
+    async function guardarBlob(it, blob) {
       processando = it.id;
       atualizarTudo();
       let r;
@@ -294,6 +304,16 @@ export default {
       atualizarTudo();
       try { await avisarAudio(); } catch (e) { /* ignora */ }
       if (!destruida) ouvir(it);
+    }
+
+    // ---------- enviar um arquivo de áudio (em vez de gravar) ----------
+    async function enviar(it, arquivo) {
+      if (gravando || processando) return;
+      mostrar('');
+      if (!arquivo || !arquivo.size || !/^audio\//.test(arquivo.type || '')) { mostrar('Escolha um arquivo de áudio válido, como MP3, M4A, WAV ou WebM.'); return; }
+      if (arquivo.size > 10 * 1024 * 1024) { mostrar('Este áudio é grande demais. Escolha um de até 10 MB.'); return; }
+      try { audio.parar(); } catch (e) { /* ignora */ }
+      await guardarBlob(it, arquivo);
     }
 
     // ---------- apagar ----------
@@ -327,7 +347,8 @@ export default {
     function criarLinha(it) {
       const gravadoMarca = el('span', { classe: 'gv-marca', texto: '✓ gravado', attrs: { 'aria-label': 'Gravado' } });
       const alvo = el('div', { classe: `gv-alvo ${it.tipo}`, texto: it.alvo });
-      const topo = el('div', { classe: 'gv-topo' }, alvo, gravadoMarca);
+      const originalMarca = el('span', { classe: 'gv-original', texto: 'Voz original' });
+      const topo = el('div', { classe: 'gv-topo' }, alvo, gravadoMarca, originalMarca);
       const dica = it.dica ? el('p', { classe: 'nota gv-dica', texto: it.dica }) : null;
 
       const bGravar = el('button', { type: 'button', classe: 'btn-texto gv-gravar', attrs: { 'data-acao': 'gravar' } });
@@ -339,7 +360,11 @@ export default {
       const bApagar = el('button', { type: 'button', classe: 'btn-texto perigo', texto: 'Apagar', attrs: { 'data-acao': 'apagar', 'aria-label': `Apagar gravação de ${it.alvo}` } });
       confirmar(bApagar, 'Apagar', 'Toque de novo', () => apagarUm(it));
 
-      const botoes = el('div', { classe: 'gv-botoes' }, bGravar, bOuvir, bHoje, bApagar);
+      const entrada = el('input', { type: 'file', accept: 'audio/*', classe: 'gv-arquivo', attrs: { 'aria-label': `Enviar áudio de ${it.alvo}`, 'data-acao': 'enviar-arquivo', tabindex: '-1' } });
+      entrada.addEventListener('change', () => { const f = entrada.files && entrada.files[0]; entrada.value = ''; if (f) enviar(it, f); });
+      const bEnviar = el('button', { type: 'button', classe: 'btn-texto claro gv-enviar', texto: 'Enviar áudio', attrs: { 'data-acao': 'enviar', 'aria-label': `Enviar um arquivo de áudio para ${it.alvo}` } });
+      bEnviar.addEventListener('click', () => entrada.click());
+      const botoes = el('div', { classe: 'gv-botoes' }, bGravar, bOuvir, bHoje, bEnviar, bApagar, entrada);
       const card = el('div', { classe: 'gv-item', attrs: { 'data-id': it.id } }, topo, dica, botoes);
 
       const atualizar = () => {
@@ -349,6 +374,8 @@ export default {
         card.classList.toggle('gravado', tem);
         card.classList.toggle('gravando', !!eu);
         gravadoMarca.style.display = tem ? '' : 'none';
+        originalMarca.style.display = tem ? 'none' : '';
+        bEnviar.disabled = ocupado || !!eu;
         bGravar.textContent = eu ? 'Parar' : processando === it.id ? 'Salvando…' : tem ? 'Gravar de novo' : 'Gravar';
         bGravar.setAttribute('aria-label', eu ? `Parar de gravar ${it.alvo}` : `Gravar ${it.alvo}`);
         bGravar.classList.toggle('ativo', !!eu);
@@ -366,6 +393,8 @@ export default {
     }
 
     const total = el('p', { classe: 'nota', id: 'gv-total' });
+    const totalSons = grupos.reduce((n, g) => n + g.itens.length, 0);
+    const resumoVoz = el('p', { classe: 'resumo-voz', id: 'gv-resumo-total' });
     const apagarTudo = el('button', { type: 'button', classe: 'btn-texto perigo', texto: 'Apagar todas as gravações', attrs: { 'data-acao': 'apagar-todas', 'aria-label': 'Apagar todas as gravações' } });
     confirmar(apagarTudo, 'Apagar todas as gravações', 'Toque de novo para apagar todas', async () => {
       await gravacoes.apagarTodas();
@@ -375,6 +404,45 @@ export default {
       mostrar('Todas as gravações foram apagadas.', false);
     });
 
+    const semAcento = (t) => String(t || '').toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    let filtro = 'letras'; // 'letras' (só os sons das letras) ou 'todos' (sons, frases, sílabas e palavras)
+    let busca = '';
+    const detalhes = [];
+    const botoesFiltro = {};
+    const semResultado = el('p', { classe: 'nota', id: 'gv-sem-resultado', texto: 'Nenhum som encontrado.', attrs: { hidden: '' } });
+
+    let aplicando = false;
+    function aplicarFiltro() {
+      if (aplicando) return;
+      aplicando = true;
+      try { aplicarFiltroInterno(); } finally { aplicando = false; }
+    }
+    function aplicarFiltroInterno() {
+      const q = semAcento(busca).trim();
+      let achou = 0;
+      for (const d of detalhes) {
+        const gr = d.gr;
+        const mostrarGrupo = q ? true : filtro === 'todos' || gr.chave === 'sons';
+        let visiveis = 0;
+        if (q) { d.abrir(); }
+        for (const it of gr.itens) {
+          const linha = d.det.querySelector(`.gv-item[data-id="${it.id}"]`);
+          if (!linha) continue;
+          const bate = !q || semAcento(`${it.alvo} ${it.id}`).includes(q);
+          linha.hidden = !bate;
+          if (bate) visiveis++;
+        }
+        const grupoVisivel = mostrarGrupo && (!q || visiveis > 0);
+        d.det.hidden = !grupoVisivel;
+        if (grupoVisivel) achou += q ? visiveis : 1;
+      }
+      semResultado.hidden = !(q && achou === 0);
+      for (const [k, b] of Object.entries(botoesFiltro)) {
+        b.setAttribute('aria-pressed', String(k === filtro));
+        b.classList.toggle('ativo', k === filtro);
+      }
+    }
+
     function montarConteudo() {
       const blocos = grupos.map((gr) => {
         gr.contador = el('span', { classe: 'gv-contador', attrs: { 'data-grupo': gr.chave } });
@@ -383,31 +451,46 @@ export default {
         if (gr.aberto) det.open = true;
         if (gr.aviso) det.append(el('p', { classe: 'aviso', texto: gr.aviso }));
         let montado = false;
-        const montarItens = () => { if (montado) return; montado = true; gr.itens.forEach((it) => det.append(criarLinha(it))); atualizarTudo(); };
+        const montarItens = () => { if (montado) return; montado = true; gr.itens.forEach((it) => det.append(criarLinha(it))); atualizarTudo(); aplicarFiltro(); };
         det.addEventListener('toggle', () => { if (det.open) montarItens(); });
         if (gr.aberto) montarItens();
+        detalhes.push({ gr, det, abrir: () => { if (!det.open) det.open = true; montarItens(); } });
         return det;
       });
-      tela.replaceChildren(
-        el('div', { classe: 'topo-pais' }, el('h1', { texto: 'Gravar minha voz' })),
-        el('p', { texto: 'Grave a sua voz para o jogo falar com você. As gravações ficam só neste celular e não vão para a internet. Se você apagar os dados do navegador ou desinstalar o app, elas somem. O que não for gravado continua com a voz do aparelho.' }),
-        el('p', { classe: 'nota', texto: 'Dica: fique num lugar silencioso, com o celular a um palmo da boca. Comece pelos sons das letras. Cada gravação pode ter até 6 segundos.' }),
+      const campoBusca = el('input', { type: 'text', id: 'busca-som', placeholder: 'Buscar som ou palavra', attrs: { 'aria-label': 'Buscar som', autocomplete: 'off' } });
+      campoBusca.addEventListener('input', () => { busca = campoBusca.value; aplicarFiltro(); });
+      const faixa = el('div', { classe: 'gv-filtro' });
+      for (const [k, rot] of [['letras', 'Letras'], ['todos', 'Todos os sons']]) {
+        const b = el('button', { type: 'button', classe: 'btn-texto claro gv-filtro-btn', texto: rot, attrs: { 'data-filtro': k, 'aria-pressed': 'false' } });
+        b.addEventListener('click', () => { filtro = k; aplicarFiltro(); });
+        botoesFiltro[k] = b;
+        faixa.append(b);
+      }
+      tela.replaceChildren(...[
+        aoVoltar ? el('div', { classe: 'topo-pais' }, el('h1', { texto: 'Gravar minha voz' })) : el('h2', { texto: 'Sua voz, som por som' }),
+        el('p', { texto: 'Grave a sua voz (até 6 segundos) ou envie um áudio. Ouça e, se quiser, grave de novo. Sem uma gravação, o jogo usa a voz original daquele som. As gravações ficam só neste celular e não vão para a internet. Se você apagar os dados do navegador ou desinstalar o app, elas somem.' }),
+        el('p', { classe: 'nota', texto: 'Dica: fique num lugar silencioso, com o celular a um palmo da boca. Comece pelos sons das letras.' }),
         msg,
+        faixa,
+        campoBusca,
+        resumoVoz,
         total,
         ...blocos,
+        semResultado,
         el('div', { classe: 'linha' }, apagarTudo),
-        el('div', { classe: 'linha', estilo: 'padding-bottom:24px' }, botaoVoltar()),
-      );
+        aoVoltar ? el('div', { classe: 'linha', estilo: 'padding-bottom:24px' }, botaoVoltar()) : null,
+      ].filter(Boolean));
+      aplicarFiltro();
       atualizarTudo();
     }
 
     try { audio.parar(); } catch (e) { /* ignora */ }
     if (!gravacoes.disponivel()) {
-      tela.replaceChildren(
-        el('div', { classe: 'topo-pais' }, el('h1', { texto: 'Gravar minha voz' })),
+      tela.replaceChildren(...[
+        aoVoltar ? el('div', { classe: 'topo-pais' }, el('h1', { texto: 'Gravar minha voz' })) : el('h2', { texto: 'Sua voz, som por som' }),
         el('p', { classe: 'aviso', id: 'gv-indisponivel', texto: 'Este navegador não permite guardar gravações (isso acontece em abas anônimas). Abra o jogo numa aba normal do Chrome. O jogo continua funcionando com a voz do aparelho.' }),
-        el('div', { classe: 'linha' }, botaoVoltar()),
-      );
+        aoVoltar ? el('div', { classe: 'linha' }, botaoVoltar()) : null,
+      ].filter(Boolean));
     } else {
       montarConteudo();
       gravacoes.listarIds().then((s) => {
@@ -418,6 +501,18 @@ export default {
     }
 
     return {
+      no: tela,
+      /** Para uma gravação em andamento e solta o microfone (ao trocar de aba ou sair). */
+      pausar() {
+        if (gravando) {
+          gravando.descartar = true;
+          liberarMicrofone(gravando);
+          try { if (gravando.rec.state !== 'inactive') gravando.rec.stop(); } catch (e) { /* ignora */ }
+          gravando = null;
+          atualizarTudo();
+        }
+        try { audio.parar(); } catch (e) { /* ignora */ }
+      },
       destruir() {
         destruida = true;
         confirmacoes.forEach((t) => clearTimeout(t));
@@ -429,5 +524,15 @@ export default {
         }
       },
     };
+}
+
+// Tela própria (continua disponível; a Área dos pais usa o editor dentro da aba "Sua voz").
+export default {
+  montar(raiz, app) {
+    const tela = el('section', { classe: 'tela rolavel pais gravar' });
+    raiz.append(tela);
+    const ed = criarEditorVoz(app, { aoVoltar: () => app.ir('pais', { painel: true, aba: 'voz' }) });
+    tela.append(ed.no);
+    return { destruir() { ed.destruir(); } };
   },
 };
