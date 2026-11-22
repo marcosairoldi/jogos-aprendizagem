@@ -1,0 +1,131 @@
+/* Casinhas dos Sons: estilos do jogo (prefixo cs-). Usa os tokens de css/jogos.css (.jogo). */
+.jogo-casinhas {
+  --peca: clamp(72px, min(18vw, 11vh), 104px);
+  --vaga: calc(var(--peca) + 8px);
+  --roxo: #6741d9;
+  gap: clamp(6px, 1.6vh, 14px);
+  touch-action: none;
+  background: linear-gradient(#fff0f6, #ffdeeb);
+}
+.jogo-casinhas * { touch-action: none; }
+
+/* topo: escolha de fase + ouvir de novo */
+.cs-topo { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex: 0 0 auto; }
+.cs-fases { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.cs-rotulo-fase { font-size: 13px; font-weight: 700; line-height: 1.15; color: var(--j-texto); background: rgba(255, 255, 255, .9); padding: 1px 8px; border-radius: 10px; }
+.cs-bolinhas { display: flex; gap: 8px; }
+.cs-fase {
+  width: 64px; height: 64px; border-radius: 50%; padding: 0; cursor: pointer;
+  font-family: inherit; font-size: 30px; font-weight: 700; line-height: 1;
+  background: #fff; color: var(--j-rosa-forte); border: 4px solid var(--j-rosa);
+  box-shadow: 0 4px 0 rgba(214, 51, 108, .25); transition: transform .15s, background .2s;
+}
+.cs-fase.cs-atual { background: var(--j-rosa-forte); color: #fff; border-color: #fff; box-shadow: 0 0 0 4px var(--j-rosa-forte), 0 5px 0 4px rgba(92, 42, 62, .25); }
+.cs-fase.cs-pulsa { animation: cs-pulsa 1s ease-in-out 2; }
+.cs-fase:active { transform: translateY(3px); }
+.cs-fase:focus-visible, .cs-peca:focus-visible, .cs-casa:focus-visible { outline: 5px solid var(--j-dourado); outline-offset: 3px; }
+.jogo-casinhas .j-ouvir .j-disco { width: 64px; height: 64px; padding: 12px; }
+.jogo-casinhas .j-ouvir .j-rotulo { font-size: 13px; padding: 2px 6px; }
+@keyframes cs-pulsa { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+.cs-progresso { display: flex; justify-content: center; flex: 0 0 auto; }
+
+/* figura */
+.cs-figura {
+  flex: 1 1 0; min-height: 64px; max-height: 210px; display: flex; align-items: center; justify-content: center;
+}
+.cs-cartao-figura {
+  height: 100%; aspect-ratio: 1.25 / 1; max-width: 100%; display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 5px solid var(--j-rosa); border-radius: 28px; box-shadow: 0 6px 0 var(--j-rosa); padding: 6px;
+  transition: opacity .4s, transform .4s;
+}
+.cs-cartao-figura.cs-vazio { background: rgba(255, 255, 255, .45); border: 5px dashed var(--j-rosa); box-shadow: none; opacity: .75; }
+.cs-cartao-figura.cs-vazio img { width: 55%; height: 55%; opacity: .45; }
+.cs-cartao-figura img { width: 100%; height: 100%; object-fit: contain; }
+.cs-cartao-figura .cs-silaba-grande { font-size: clamp(40px, 8vh, 80px); font-weight: 700; color: var(--j-rosa-forte); line-height: 1; }
+.cs-cartao-figura.cs-aparece { animation: cs-aparece .6s ease-out; }
+@keyframes cs-aparece { 0% { transform: scale(.6) rotate(-4deg); opacity: 0; } 60% { transform: scale(1.08) rotate(2deg); opacity: 1; } 100% { transform: scale(1); } }
+
+/* casinhas */
+.cs-casas { position: relative; display: flex; justify-content: center; align-items: flex-end; gap: clamp(12px, 4vw, 28px); flex: 0 0 auto; }
+.cs-casa {
+  position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 0; background: none; border: 0;
+  width: calc(var(--vaga) + 44px); font-family: inherit; filter: drop-shadow(0 5px 0 rgba(92, 42, 62, .22));
+  transition: transform .2s;
+}
+.cs-telhado { width: 100%; height: calc(var(--peca) * .5); background: var(--cor-telhado, var(--j-rosa-forte)); clip-path: polygon(50% 0, 100% 100%, 0 100%); margin-bottom: -2px; }
+.cs-corpo {
+  width: 88%; padding: 8px 0 10px; display: flex; justify-content: center;
+  background: var(--cor-corpo, var(--j-rosa-claro)); border-radius: 0 0 22px 22px; border: 4px solid var(--cor-telhado, var(--j-rosa-forte)); border-top: 0;
+}
+.cs-vaga-casa {
+  width: var(--vaga); height: var(--vaga); border-radius: 20px; display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .8); border: 4px dashed var(--cor-telhado, var(--j-rosa-forte));
+}
+.cs-casa.cs-consoante { --cor-telhado: var(--j-rosa-forte); --cor-corpo: #ffdeeb; }
+.cs-casa.cs-vogal { --cor-telhado: var(--roxo); --cor-corpo: #e5dbff; }
+.cs-casa.cs-silaba-0 { --cor-telhado: var(--j-rosa-forte); --cor-corpo: #ffdeeb; }
+.cs-casa.cs-silaba-1 { --cor-telhado: var(--roxo); --cor-corpo: #e5dbff; }
+.cs-casa.cs-silaba-2 { --cor-telhado: #1098ad; --cor-corpo: #c5f6fa; }
+.cs-casa.cs-sobre, .cs-casa.cs-convida-casa { transform: translateY(-4px) scale(1.04); }
+.cs-casa.cs-sobre .cs-vaga-casa { background: #fff3bf; border-style: solid; border-color: var(--j-dourado); box-shadow: 0 0 0 6px rgba(255, 212, 59, .55); }
+.cs-casa.cs-convida-casa .cs-vaga-casa { border-color: var(--j-dourado); box-shadow: 0 0 0 5px rgba(255, 212, 59, .5); }
+.cs-casa.cs-cheia .cs-vaga-casa { border-style: solid; background: #fff; }
+.cs-casas.cs-feliz .cs-casa { animation: cs-salta .7s ease-out both; }
+.cs-casas.cs-feliz .cs-casa:nth-child(2) { animation-delay: .12s; }
+.cs-casas.cs-feliz .cs-casa:nth-child(3) { animation-delay: .24s; }
+.cs-casas.cs-feliz .cs-vaga-casa { background: #fff3bf; border-color: var(--j-dourado); border-style: solid; }
+@keyframes cs-salta { 0% { transform: translateY(0); } 35% { transform: translateY(-16px) rotate(-2deg); } 65% { transform: translateY(0) rotate(2deg); } 82% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+
+/* bandeja */
+.cs-bandeja {
+  flex: 0 0 auto; align-self: center; max-width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 6px;
+  background: #fff; border: 4px solid var(--j-rosa); border-radius: 28px; box-shadow: 0 6px 0 var(--j-rosa);
+}
+.cs-grupo { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.cs-vaga-peca { width: var(--peca); height: var(--peca); border-radius: 22px; position: relative; }
+.cs-vaga-peca.cs-silaba { width: var(--peca); }
+.cs-vaga-peca.cs-vazia { border: 3px dashed var(--j-rosa-claro); }
+.cs-peca {
+  position: relative; width: 100%; height: 100%; padding: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--fonte, 'Andika', system-ui, sans-serif); font-weight: 700; font-size: calc(var(--peca) * .62); line-height: 1; cursor: grab;
+  background: #fff; border: 5px solid var(--j-rosa-forte); color: var(--j-rosa-forte); border-radius: 22px;
+  box-shadow: 0 6px 0 var(--j-rosa-forte); transition: box-shadow .2s, scale .2s;
+}
+.cs-peca.cs-v { border-color: var(--roxo); color: var(--roxo); box-shadow: 0 6px 0 var(--roxo); background: #f3efff; }
+.cs-peca.cs-c { background: #fff0f6; }
+.cs-peca.cs-s { font-size: calc(var(--peca) * .44); background: #fff; }
+.cs-peca.cs-selecionada { scale: 1.1; box-shadow: 0 0 0 7px rgba(255, 212, 59, .8), 0 6px 0 var(--j-rosa-forte); border-color: var(--j-dourado); }
+.cs-peca.cs-arrasta { z-index: 60; scale: 1.12; transition: none; cursor: grabbing; box-shadow: 0 14px 18px rgba(92, 42, 62, .3), 0 6px 0 var(--j-rosa-forte); }
+.cs-peca.cs-volta { transition: transform .42s cubic-bezier(.2, .9, .3, 1.15), scale .42s; }
+.cs-peca.cs-voa { transition: transform .28s ease-in-out, scale .28s; z-index: 60; }
+.cs-peca.cs-brilha { animation: cs-brilha 1.1s ease-in-out infinite; border-color: var(--j-dourado); }
+@keyframes cs-brilha { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 212, 59, .9), 0 6px 0 var(--j-rosa-forte); } 50% { box-shadow: 0 0 0 14px rgba(255, 212, 59, .5), 0 6px 0 var(--j-rosa-forte); } }
+.cs-vaga-casa .cs-peca { box-shadow: none; cursor: default; }
+.cs-vaga-casa .cs-peca.cs-selecionada, .cs-vaga-casa .cs-peca.cs-brilha { animation: none; scale: 1; }
+
+/* tablet e telas baixas */
+@media (max-height: 700px) {
+  .jogo-casinhas { gap: 5px; }
+  .jogo-casinhas .cs-telhado { height: calc(var(--peca) * .4); }
+  .jogo-casinhas .cs-corpo { padding: 6px 0 8px; }
+  .jogo-casinhas .cs-bandeja { padding: 8px 6px; gap: 6px; }
+}
+@media (min-width: 700px) {
+  .jogo-casinhas { padding-left: max(16px, calc((100% - 640px) / 2)); padding-right: max(16px, calc((100% - 640px) / 2)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cs-peca.cs-brilha { box-shadow: 0 0 0 10px rgba(255, 212, 59, .7), 0 6px 0 var(--j-rosa-forte); }
+}
+
+/* Menu de brincadeiras com 5 jogos: cabe sem rolagem em telas baixas e usa 3 colunas em tela larga */
+.menu-jogos { grid-auto-rows: minmax(0, 1fr); min-height: 0; }
+.menu-jogos .btn-jogo { min-height: 0; }
+@media (max-height: 760px) {
+  .menu-jogos { gap: 10px; padding-top: 4px; padding-bottom: 8px; }
+  .menu-jogos .btn-jogo { padding: 6px 6px 6px; gap: 2px; }
+}
+@media (min-width: 900px) {
+  .menu-jogos { grid-template-columns: repeat(3, 1fr); max-height: 440px; }
+}
+.menu-jogos .btn-jogo .figura-jogo { position: relative; min-height: 0; overflow: hidden; }
+.menu-jogos .btn-jogo .figura-jogo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }

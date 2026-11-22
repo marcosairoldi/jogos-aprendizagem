@@ -8,6 +8,7 @@ const JOGOS = [
   ['caca', 'Caça-Som', '✶', 'Caça-som'],
   ['junte', 'Junte os Sons', '≈', 'Junte os sons'],
   ['trace', 'Trace a Letra', '✎', 'Trace a letra'],
+  ['casinhas', 'Casinhas dos Sons', '⌂', 'Casinhas dos sons'],
 ];
 
 export default {
