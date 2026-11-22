@@ -30,5 +30,9 @@
   "recompensa_chifre": "Você ganhou um chifre de unicórnio!",
   "letra_dominada": "Você já sabe o som desta letra! A trilha vai continuar.",
   "colecao": "Olha tudo o que você juntou!",
-  "despedida": "Tchau tchau! Você brincou muito bem hoje. Até amanhã!"
+  "despedida": "Tchau tchau! Você brincou muito bem hoje. Até amanhã!",
+  "ouca_nome_som": "Ouça o nome e o som da letra.",
+  "casinhas_instrucao": "Arraste as letras para as casinhas e escute o som que elas fazem juntas.",
+  "casinhas_monte": "Monte este som:",
+  "casinhas_palavra": "Monte a palavra:"
 }

@@ -38,6 +38,7 @@ const FRASES = {
   acerto_4: 'elogio-4',
   rodada_fim: 'elogio-5',
   despedida: 'despedida-1',
+  ouca_nome_som: 'instrucao-ouca-nome-som',
 };
 
 const copiados = [];
