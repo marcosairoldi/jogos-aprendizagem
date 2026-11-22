@@ -544,14 +544,12 @@ export function criarJogador(page, esp, relator, { nome = '', errar = true, foto
       }
       await esperarAte(async () => page.locator('.j-trace-svg').count(), { msg: 'svg do trace' });
       if (n === 0) await verTela('jogoTrace');
-      const tr = tracados.letras[letra];
-      ok(!!tr, `trace: há traçado para "${letra}"`);
-      // converte cada ponto do viewBox para a tela, usando a matriz real do SVG (o que a criança vê)
-      const traços = await page.evaluate((tracos) => {
-        const s = document.querySelector('.j-trace-svg');
-        const m = s.getScreenCTM();
-        return tracos.map((t) => t.map(([x, y]) => ({ x: m.a * x + m.c * y + m.e, y: m.b * x + m.d * y + m.f })));
-      }, [...tr.tracos, ...tr.minuscula.tracos.map((t) => t.map(([x, y]) => [x + 100, y]))]);
+      ok(!!tracados.letras[letra], `trace: há traçado para "${letra}"`);
+      // pontos do pontilhado em px de tela, lidos do DOM com a matriz real do SVG (o que a criança vê; vale para os dois layouts)
+      const traços = await page.evaluate(() => [...document.querySelectorAll('.j-trace-svg .j-trace-pontos')].map((pl) => {
+        const m = pl.getScreenCTM();
+        return [...pl.points].map((p) => ({ x: m.a * p.x + m.c * p.y + m.e, y: m.b * p.x + m.d * p.y + m.f }));
+      }));
       let tid = 1;
       for (const t of traços) {
         const toque = (p) => ({ x: p.x, y: p.y, id: tid, radiusX: 8, radiusY: 8, force: 1 });

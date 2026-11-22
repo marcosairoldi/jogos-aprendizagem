@@ -115,16 +115,26 @@
 .j-cartao.j-grande { transform: scale(1.18); z-index: 3; }
 
 /* trace */
-.j-palco { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; }
-.j-trace-svg { width: 100%; max-height: 100%; aspect-ratio: 2 / 1; touch-action: none; overflow: visible; background: #fff; border-radius: 28px; border: 5px solid var(--j-rosa); box-shadow: 0 8px 0 var(--j-rosa); }
-.j-trace-faixa { fill: none; stroke: var(--j-rosa-claro); stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; }
-.j-trace-pontos { fill: none; stroke: var(--j-lilas); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .1 6; }
-.j-trace-rastro { fill: none; stroke: var(--j-rosa-forte); stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 2px rgba(247, 131, 172, .9)); }
+.jogo-trace { touch-action: none; overscroll-behavior: none; }
+.j-palco { position: relative; flex: 1 1 auto; min-height: 0; }
+/* o SVG é dimensionado em px pelo JS (letra o maior possível; maiúscula e minúscula lado a lado ou uma sobre a outra) */
+.j-trace-svg {
+  position: absolute; inset: 0; margin: auto; display: block; touch-action: none; overflow: visible; background: #fff; border-radius: 28px;
+  box-shadow: 0 0 0 5px var(--j-rosa), 0 13px 0 5px var(--j-rosa); -webkit-user-select: none; user-select: none;
+}
+/* nada dentro do desenho captura toque: o SVG recebe todos os eventos (guia, dica, rastro, cintilância) */
+.j-trace-svg *, .j-palco .j-cintila, .j-palco .j-cintila * { pointer-events: none; }
+.j-trace-divisor { stroke: var(--j-rosa-claro); stroke-width: 1.2; stroke-dasharray: 2 3; stroke-linecap: round; }
+.j-trace-faixa { fill: none; stroke: var(--j-rosa-claro); stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+.j-trace-pontos { fill: none; stroke: var(--j-lilas); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .1 5; }
+.j-trace-rastro { fill: none; stroke: var(--j-rosa-forte); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 2px rgba(247, 131, 172, .9)); }
+.j-trace-dedo { fill: none; stroke: var(--j-rosa); stroke-opacity: .75; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; transition: opacity 1.2s ease-out; }
+.j-trace-dedo.j-some-dedo { opacity: 0; }
 .j-trace-estrela { fill: var(--j-dourado); stroke: var(--j-rosa-forte); stroke-width: 1.2; stroke-linejoin: round; transform-box: fill-box; transform-origin: center; animation: j-pulsa 1s ease-in-out infinite; }
 .j-trace-seta { fill: var(--j-rosa-forte); opacity: .75; }
 /* trace: modo livre (26 letras, cartões com o par Aa) */
 .j-em-grade .j-topo { display: none; }
-.j-em-grade .j-palco { align-items: stretch; }
+.j-em-grade .j-palco { display: flex; align-items: stretch; }
 .j-grade-letras { width: 100%; height: 100%; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(7, minmax(var(--j-alvo), 84px)); gap: 8px; align-content: center; }
 .j-celula { display: flex; align-items: center; justify-content: center; min-width: 0; }
 .j-grade-letras .j-ouvir { width: 100%; height: 100%; max-width: 84px; min-height: var(--j-alvo); justify-content: center; gap: 2px; }
@@ -139,7 +149,7 @@
 .j-marca { position: absolute; top: -9px; right: -7px; width: 24px; height: 24px; fill: var(--j-dourado); stroke: var(--j-rosa-forte); stroke-width: 1.5; stroke-linejoin: round; pointer-events: none; }
 @keyframes j-pulsa { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
 .j-trace-completa .j-trace-rastro { animation: j-brilha 1s ease-in-out; }
-@keyframes j-brilha { 0%, 100% { stroke: var(--j-rosa-forte); } 50% { stroke: var(--j-dourado); stroke-width: 11; } }
+@keyframes j-brilha { 0%, 100% { stroke: var(--j-rosa-forte); } 50% { stroke: var(--j-dourado); stroke-width: 10; } }
 
 /* cintilância */
 .j-cintila { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; z-index: 5; }

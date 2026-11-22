@@ -18,7 +18,6 @@ const base = `http://127.0.0.1:${porta}`;
 const browser = await chromium.launch();
 let falhas = 0;
 const tracados = JSON.parse(readFileSync(RAIZ + 'data/tracados.json', 'utf8'));
-const tracosDe = (l) => [...tracados.letras[l].tracos, ...tracados.letras[l].minuscula.tracos.map((t) => t.map(([x, y]) => [x + 100, y]))];
 const dormir = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function nova(w, h, query) {
@@ -41,16 +40,17 @@ async function teste(nome, fn) {
 }
 const esperar = (page, fn, arg, t = 8000) => page.waitForFunction(fn, arg, { timeout: t });
 const falas = (page) => page.evaluate(() => window.__d2.falas.flat());
+const tracosTela = (page) => page.evaluate(() => [...document.querySelectorAll('.j-trace-svg .j-trace-pontos')].map((pl) => {
+  const m = pl.getScreenCTM();
+  return [...pl.points].map((p) => [m.a * p.x + m.c * p.y + m.e, m.b * p.x + m.d * p.y + m.f]);
+}));
 async function arrastar(page, traco) {
-  const b = await page.evaluate(() => { const s = document.querySelector('.j-trace-svg'); const r = s.getBoundingClientRect(); return { l: r.left, t: r.top, w: r.width, h: r.height, vw: s.viewBox.baseVal.width }; });
-  const pos = ([x, y]) => [b.l + (x / b.vw) * b.w, b.t + (y / 100) * b.h];
-  const [x0, y0] = pos(traco[0]);
-  await page.mouse.move(x0, y0); await page.mouse.down();
-  for (let i = 1; i < traco.length; i++) { const [x, y] = pos(traco[i]); await page.mouse.move(x, y, { steps: 2 }); }
+  await page.mouse.move(traco[0][0], traco[0][1]); await page.mouse.down();
+  for (let i = 1; i < traco.length; i++) await page.mouse.move(traco[i][0], traco[i][1], { steps: 2 });
   await page.mouse.up();
 }
 async function tracar(page, letra) {
-  for (const t of tracosDe(letra)) { await arrastar(page, t); await dormir(50); }
+  for (const t of await tracosTela(page)) { await arrastar(page, t); await dormir(50); }
   await esperar(page, () => document.querySelector('.j-trace-completa'));
 }
 
@@ -98,12 +98,12 @@ await teste('tocar H não fala som de letra; abre o traçado do par', async () =
   assert.ok(!f.some((x) => typeof x === 'string' && x.toLowerCase() === 'h'), 'sem "h" para a voz');
   assert.ok(f.filter((x) => typeof x === 'string' && x.startsWith('som:')).length === 0, 'nenhum som de letra');
   assert.ok(f.includes('frase:trace_instrucao'));
-  assert.equal(await page.evaluate(() => document.querySelector('.j-trace-svg').viewBox.baseVal.width), 200, 'par lado a lado');
+  assert.ok(['horizontal', 'vertical'].includes(await page.evaluate(() => document.querySelector('.j-trace-svg').dataset.layout)), 'par maiúscula + minúscula no mesmo desenho');
   await page.screenshot({ path: `${SHOTS}/tracar-h.png` });
   await tracar(page, 'h');
   await esperar(page, () => window.__d2.falas.some((x) => x[0] === 'frase:trace_completo'));
   const completos = await page.evaluate(() => window.__d2.falas.filter((x) => x[0] === 'frase:trace_completo'));
-  assert.deepEqual(completos[0], ['frase:trace_completo'], 'só o elogio');
+  assert.deepEqual(completos[0], ['frase:trace_completo', 'nome:h'], 'elogio + nome, sem som de letra');
   assert.deepEqual(await page.evaluate(() => window.__d2.registros), [], 'h não liberada: não registra');
   await esperar(page, () => document.querySelector('.j-cartao-letra.j-tracada[data-letra="h"] .j-marca'), null, 6000);
   assert.deepEqual(erros, []);
@@ -120,7 +120,7 @@ await teste('tocar M fala som:m; 3 letras encerram; só liberadas registram', as
   assert.ok(f.includes('som:m'), 'som:m ao tocar');
   assert.ok(await page.$('.j-trace-estrela'), 'estrelinha de início');
   await tracar(page, 'm');
-  await esperar(page, () => window.__d2.falas.some((x) => x[0] === 'frase:trace_completo' && x[1] === 'som:m'));
+  await esperar(page, () => window.__d2.falas.some((x) => x[0] === 'frase:trace_completo' && x[1] === 'nome:m' && x[3] === 'som:m'));
   await esperar(page, () => document.querySelectorAll('.j-cartao-letra').length === 26, null, 6000);
   await page.screenshot({ path: `${SHOTS}/grade-com-estrela.png` });
   for (const l of ['q', 'x']) {

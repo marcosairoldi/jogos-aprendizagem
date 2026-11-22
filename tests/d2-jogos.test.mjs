@@ -301,15 +301,16 @@ await teste('junte: etapa das vogais usa pares (ai, oi)', async () => {
 
 // ---------- Trace a Letra ----------
 const tracados = JSON.parse(readFileSync(RAIZ + 'data/tracados.json', 'utf8'));
-// maiúscula + minúscula (deslocada 100 unidades), na ordem em que a criança traça
-const tracosDe = (l) => [...tracados.letras[l].tracos, ...tracados.letras[l].minuscula.tracos.map((t) => t.map(([x, y]) => [x + 100, y]))];
+// traços (pontos guia do pontilhado) em px de tela, lidos do DOM: valem para o layout lado a lado e para o vertical
+const tracosTela = (page) => page.evaluate(() => [...document.querySelectorAll('.j-trace-svg .j-trace-pontos')].map((pl) => {
+  const m = pl.getScreenCTM();
+  return [...pl.points].map((p) => [m.a * p.x + m.c * p.y + m.e, m.b * p.x + m.d * p.y + m.f]);
+}));
 async function arrastar(page, traco, { ate = traco.length } = {}) {
-  const box = await page.evaluate(() => { const s = document.querySelector('.j-trace-svg'); const b = s.getBoundingClientRect(); return { l: b.left, t: b.top, w: b.width, h: b.height, vw: s.viewBox.baseVal.width }; });
-  const pos = ([x, y]) => [box.l + (x / box.vw) * box.w, box.t + (y / 100) * box.h];
-  const [x0, y0] = pos(traco[0]);
+  const [x0, y0] = traco[0];
   await page.mouse.move(x0, y0);
   await page.mouse.down();
-  for (let i = 1; i < ate; i++) { const [x, y] = pos(traco[i]); await page.mouse.move(x, y, { steps: 2 }); }
+  for (let i = 1; i < ate; i++) { const [x, y] = traco[i]; await page.mouse.move(x, y, { steps: 2 }); }
   await page.mouse.up();
 }
 
@@ -325,12 +326,12 @@ await teste('trace: arrasta os traços de 2 letras e conclui', async () => {
   assert.equal(info.touch, 'none');
   for (const letra of ['m', 'a']) {
     await esperar(page, (l) => !document.querySelector('.j-trace-completa') && window.__d2.falas.some((f) => f[0] === 'frase:trace_instrucao' && f[1] === 'som:' + l), letra);
-    const tr = tracosDe(letra);
+    const tr = await tracosTela(page);
     for (let t = 0; t < tr.length; t++) {
       if (letra === 'm' && t === 0) {
         // arrasta só metade, levanta o dedo: o progresso fica
         await arrastar(page, tr[0], { ate: Math.floor(tr[0].length / 2) });
-        const pontos = await page.evaluate(() => document.querySelector('.j-trace-rastro').getAttribute('points').split(' ').length);
+        const pontos = await page.evaluate(() => +document.querySelector('.j-trace-svg').dataset.cobertos);
         assert.ok(pontos >= 5, 'progresso mantido ao levantar o dedo');
         await page.screenshot({ path: `${SHOTS}/trace-2-meio.png` });
         // continua de onde parou (dedo cai de novo no meio do traço)
@@ -342,7 +343,7 @@ await teste('trace: arrasta os traços de 2 letras e conclui', async () => {
     }
     await esperar(page, () => document.querySelector('.j-trace-completa'));
     await page.screenshot({ path: `${SHOTS}/trace-3-completa-${letra}.png` });
-    await esperar(page, (l) => window.__d2.falas.some((f) => f[0] === 'frase:trace_completo' && f[1] === 'som:' + l), letra);
+    await esperar(page, (l) => window.__d2.falas.some((f) => f[0] === 'frase:trace_completo' && f[1] === 'nome:' + l && f[3] === 'som:' + l), letra);
   }
   await esperar(page, () => window.__d2.terminou, null, 12000);
   const r = await page.evaluate(() => ({ t: window.__d2.terminou, reg: window.__d2.registros, ef: window.__d2.efeitos }));
@@ -360,7 +361,7 @@ await teste('trace: as 26 letras (maiúscula e minúscula) são completáveis', 
   for (const l of todas) {
     const { page, erros, ctx } = await novaPagina(`jogo=trace&foco=${l}&letras=${l}&liberadas=${l}`);
     await esperar(page, () => document.querySelector('.j-trace-svg'));
-    for (const t of tracosDe(l)) await arrastar(page, t);
+    for (const t of await tracosTela(page)) await arrastar(page, t);
     await esperar(page, () => document.querySelector('.j-trace-completa'), null, 4000);
     assert.deepEqual(erros, [], l);
     await ctx.close();
