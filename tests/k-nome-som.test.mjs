@@ -63,9 +63,11 @@ try {
   let m = await esp.tamanho();
   await page.evaluate(() => { window.__fala.length = 0; });
   const L = (await page.locator('.parada:not(.foco) .letra').first().innerText()).toLowerCase(); // uma parada antiga (O)
-  await tocar(page, '.parada:not(.foco)');
-  await esperarAte(async () => ids((await esp.bruto()).slice(m)).includes('som_' + L), { timeout: 8000, msg: 'nome e som da parada' });
-  ok(JSON.stringify(ids((await esp.bruto()).slice(m))) === JSON.stringify(['nome_' + L, 'som_' + L]), 'parada: nome e depois som da letra (nessa ordem, uma vez cada)', JSON.stringify(ids((await esp.bruto()).slice(m))));
+  await tocar(page, '.parada:not(.foco)'); // um toque abre a lição da letra antiga, que diz nome e som
+  await esperarTela(page, 'apresenta');
+  await esperarAte(async () => ids((await esp.bruto()).slice(m)).filter((x) => x === 'som_' + L).length >= 2, { timeout: 8000, msg: 'nome e som da parada' });
+  const sq = ids((await esp.bruto()).slice(m));
+  ok(JSON.stringify(sq.slice(0, 4)) === JSON.stringify(['frase_ouca_nome_som', 'nome_' + L, 'som_' + L, 'som_' + L]), 'parada antiga: a lição diz nome e depois som da letra (nessa ordem)', JSON.stringify(sq));
   const fT = await lerFalas(page);
   const nT = fT.find((x) => x.d.tipo === 'nome');
   const sT = fT.find((x) => x.d.tipo === 'som');
@@ -74,6 +76,7 @@ try {
   ok(fT.indexOf(nT) < fT.indexOf(sT), 'legenda: o nome vem antes do som');
   ok(/legenda-icone/.test(sT.html), 'legenda do som mantém o alto-falante');
 
+  await tocar(page, 'button[aria-label="Voltar para a trilha"]'); await esperarTela(page, 'trilha'); await dormir(300);
   console.log('\n# Lição: apresentação fala ouca_nome_som, nome, som, som');
   m = await esp.tamanho();
   await page.evaluate(() => { window.__fala.length = 0; });

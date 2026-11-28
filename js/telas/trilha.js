@@ -1,5 +1,5 @@
 // Trilha Encantada: caminho rosa sinuoso, de baixo para cima, uma parada por letra.
-// Mostra só uma janela de 6 paradas, centrada na letra foco (sem rolagem).
+// Mostra só uma janela de 6 paradas, centrada na letra foco (sem rolagem). Botões e arrasto vertical trocam de página.
 import { el, imagem, botaoIcone, botaoOuvir, srcGuia, slotLegenda, nomeEtapa } from '../ui.js';
 
 const JANELA = 6;
@@ -31,59 +31,59 @@ export default {
     const liberadas = app.progresso.letrasLiberadas();
     const foco = app.progresso.letraFoco();
     const idxFoco = foco ? ordem.indexOf(foco) : ordem.indexOf(liberadas[liberadas.length - 1]);
-    const inicio = Math.max(0, Math.min(idxFoco - 2, ordem.length - JANELA));
-    const letras = ordem.slice(inicio, inicio + JANELA);
-    const pts = letras.map((_, i) => posicao(i, Math.min(JANELA, letras.length) > 1 ? JANELA : 1));
+    const inicioFoco = Math.max(0, Math.min(idxFoco - 2, ordem.length - JANELA));
+    let inicio = inicioFoco;
 
     const area = el('div', { classe: 'trilha-area' });
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', '0 0 100 100');
-    svg.setAttribute('preserveAspectRatio', 'none');
-    svg.setAttribute('aria-hidden', 'true');
-    const d = desenharCaminho(pts, inicio > 0, inicio + JANELA < ordem.length);
-    for (const cls of ['caminho-base', 'caminho-miolo']) {
-      const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      p.setAttribute('d', d);
-      p.setAttribute('class', cls);
-      svg.append(p);
-    }
-    area.append(svg);
+    let suprimirAte = 0; // depois de arrastar, o toque que "sobra" não abre nada
+    const iniciarLicao = (l) => { if (Date.now() < suprimirAte) return; app.ir('licao', { letra: l }); };
 
-    let ultimoToque = { letra: null, t: 0 };
-    const iniciarLicao = (l) => app.ir('licao', { letra: l });
-
-    letras.forEach((l, i) => {
-      const { x, y } = pts[i];
-      const estilo = `left:${x}%;top:${y}%`;
-      if (!liberadas.includes(l)) {
-        const f = el('div', { classe: 'ponto futura', estilo, attrs: { 'aria-hidden': 'true' } }, imagem('assets/svg/ui/nuvem.svg'));
-        area.append(f);
-        return;
+    function criarPagina(ini) {
+      const letras = ordem.slice(ini, ini + JANELA);
+      const pts = letras.map((_, i) => posicao(i, Math.min(JANELA, letras.length) > 1 ? JANELA : 1));
+      const pag = el('div', { classe: 'trilha-pagina' });
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', '0 0 100 100');
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.setAttribute('aria-hidden', 'true');
+      const d = desenharCaminho(pts, ini > 0, ini + JANELA < ordem.length);
+      for (const cls of ['caminho-base', 'caminho-miolo']) {
+        const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p.setAttribute('d', d);
+        p.setAttribute('class', cls);
+        svg.append(p);
       }
-      const ehFoco = l === foco || (!foco && l === liberadas[liberadas.length - 1]);
-      const b = el('button', {
-        type: 'button',
-        classe: `ponto parada${ehFoco ? ' foco' : ''}`,
-        estilo,
-        attrs: { 'aria-label': `Parada número ${ordem.indexOf(l) + 1}` },
-      }, imagem('assets/svg/ui/parada.svg', 'fundo-parada'), el('span', { classe: 'letra', texto: (app.curriculo.letras[l] && app.curriculo.letras[l].maiuscula) || l.toUpperCase() }));
-      b.addEventListener('click', () => {
-        if (ehFoco) return iniciarLicao(l);
-        // parada antiga: diz o nome e depois o som; um segundo toque seguido abre a lição daquela letra
-        const agora = Date.now();
-        if (ultimoToque.letra === l && agora - ultimoToque.t < 6000) return iniciarLicao(l);
-        ultimoToque = { letra: l, t: agora };
-        b.classList.remove('balanca');
-        void b.offsetWidth;
-        b.classList.add('balanca');
-        app.audio.falar([`nome:${l}`, 'pausa:400', `som:${l}`]);
+      pag.append(svg);
+      letras.forEach((l, i) => {
+        const { x, y } = pts[i];
+        const estilo = `left:${x}%;top:${y}%`;
+        if (!liberadas.includes(l)) {
+          pag.append(el('div', { classe: 'ponto futura', estilo, attrs: { 'aria-hidden': 'true' } }, imagem('assets/svg/ui/nuvem.svg')));
+          return;
+        }
+        const ehFoco = l === foco || (!foco && l === liberadas[liberadas.length - 1]);
+        const dominada = app.progresso.estadoLetra(l) === 'dominada';
+        const b = el('button', {
+          type: 'button',
+          classe: `ponto parada${ehFoco ? ' foco' : ''}${dominada ? ' dominada' : ''}`,
+          estilo,
+          attrs: { 'aria-label': `Parada número ${ordem.indexOf(l) + 1}` },
+        }, imagem('assets/svg/ui/parada.svg', 'fundo-parada'),
+        el('span', { classe: 'letra', texto: (app.curriculo.letras[l] && app.curriculo.letras[l].maiuscula) || l.toUpperCase() }),
+        dominada ? el('span', { classe: 'marca-dominada', attrs: { 'aria-hidden': 'true', 'data-glifo': '★' } }, imagem('assets/svg/recompensas/estrela.svg')) : null);
+        // um toque abre a lição da letra (a lição diz o nome e o som ao abrir)
+        b.addEventListener('click', () => iniciarLicao(l));
+        pag.append(b);
+        if (ehFoco) {
+          const gx = x < 50 ? 78 : 22;
+          pag.append(el('div', { classe: 'guia-trilha', estilo: `left:${gx}%;top:${y}%` }, imagem(srcGuia(app.progresso.guia()))));
+        }
       });
-      area.append(b);
-      if (ehFoco) {
-        const gx = x < 50 ? 78 : 22;
-        area.append(el('div', { classe: 'guia-trilha', estilo: `left:${gx}%;top:${y}%` }, imagem(srcGuia(app.progresso.guia()))));
-      }
-    });
+      return pag;
+    }
+
+    let pagina = criarPagina(inicio);
+    area.append(pagina);
 
     const casa = botaoIcone({ src: 'assets/svg/ui/casa.svg', rotulo: 'Voltar ao início', texto: 'Início', glifo: '⌂', aoClicar: () => app.ir('inicio') });
     const falaInstr = ['frase:trilha_instrucao'];
@@ -91,17 +91,66 @@ export default {
     const barra = el('div', { classe: 'barra' }, casa, slotLegenda(), ouvir);
     const jogos = botaoIcone({ src: 'assets/svg/ui/jogo-trilha.svg', rotulo: 'Brincadeiras', texto: 'Brincadeiras', glifo: '★', classe: 'grande', aoClicar: () => app.ir('menu') });
     const colecao = botaoIcone({ src: 'assets/svg/ui/colecao.svg', rotulo: 'Minha coleção', texto: 'Coleção', glifo: '❦', classe: 'grande', aoClicar: () => app.ir('colecao') });
-    const rodape = el('div', { classe: 'rodape' }, jogos, colecao);
+    const anteriores = botaoIcone({ src: 'assets/svg/ui/voltar-trilha.svg', rotulo: 'Letras anteriores', texto: 'Letras anteriores', glifo: '↓', classe: 'nav-trilha', aoClicar: () => irPara(inicio - JANELA) });
+    const hoje = botaoIcone({ src: 'assets/svg/ui/letra-de-hoje.svg', rotulo: 'Letra de hoje', texto: 'Letra de hoje', glifo: '★', classe: 'nav-trilha', aoClicar: () => irPara(inicioFoco) });
+    const rodape = el('div', { classe: 'rodape rodape-trilha' }, anteriores, jogos, colecao, hoje);
 
-    // indicador para a adulta: em que letra a criança está e em que etapa
+    // indicador para a adulta: em que letra a criança está e em que etapa (ou o intervalo da página que está vendo)
     const letraAtual = foco || liberadas[liberadas.length - 1];
-    const indice = ordem.indexOf(letraAtual) + 1;
-    const etapa = nomeEtapa(app.curriculo, letraAtual);
-    const indicador = el('div', { classe: 'indicador', attrs: { 'data-i': 'indicador', id: 'indicador-trilha' } },
-      el('strong', { texto: `Letra ${indice} de ${ordem.length}` }),
-      etapa ? el('span', { texto: ` · ${etapa}` }) : null,
-      params.novaLetra ? el('span', { classe: 'indicador-nova', texto: 'Nova letra liberada!' }) : null);
+    const indicador = el('div', { classe: 'indicador', attrs: { 'data-i': 'indicador', id: 'indicador-trilha' } });
+    function pintarIndicador() {
+      indicador.replaceChildren();
+      if (inicio === inicioFoco) {
+        const etapa = nomeEtapa(app.curriculo, letraAtual);
+        indicador.append(el('strong', { texto: `Letra ${ordem.indexOf(letraAtual) + 1} de ${ordem.length}` }));
+        if (etapa) indicador.append(el('span', { texto: ` · ${etapa}` }));
+        if (params.novaLetra) indicador.append(el('span', { classe: 'indicador-nova', texto: 'Nova letra liberada!' }));
+      } else {
+        const fim = Math.min(inicio + JANELA, ordem.length);
+        indicador.append(el('strong', { texto: `Letras ${inicio + 1} a ${fim} de ${ordem.length}` }), el('span', { texto: ' · treino das letras anteriores' }));
+      }
+    }
+    function pintarNav() {
+      const mostrar = (b, sim) => { b.classList.toggle('oculto', !sim); b.disabled = !sim; b.tabIndex = sim ? 0 : -1; b.setAttribute('aria-hidden', sim ? 'false' : 'true'); };
+      mostrar(anteriores, inicio > 0);
+      mostrar(hoje, inicio !== inicioFoco);
+    }
 
+    /** Troca a janela da trilha com uma transição suave (a tela não rola). */
+    function irPara(alvo) {
+      alvo = Math.max(0, Math.min(alvo, inicioFoco));
+      if (alvo === inicio) return;
+      const subindo = alvo > inicio; // páginas mais novas entram por cima
+      inicio = alvo;
+      const velha = pagina;
+      pagina = criarPagina(inicio);
+      pagina.classList.add(subindo ? 'entra-de-cima' : 'entra-de-baixo');
+      velha.classList.add('saindo', subindo ? 'sai-para-baixo' : 'sai-para-cima');
+      velha.setAttribute('aria-hidden', 'true');
+      area.append(pagina);
+      setTimeout(() => velha.remove(), 320);
+      pintarIndicador();
+      pintarNav();
+    }
+
+    // arrastar na vertical: dedo para cima mostra as letras anteriores (abaixo), para baixo as mais novas
+    let ini = null;
+    area.addEventListener('pointerdown', (ev) => { ini = { x: ev.clientX, y: ev.clientY, id: ev.pointerId }; });
+    const soltar = (ev) => {
+      if (!ini || ev.pointerId !== ini.id) return;
+      const dy = ev.clientY - ini.y;
+      const dx = ev.clientX - ini.x;
+      ini = null;
+      if (ev.type === 'pointerup' && Math.abs(dy) >= 48 && Math.abs(dy) > Math.abs(dx) * 1.3) {
+        suprimirAte = Date.now() + 450;
+        irPara(dy < 0 ? inicio - JANELA : inicio + JANELA);
+      }
+    };
+    area.addEventListener('pointerup', soltar);
+    area.addEventListener('pointercancel', soltar);
+
+    pintarIndicador();
+    pintarNav();
     raiz.append(el('section', { classe: 'tela fundo-trilha' }, barra, indicador, area, rodape));
 
     let fala = falaInstr;

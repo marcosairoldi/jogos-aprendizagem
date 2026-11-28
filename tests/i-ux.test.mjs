@@ -123,9 +123,10 @@ console.log('\n# 2. Legenda da fala');
   ok(rect.cobre === 0, 'a legenda não cobre nenhum botão');
   await esperarAte(async () => page.evaluate(() => !document.getElementById('legenda').classList.contains('visivel')), { timeout: 8000, msg: 'legenda some' });
   ok(true, 'a legenda some alguns segundos depois do fim da fala');
-  // parada: diz o nome e depois o som; a legenda marca "nome:" e, em seguida, "som:" (alto-falante + letra em maiúscula)
+  // parada antiga: um toque abre a lição, que diz o nome e depois o som; a legenda marca "nome:" e, em seguida, "som:" (alto-falante + letra em maiúscula)
   await page.evaluate(() => { window.__fala.length = 0; });
   await tocar(page, '.parada:not(.foco)');
+  await esperarTela(page, 'apresenta');
   await esperarAte(async () => (await lerFalas(page)).some((x) => x.d.tipo === 'som'), { msg: 'fala de som' });
   const fl = await lerFalas(page);
   const nomeEv = fl.find((x) => x.d.tipo === 'nome');
@@ -136,6 +137,7 @@ console.log('\n# 2. Legenda da fala');
   const txtSom = som.html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   ok(/legenda-icone/.test(som.html) && /legenda-texto grande/.test(som.html) && !/\//.test(txtSom), 'som: alto-falante + letra, sem barras');
   ok(txtSom === `nome: ${nomeEv.d.texto} · som: ${som.d.texto}`, 'a dupla fica clara: "nome: ... · som: ..."', txtSom);
+  await tocar(page, 'button[aria-label="Voltar para a trilha"]'); await esperarTela(page, 'trilha');
   await tocar(page, 'button[aria-label="Brincadeiras"]'); await esperarTela(page, 'menu');
   // no Escute e Toque a letra é a resposta: só o alto-falante
   await page.evaluate(() => { window.__fala.length = 0; });

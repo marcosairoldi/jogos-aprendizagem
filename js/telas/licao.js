@@ -14,6 +14,8 @@ export default {
     let vivo = true;
     const limpezas = [];
     let jogoAtual = null;
+    // treino de uma letra já concluída (ou fora do foco): conta tentativas, mas não libera letra nem muda o foco
+    const revisao = app.progresso.letraFoco() !== letra;
 
     const q = quadro(app, raiz, { aoCasa: () => app.ir('trilha') });
     const palco = q.palco;
@@ -125,9 +127,11 @@ export default {
       }
       // fim da lição: concha (Marola) ou chifre (Lumi)
       pintar(seq.length + 1);
-      const nova = app.progresso.verificarAvanco();
+      const nova = revisao ? null : app.progresso.verificarAvanco();
       const dominada = app.progresso.estadoLetra(letra) === 'dominada';
-      const nota = nova
+      const nota = revisao
+        ? `Treino da letra ${maius} concluído!`
+        : nova
         ? `Letra ${maius} dominada! A próxima letra foi liberada.`
         : dominada
           ? `Letra ${maius} dominada!`

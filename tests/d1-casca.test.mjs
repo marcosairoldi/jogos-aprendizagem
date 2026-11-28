@@ -200,13 +200,12 @@ console.log('\n[3] avanço por domínio libera nova letra');
   ok((await page.locator('.parada').count()) === 2, 'duas paradas liberadas');
   await conferirBotoes(page, 'trilha com 2 letras');
   await foto(page, 'trilha-nova');
-  // toque numa parada antiga diz o nome e depois o som; segundo toque abre a lição
-  await page.locator('.parada:not(.foco)').click();
-  const f2 = await falasDe(page);
-  ok(f2.some((f) => JSON.stringify(f) === JSON.stringify(['nome:a', 'pausa:400', 'som:a'])), 'toque numa parada antiga diz o nome e depois o som');
+  // um toque numa parada antiga abre direto a lição daquela letra
   await page.locator('.parada:not(.foco)').click();
   await page.waitForSelector('.letra-gigante');
-  ok((await page.textContent('.letra-gigante')) === 'A', 'segundo toque abre a lição da letra antiga');
+  ok((await page.textContent('.letra-gigante')) === 'A', 'um toque na parada antiga abre a lição da letra antiga');
+  const f2 = await falasDe(page);
+  ok(f2.some((f) => f.includes('nome:a') && f.includes('som:a')), 'a lição da letra antiga diz nome e som ao abrir');
   await clicar(page, 'Continuar');
   await page.waitForFunction(() => window.__jogos.length >= 5);
   const j = await page.evaluate(() => window.__jogos[window.__jogos.length - 1]);

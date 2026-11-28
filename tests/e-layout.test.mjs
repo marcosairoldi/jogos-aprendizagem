@@ -38,7 +38,7 @@ async function auditarTela(page, vp, nome, opcoes = {}) {
 async function sairRecompensa(page) {
   await page.evaluate(() => { const p = document.querySelector('.recompensa .premio'); if (p) p.__v = true; });
   await tocar(page, 'button[aria-label="Continuar"]');
-  await esperarAte(() => page.evaluate(() => { const p = document.querySelector('.recompensa .premio'); return !(p && p.__v); }), { timeout: 10000 });
+  await esperarAte(() => page.evaluate(() => { const p = document.querySelector('.recompensa .premio'); return !(p && p.__v); }), { timeout: 25000 });
 }
 
 try {

@@ -55,6 +55,7 @@ Você vai precisar de uma conta gratuita no GitHub (https://github.com). O site 
 1. Abra o jogo e toque no **botão grande** para começar (o celular só libera o som depois de um toque).
 2. Na primeira vez, a criança escolhe a amiga: Lumi ou Marola.
 3. Na trilha, toque na parada que brilha. Cada parada é uma letra nova.
+   Para treinar uma letra que já foi concluída, toque em "Letras anteriores" (ou arraste a trilha para cima) e toque na parada da letra; as concluídas têm uma estrelinha, e "Letra de hoje" volta para a letra atual. Esse treino não muda a letra atual nem libera letra nova.
 4. Uma sessão dura cerca de 8 minutos e termina com uma despedida carinhosa. Pouco por dia funciona melhor do que muito de uma vez.
 
 ### Para a adulta que acompanha
