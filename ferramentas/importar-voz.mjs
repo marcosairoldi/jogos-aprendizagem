@@ -18,9 +18,9 @@ const destino = join(raiz, 'assets/audio/voz');
 if (existsSync(destino)) rmSync(destino, { recursive: true });
 mkdirSync(destino, { recursive: true });
 
-// E e O: a outra voz faz o som aberto (é, ó); este currículo ensina o fechado (ê, ô), coerente com
-// elefante, ervilha, ema, ovo, olho, ovelha. Por isso som_e e som_o continuam com o som gerado.
-const SONS_FORA = new Set(['e', 'o']);
+// E e O usam o som aberto da voz natural (é, ó): o som fechado gerado por computador ficava robotizado
+// demais para entender. Nenhuma letra fica de fora.
+const SONS_FORA = new Set();
 
 // Frases deste jogo -> arquivo de instrução/elogio da outra voz (o texto em data/frases.json foi
 // ajustado para ser exatamente o que a voz fala, para a legenda bater com o áudio).
@@ -39,6 +39,16 @@ const FRASES = {
   rodada_fim: 'elogio-5',
   despedida: 'despedida-1',
   ouca_nome_som: 'instrucao-ouca-nome-som',
+  // frases com equivalente gravado na voz natural (o texto em data/frases.json é exatamente o falado)
+  menu_jogos: 'instrucao-vamos-jogar',
+  trilha_nova_letra: 'instrucao-letra-nova',
+  trace_escolher: 'instrucao-vamos-tracar',
+  trace_completo: 'elogio-4',
+  letra_dominada: 'elogio-3',
+  recompensa_estrela: 'elogio-5',
+  recompensa_concha: 'elogio-5',
+  recompensa_chifre: 'elogio-5',
+  junte_instrucao: 'instrucao-junte-sons',
 };
 
 const copiados = [];

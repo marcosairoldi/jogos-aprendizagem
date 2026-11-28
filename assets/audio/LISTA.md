@@ -35,9 +35,9 @@ O jogo ensina o **nome** da letra e, logo depois, o **som** dela, sempre separad
 | arquivo | letra | como fazer o som |
 |---|---|---|
 | `som_a.mp3` | A | boca bem aberta, língua baixa, o som 'á' de 'abelha'. (som /a/) |
-| `som_e.mp3` | E | som fechado 'ê' de 'elefante'; sorriso leve, língua um pouco alta. Não é o 'é' aberto. (som /e/) |
+| `som_e.mp3` | E | boca aberta e sorriso leve, o som 'é' aberto, como em 'é' de 'é você?'. Sem dizer o nome de outra letra. (som /ɛ/) |
 | `som_i.mp3` | I | sorriso largo, lábios esticados, som curto e agudo 'i' de 'ilha'. (som /i/) |
-| `som_o.mp3` | O | lábios em 'o' redondo, som fechado 'ô' de 'ovo'. Não é o 'ó' aberto. (som /o/) |
+| `som_o.mp3` | O | lábios bem redondos e abertos, o som 'ó' aberto, como em 'ó, que lindo!'. (som /ɔ/) |
 | `som_u.mp3` | U | lábios bem fechadinhos e para frente, como um beijinho: 'u' de 'uva'. (som /u/) |
 | `som_m.mp3` | M | lábios fechados, som 'mmmm' saindo pelo nariz, contínuo, sem dizer 'mê'. (som /m/) |
 | `som_p.mp3` | P | lábios fechados e um sopro rápido, só 'p', sem voz e sem vogal depois (não é 'pê'). Mão na frente da boca sente o ar. (som /p/) |
@@ -150,8 +150,8 @@ Fale a sílaba como ela soa dentro de uma palavra, juntinha ("má", não "eme-a"
 | `sil_gu.mp3` | gú (GU) |
 | `sil_ai.mp3` | ai (AI) |
 | `sil_au.mp3` | au (AU) |
-| `sil_ei.mp3` | êi (EI) |
-| `sil_eu.mp3` | êu (EU) |
+| `sil_ei.mp3` | ei (EI) |
+| `sil_eu.mp3` | eu (EU) |
 | `sil_oi.mp3` | oi (OI) |
 | `sil_ui.mp3` | ui (UI) |
 | `sil_ja.mp3` | já (JA) |
@@ -245,30 +245,30 @@ Frases com `{nome}`: grave **sem o nome**, como mostrado.
 | `frase_guia_lumi.mp3` | Oi! Eu sou a Lumi, a unicórnio. Vamos juntas pela trilha! |
 | `frase_guia_marola.mp3` | Oi! Eu sou a Marola, a sereia. Vamos juntas pela trilha! |
 | `frase_trilha_instrucao.mp3` | Toque na parada que está brilhando para continuar a trilha. |
-| `frase_trilha_nova_letra.mp3` | Uma letra nova apareceu na trilha! |
+| `frase_trilha_nova_letra.mp3` | Olha a letra nova! |
 | `frase_apresentar_letra.mp3` | Olha a letra nova! |
 | `frase_repita_comigo.mp3` | Faz comigo: |
 | `frase_como_no_comeco.mp3` | Como no começo de |
-| `frase_menu_jogos.mp3` | Escolha uma brincadeira! |
+| `frase_menu_jogos.mp3` | Vamos jogar! |
 | `frase_escute_instrucao.mp3` | Vamos jogar! |
 | `frase_escute_pergunta.mp3` | Toque na letra que faz este som. |
 | `frase_caca_instrucao.mp3` | Vamos jogar! |
 | `frase_caca_pergunta.mp3` | Qual figura começa com este som? |
-| `frase_junte_instrucao.mp3` | Toque na sereia para ela nadar e juntar os sons. |
+| `frase_junte_instrucao.mp3` | Escute os sons juntinhos. Toque na sílaba. |
 | `frase_junte_resultado.mp3` | Juntando, fica assim: |
 | `frase_trace_instrucao.mp3` | Vamos desenhar a letra! Siga os pontinhos. |
-| `frase_trace_completo.mp3` | Que traço lindo! |
-| `frase_trace_escolher.mp3` | Escolha uma letra para traçar! |
+| `frase_trace_completo.mp3` | Que lindo! |
+| `frase_trace_escolher.mp3` | Vamos desenhar a letra! Siga os pontinhos. |
 | `frase_acerto_1.mp3` | Isso mesmo! |
 | `frase_acerto_2.mp3` | Muito bem! |
 | `frase_acerto_3.mp3` | Você conseguiu! |
 | `frase_acerto_4.mp3` | Que lindo! |
 | `frase_quase.mp3` | Quase! Escute de novo e tente outra vez. |
 | `frase_rodada_fim.mp3` | Parabéns! |
-| `frase_recompensa_estrela.mp3` | Você ganhou uma estrela! |
-| `frase_recompensa_concha.mp3` | Você ganhou uma concha! |
-| `frase_recompensa_chifre.mp3` | Você ganhou um chifre de unicórnio! |
-| `frase_letra_dominada.mp3` | Você já sabe o som desta letra! A trilha vai continuar. |
+| `frase_recompensa_estrela.mp3` | Parabéns! |
+| `frase_recompensa_concha.mp3` | Parabéns! |
+| `frase_recompensa_chifre.mp3` | Parabéns! |
+| `frase_letra_dominada.mp3` | Você conseguiu! |
 | `frase_colecao.mp3` | Olha tudo o que você juntou! |
 | `frase_despedida.mp3` | Tchau tchau! Você brincou muito bem hoje. Até amanhã! |
 | `frase_ouca_nome_som.mp3` | Ouça o nome e o som da letra. |

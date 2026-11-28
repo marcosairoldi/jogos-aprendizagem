@@ -1,6 +1,6 @@
 // Service worker da Trilha dos Sons. A lista de arquivos e o nome do cache sao
 // gerados por `node ferramentas/gerar-sw.mjs`: nao edite entre os marcadores.
-const CACHE = 'trilha-sons-614ba7cdda'; // CACHE-AUTO
+const CACHE = 'trilha-sons-c37a658f9e'; // CACHE-AUTO
 const ARQUIVOS = [
 // <ARQUIVOS>
   "./",
@@ -35,10 +35,19 @@ const ARQUIVOS = [
   "assets/audio/voz/frase_despedida.mp3",
   "assets/audio/voz/frase_escute_instrucao.mp3",
   "assets/audio/voz/frase_escute_pergunta.mp3",
+  "assets/audio/voz/frase_junte_instrucao.mp3",
+  "assets/audio/voz/frase_letra_dominada.mp3",
+  "assets/audio/voz/frase_menu_jogos.mp3",
   "assets/audio/voz/frase_ouca_nome_som.mp3",
   "assets/audio/voz/frase_quase.mp3",
+  "assets/audio/voz/frase_recompensa_chifre.mp3",
+  "assets/audio/voz/frase_recompensa_concha.mp3",
+  "assets/audio/voz/frase_recompensa_estrela.mp3",
   "assets/audio/voz/frase_rodada_fim.mp3",
+  "assets/audio/voz/frase_trace_completo.mp3",
+  "assets/audio/voz/frase_trace_escolher.mp3",
   "assets/audio/voz/frase_trace_instrucao.mp3",
+  "assets/audio/voz/frase_trilha_nova_letra.mp3",
   "assets/audio/voz/nome_a.mp3",
   "assets/audio/voz/nome_b.mp3",
   "assets/audio/voz/nome_c.mp3",
@@ -149,12 +158,14 @@ const ARQUIVOS = [
   "assets/audio/voz/som_b.mp3",
   "assets/audio/voz/som_c.mp3",
   "assets/audio/voz/som_d.mp3",
+  "assets/audio/voz/som_e.mp3",
   "assets/audio/voz/som_f.mp3",
   "assets/audio/voz/som_g.mp3",
   "assets/audio/voz/som_i.mp3",
   "assets/audio/voz/som_l.mp3",
   "assets/audio/voz/som_m.mp3",
   "assets/audio/voz/som_n.mp3",
+  "assets/audio/voz/som_o.mp3",
   "assets/audio/voz/som_p.mp3",
   "assets/audio/voz/som_r.mp3",
   "assets/audio/voz/som_s.mp3",

@@ -105,16 +105,16 @@
       "maiuscula": "E",
       "nome": "é",
       "tipo": "vogal",
-      "fonema": "/e/",
+      "fonema": "/ɛ/",
       "continuo": true,
       "audio": "som_e",
-      "tts": "ê",
+      "tts": "é",
       "palavras": [
         "elefante",
         "ervilha",
         "ema"
       ],
-      "dica": "Para a adulta: som fechado 'ê' de 'elefante'; sorriso leve, língua um pouco alta. Não é o 'é' aberto."
+      "dica": "Para a adulta: boca aberta e sorriso leve, o som 'é' aberto, como em 'é' de 'é você?'. Sem dizer o nome de outra letra."
     },
     "i": {
       "maiuscula": "I",
@@ -135,16 +135,16 @@
       "maiuscula": "O",
       "nome": "ó",
       "tipo": "vogal",
-      "fonema": "/o/",
+      "fonema": "/ɔ/",
       "continuo": true,
       "audio": "som_o",
-      "tts": "ô",
+      "tts": "ó",
       "palavras": [
         "ovo",
         "olho",
         "ovelha"
       ],
-      "dica": "Para a adulta: lábios em 'o' redondo, som fechado 'ô' de 'ovo'. Não é o 'ó' aberto."
+      "dica": "Para a adulta: lábios bem redondos e abertos, o som 'ó' aberto, como em 'ó, que lindo!'."
     },
     "u": {
       "maiuscula": "U",
@@ -898,7 +898,7 @@
         "i"
       ],
       "audio": "sil_ei",
-      "tts": "êi"
+      "tts": "ei"
     },
     "eu": {
       "texto": "EU",
@@ -907,7 +907,7 @@
         "u"
       ],
       "audio": "sil_eu",
-      "tts": "êu"
+      "tts": "eu"
     },
     "oi": {
       "texto": "OI",
