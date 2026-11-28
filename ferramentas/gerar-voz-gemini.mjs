@@ -19,8 +19,8 @@ import { execFileSync } from 'node:child_process';
 
 const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 const API = 'https://generativelanguage.googleapis.com/v1beta';
-// O Pro não tem cota gratuita na API; o Flash tem as mesmas vozes e funciona na cota gratuita.
-const MODELO = process.env.GEMINI_TTS_MODELO || 'gemini-2.5-flash-preview-tts';
+// Pro: o mesmo modelo dos áudios do Unicórnio (precisa de faturamento). Na cota gratuita, use GEMINI_TTS_MODELO=gemini-2.5-flash-preview-tts.
+const MODELO = process.env.GEMINI_TTS_MODELO || 'gemini-2.5-pro-preview-tts';
 const DESTINO = join(raiz, 'assets/audio/voz');
 const REGISTRO = join(DESTINO, 'voz.json');
 const TMP = join(raiz, '.tmp-voz');
@@ -70,9 +70,11 @@ async function pedirAudio(texto, voz, estilo) {
   };
   let resp;
   for (let tentativa = 1; ; tentativa++) {
-    try { resp = await chamar(`models/${MODELO}:generateContent`, corpo); break; } catch (e) {
+    try { resp = await chamar(`models/${MODELO}:generateContent`, corpo); break; } catch (e0) {
+      // falha de rede (fetch failed) conta como erro passageiro, igual a 500/502/503/504
+      const e = /^HTTP /.test(e0.message) ? e0 : new Error('HTTP 503: ' + e0.message);
       if (/HTTP 429/.test(e.message) && /per_day|PerDay|RequestsPerDay/i.test(e.message)) throw new CotaEsgotada(e.message);
-      if (tentativa >= 5 || !/HTTP (429|500|503)/.test(e.message)) {
+      if (tentativa >= 6 || !/HTTP (429|500|502|503|504)/.test(e.message)) {
         if (/HTTP 429/.test(e.message)) throw new CotaEsgotada(e.message);
         throw e;
       }
@@ -90,10 +92,10 @@ async function pedirAudio(texto, voz, estilo) {
 }
 
 /** Trecho [ini, fim] (s) do PCM -> mp3 final, sem silêncio nas pontas e com volume igualado. */
-function finalizar({ pcm, taxa }, arquivo, ini = 0, fim = null) {
+function finalizar({ pcm, taxa }, arquivo, ini = 0, fim = null, limiar = '-45dB') {
   const af = [
-    'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.03',
-    'areverse', 'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.06', 'areverse',
+    `silenceremove=start_periods=1:start_threshold=${limiar}:start_silence=0.03`,
+    'areverse', `silenceremove=start_periods=1:start_threshold=${limiar}:start_silence=0.06`, 'areverse',
     'afade=t=in:d=0.01', 'loudnorm=I=-18:TP=-2:LRA=11',
   ].join(',');
   const corte = fim !== null ? ['-ss', String(ini), '-to', String(fim)] : [];
@@ -233,11 +235,12 @@ async function gerarSom(item, voz, reg) {
       execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', silaba, '-t', String(Math.max(0.03, v - 0.005)),
         '-af', 'afade=t=out:st=' + Math.max(0, v - 0.02).toFixed(3) + ':d=0.015', '-ar', '48000', '-ac', '1', '-b:a', '64k', arq]);
     } else {
-      finalizar(audio, arq);
+      finalizar(audio, arq, 0, null, '-60dB');
     }
     const ms = msDeVogal(arq);
     const limite = vogal ? Infinity : (oclusiva ? 30 : 60);
-    if (ms <= limite) {
+    const dur = (() => { try { return parseFloat(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', arq]).toString()); } catch (e) { return 0; } })();
+    if (ms >= 0 && dur >= 0.04 && ms <= limite) {
       reg.itens[item.id] = { texto: item.texto, vogalMs: ms };
       salvarRegistro(reg);
       console.log('ok', item.id, `(vogal ${ms} ms)`);
