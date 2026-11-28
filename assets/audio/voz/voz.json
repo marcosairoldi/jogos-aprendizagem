@@ -1,0 +1,110 @@
+{
+ "voz": "Autonoe",
+ "modelo": "gemini-2.5-pro-preview-tts",
+ "itens": {
+  "som_a": {
+   "texto": "Aaaaaa.",
+   "vogalMs": 990
+  },
+  "som_e": {
+   "texto": "\u00ca\u00ea\u00ea\u00ea\u00ea\u00ea.",
+   "vogalMs": 2540
+  },
+  "som_i": {
+   "texto": "Iiiiii.",
+   "vogalMs": 1410
+  },
+  "som_o": {
+   "texto": "\u00d4\u00f4\u00f4\u00f4\u00f4\u00f4.",
+   "vogalMs": 1450
+  },
+  "som_u": {
+   "texto": "Uuuuuu.",
+   "vogalMs": 420
+  },
+  "som_m": {
+   "texto": "Mmmmmmmm.",
+   "vogalMs": 30
+  },
+  "som_p": {
+   "texto": "p\u00e1",
+   "vogalMs": 0
+  },
+  "som_b": {
+   "texto": "b\u00e1",
+   "vogalMs": 0
+  },
+  "som_t": {
+   "texto": "t\u00e1",
+   "vogalMs": 10
+  },
+  "som_v": {
+   "texto": "Vvvvvvvv.",
+   "vogalMs": 0
+  },
+  "som_d": {
+   "texto": "d\u00e1",
+   "vogalMs": 0
+  },
+  "som_g": {
+   "texto": "g\u00e1",
+   "vogalMs": 0
+  },
+  "som_z": {
+   "texto": "Zzzzzzzz.",
+   "vogalMs": 0
+  },
+  "som_r": {
+   "texto": "Rrrrrrrr.",
+   "vogalMs": 10
+  },
+  "frase_escolher_guia": {
+   "texto": "Quem vai brincar com voc\u00ea hoje? A unic\u00f3rnio Lumi ou a sereia Marola? Toque na sua amiga."
+  },
+  "frase_guia_lumi": {
+   "texto": "Oi! Eu sou a Lumi, a unic\u00f3rnio. Vamos juntas pela trilha!"
+  },
+  "frase_guia_marola": {
+   "texto": "Oi! Eu sou a Marola, a sereia. Vamos juntas pela trilha!"
+  },
+  "frase_trilha_instrucao": {
+   "texto": "Toque na parada que est\u00e1 brilhando para continuar a trilha."
+  },
+  "frase_trilha_nova_letra": {
+   "texto": "Olha a letra nova!"
+  },
+  "frase_apresentar_letra": {
+   "texto": "Olha a letra nova!"
+  },
+  "frase_repita_comigo": {
+   "texto": "Faz comigo:"
+  },
+  "frase_como_no_comeco": {
+   "texto": "Como no come\u00e7o de"
+  },
+  "frase_menu_jogos": {
+   "texto": "Vamos jogar!"
+  },
+  "frase_escute_instrucao": {
+   "texto": "Vamos jogar!"
+  },
+  "frase_escute_pergunta": {
+   "texto": "Toque na letra que faz este som."
+  },
+  "frase_caca_instrucao": {
+   "texto": "Vamos jogar!"
+  },
+  "frase_caca_pergunta": {
+   "texto": "Qual figura come\u00e7a com este som?"
+  },
+  "frase_junte_instrucao": {
+   "texto": "Escute os sons juntinhos. Toque na s\u00edlaba."
+  },
+  "frase_junte_resultado": {
+   "texto": "Juntando, fica assim:"
+  },
+  "frase_trace_instrucao": {
+   "texto": "Vamos desenhar a letra! Siga os pontinhos."
+  }
+ }
+}
